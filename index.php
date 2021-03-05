@@ -7,7 +7,7 @@ $dotenv->load();
 
 Flight::route('/', function() {
 	Flight::render('home', [], 'content');
-	Flight::render('layout', ['title' => 'Home']);
+	Flight::render('shell', ['title' => 'Home']);
 });
 
 Flight::start();
