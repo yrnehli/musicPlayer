@@ -5,21 +5,21 @@ require_once 'vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-Flight::map('renderView', function($viewName, $title) {
-	if (filter_var(Flight::request()->query->partial, FILTER_VALIDATE_BOOLEAN)) {
-		Flight::render($viewName);
-	} else {
-		Flight::render($viewName, [], 'partial');
+Flight::map('renderView', function($viewName, $viewData, $title) {
+	if (!filter_var(Flight::request()->query->partial, FILTER_VALIDATE_BOOLEAN)) {
+		Flight::render($viewName, $viewData, 'partial');
 		Flight::render('shell', ['title' => $title]);
+	} else {
+		Flight::render($viewName, $viewData);
 	}
 });
 
 Flight::route("GET /", function() {
-	Flight::renderView('home', "Home");
+	Flight::renderView('home', [], "Home");
 });
 
 Flight::route("GET /test", function() {
-	Flight::renderView('test', "Test");
+	Flight::renderView('test', [], "Test");
 });
 
 Flight::start();

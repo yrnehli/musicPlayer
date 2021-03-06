@@ -1,8 +1,8 @@
-yes
+<div id="aaa">yes</div>
 
 <script>
 	$(function() {
-		$('#partial').off('click').click(() => {
+		$('#aaa').click(() => {
 			loadPartial("/test");
 		});
 	});
