@@ -22,6 +22,10 @@ Flight::route("GET /test", function() {
 	Flight::renderView('test', [], "Test");
 });
 
+Flight::route("GET /api/update", function() {
+	
+});
+
 Flight::start();
 
 ?>
