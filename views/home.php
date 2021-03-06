@@ -1,15 +1,9 @@
-<div>
-	yes
-</div>
+yes
 
 <script>
-	sound = new Howl({
-		src: ['/Songs/3am.mp3']
+	$(function() {
+		$('#partial').off('click').click(() => {
+			loadPartial("/test");
+		});
 	});
-
-	sound.on('end', function(){
-		console.log('Finished!');
-	});
-
-	sound.play();
 </script>

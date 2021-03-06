@@ -12,6 +12,40 @@
 		</title>
 	</head>
 	<body>
-		<?= $content ?>
+		<div id="partial">
+			<?= $partial ?>
+		</div>
+
+		<script>
+			var $partial = $('#partial');
+
+			$(function() {
+				$(window).on('popstate', e => {
+					var oState = e.originalEvent.state;
+
+					if (oState) {
+						$partial.html(oState.html);
+					}
+				});
+			});
+
+			async function loadPartial(url) {
+				if (!loadPartial.hasBeenCalled) {
+					history.pushState(getCurrentState(), "", document.URL);
+					loadPartial.hasBeenCalled = true;
+				}
+
+				var res = await $.get(url, { partial: true });
+
+				$partial.html(res);
+				history.pushState(getCurrentState(), "", url);
+			}
+
+			loadPartial.hasBeenCalled = false;
+
+			function getCurrentState() {
+				return { html: $partial.html() };
+			}
+		</script>
 	</body>
 </html>
