@@ -1,12 +1,10 @@
 <?php
 
 class MusicDatabase extends PDO {
+	private $conn;
+
 	public function __construct() {
-		$servername = $_ENV["DB_SERVERNAME"];
-		$username = $_ENV["DB_USERNAME"];
-		$password = $_ENV["DB_PASSWORD"];
-		$dbname = $_ENV["DB_DBNAME"];
-		$conn = parent::__construct("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
+		$this->conn = parent::__construct("mysql:host={$_ENV['DB_SERVERNAME']};dbname={$_ENV['DB_DBNAME']};charset=utf8mb4", $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD']);
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
