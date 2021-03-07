@@ -1,6 +1,7 @@
 <?php
 
 require_once 'vendor/autoload.php';
+require_once 'php/MusicManager.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -23,7 +24,7 @@ Flight::route("GET /test", function() {
 });
 
 Flight::route("GET /api/update", function() {
-	
+	MusicManager::updateDatabase();
 });
 
 Flight::start();
