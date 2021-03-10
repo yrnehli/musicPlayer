@@ -6,6 +6,7 @@ class MusicDatabase {
 	public function __construct() {
 		$this->conn = new PDO("mysql:host={$_ENV['DB_SERVERNAME']};dbname={$_ENV['DB_DBNAME']};charset=utf8mb4", $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD']);
 		$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 	}
 
 	public function insertSong($song) {
@@ -23,7 +24,6 @@ class MusicDatabase {
 		$stmt->bindParam(":duration", $song->duration);
 		$stmt->bindParam(":filepath", $song->filepath);
 		$stmt->execute();
-		
 		return $this->conn->lastInsertId();
 	}
 
@@ -36,7 +36,6 @@ class MusicDatabase {
 		$stmt->bindParam(":albumArtist", $album->albumArtist);
 		$stmt->bindParam(":albumArtFilepath", $album->albumArtFilepath);
 		$stmt->execute();
-
 		return $this->conn->lastInsertId();
 	}
 
@@ -48,6 +47,35 @@ class MusicDatabase {
 		$stmt->bindParam(":songId", $songId);
 		$stmt->bindParam(":albumId", $albumId);
 		$stmt->execute();
+	}
+
+	public function getAlbums() {
+		$stmt = $this->conn->prepare("SELECT * FROM `albums`");
+		$stmt->execute();
+		return $stmt->fetchAll();
+	}
+
+	public function getSong($songId) {
+		$stmt = $this->conn->prepare(
+			"SELECT *
+			FROM `songs`
+			WHERE `id` = :id"
+		);
+		$stmt->bindParam(":id", $songId);
+		$stmt->execute();
+		return $stmt->fetch();
+	}
+
+	public function getSongs($albumId) {
+		$stmt = $this->conn->prepare(
+			"SELECT `songs`.*
+			FROM `songs`
+			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
+			WHERE `song-album`.`albumId` = :albumId"
+		);
+		$stmt->bindParam(":albumId", $albumId);
+		$stmt->execute();
+		return $stmt->fetchAll();
 	}
 
 	public function resetDatabase() {

@@ -2,9 +2,11 @@
 
 require_once 'vendor/autoload.php';
 require_once 'php/MusicManager.php';
+require_once 'php/MusicDatabase.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
+$musicDatabase = new MusicDatabase();
 
 foreach (['userData', 'userData/albumArt'] as $directory) {
 	if (!file_exists($directory))
@@ -20,20 +22,24 @@ Flight::map('renderView', function($viewName, $viewData, $title) {
 	}
 });
 
-Flight::route("GET /", function() {
-	Flight::renderView('home', [], "Home");
+Flight::route("GET /", function() use ($musicDatabase) {
+	$albums = $musicDatabase->getAlbums();
+	Flight::renderView('home', compact('albums'), "Home");
 });
 
-Flight::route("GET /test", function() {
-	Flight::renderView('test', [], "Test");
+Flight::route("GET /album/@albumId", function($albumId) use ($musicDatabase) {
+	$songs = $musicDatabase->getSongs($albumId);
+	Flight::renderView('album', compact('songs'), "Album");
+});
+
+Flight::route("GET /mp3/@songId", function($songId) use ($musicDatabase) {
+	readfile(
+		$musicDatabase->getSong($songId)['filepath']
+	);
 });
 
 Flight::route("GET /api/update", function() {
 	MusicManager::updateDatabase();
-});
-
-Flight::route("GET /mp3/@filename", function($filename) {
-	readfile($_ENV['MUSIC_DIRECTORY'] . "/$filename");
 });
 
 Flight::start();

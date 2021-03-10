@@ -30,7 +30,7 @@ class MusicManager {
 			$song->year = $tags['year'][0];
 			$song->genre = implode("/", $tags['genre']);
 			$song->duration = $mp3Info['playtime_seconds'];
-			$song->filepath = $mp3Info['filepath'];
+			$song->filepath = $mp3Info['filenamepath'];
 			$songId = $musicDatabase->insertSong($song);
 
 			$albumKey = "$song->albumArtist - $song->albumName";
