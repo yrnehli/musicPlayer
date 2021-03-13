@@ -1,7 +1,7 @@
-class MusicPlayer extends Howl {
+class MusicPlayer {
 	constructor($musicControl) {
-		super({
-			src: ['/mp3/8848'],
+		this.sound = new Howl({
+			src: [null],
 			format: 'mp3',
 			html5: true
 		});
@@ -9,21 +9,27 @@ class MusicPlayer extends Howl {
 		this.queue = [];
 		this.$playButton = $musicControl.find('#playButton');
 		this.$songName = $musicControl.find('#songName');
-
-		this.on('end', MusicPlayer.prototype.skip);
+		this.sound.on('end', e => this.skip(e));
 	}
 
 	changeSong(songId) {
-		this.unload();
 		this.songId = songId;
-		this._duration = 0;
-		this._src = `/mp3/${songId}`;
-		this.load();
+		this.sound.unload();
+		this.sound._duration = 0;
+		this.sound._src = `/mp3/${songId}`;
+		this.sound.load();
 		this.updateMusicControl();
 	}
 
-	play(sprite, internal) {
-		super.play();
+	togglePlay() {
+		if (this.sound.playing())
+			this.pause();
+		else
+			this.play();
+	}
+
+	play() {
+		this.sound.play();
 		this.$playButton
 			.addClass('playing')
 			.removeClass('paused')
@@ -31,7 +37,7 @@ class MusicPlayer extends Howl {
 	}
 
 	pause() {
-		super.pause();
+		this.sound.pause();
 		this.$playButton
 			.addClass('paused')
 			.removeClass('playing')
@@ -42,12 +48,18 @@ class MusicPlayer extends Howl {
 		this.queue.push(songId);
 	}
 
-	skip() {
-		console.log('skip');
+	skip(e) {
+		if (this.queue.length === 0)
+			return;
+
+		this.changeSong(this.queue.pop());
+		
+		if (e)
+			this.play();
 	}
 
 	async updateMusicControl() {
-		var song = await $.get(`/api/musicPlayer/${this.songId}`);
-		this.$songName.text(`${song.songArtist} - ${song.songName}`);
+		var res = await $.get(`/api/musicPlayer/${this.songId}`);
+		this.$songName.text(`${res.songArtist} - ${res.songName}`);
 	}
 }

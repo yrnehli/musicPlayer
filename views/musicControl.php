@@ -7,10 +7,7 @@
 	var musicPlayer = new MusicPlayer($('#musicControl'));
 
 	$('#playButton').click(function() {
-		if ($(this).hasClass('playing'))
-			musicPlayer.pause();
-		else
-			musicPlayer.play();
+		musicPlayer.togglePlay();
 	});
 
 </script>

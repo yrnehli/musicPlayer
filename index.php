@@ -37,7 +37,8 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 		"SELECT `songs`.*
 		FROM `songs`
 		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
-		WHERE `song-album`.`albumId` = :albumId"
+		WHERE `song-album`.`albumId` = :albumId
+		ORDER BY `songs`.`trackNumber`"
 	);
 	$stmt->bindParam(":albumId", $albumId);
 	$stmt->execute();
@@ -50,53 +51,32 @@ Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
 	$stmt->bindParam(":id", $songId);
 	$stmt->execute();
 	$filepath = $stmt->fetchColumn();
-	
 	$filesize = filesize($filepath);
 
-	$offset = 0;
-	$length = $filesize;
-
-	if ( isset($_SERVER['HTTP_RANGE']) ) {
-		// if the HTTP_RANGE header is set we're dealing with partial content
-
-		$partialContent = true;
-
-		// find the requested range
-		// this might be too simplistic, apparently the client can request
-		// multiple ranges, which can become pretty complex, so ignore it for now
-		preg_match('/bytes=(\d+)-(\d+)?/', $_SERVER['HTTP_RANGE'], $matches);
-
-		$offset = intval($matches[1]);
-		$length = (count($matches) == 3) ? (intval($matches[2]) - $offset) : $filesize;
+	if (isset($_SERVER['HTTP_RANGE'])) {
+		$bytes = explode(
+			"-",
+			str_replace("bytes=", "", $_SERVER['HTTP_RANGE'])
+		);
+		$startOffset = $bytes[0];
+		$endOffset = (!empty($bytes[1])) ? $bytes[1] : $filesize;
 	} else {
-		$partialContent = false;
+		$startOffset = 0;
+		$endOffset = $filesize;
 	}
 
 	$file = fopen($filepath, 'r');
-
-	// seek to the requested offset, this is 0 if it's not a partial content request
-	fseek($file, $offset);
-
-	$data = fread($file, $length);
-
+	fseek($file, $startOffset);
+	$data = fread($file, $endOffset - $startOffset);
 	fclose($file);
 
-	if ( $partialContent ) {
-		// output the right headers for partial content
-
-		header('HTTP/1.1 206 Partial Content');
-
-		header('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize);
-	}
-
-	// output the regular HTTP headers
-	header('Content-Type: audio/mpeg');
-	header('Content-Length: ' . $filesize);
-	header('Content-Disposition: attachment; filename="' . basename($filepath) . '"');
-	header('Accept-Ranges: bytes');
-
-	// don't forget to send the data too
-	print($data);
+	Flight::response()
+		->header('Accept-Ranges', 'bytes')
+		->header('Content-Type', 'audio/mpeg')
+		->header('Content-Range', "bytes $startOffset-" . ($endOffset - 1) . "/$filesize")
+		->status(206)
+		->write($data)
+		->send();
 });
 
 Flight::route("GET /api/musicPlayer/@songId", function($songId) use ($conn) {
