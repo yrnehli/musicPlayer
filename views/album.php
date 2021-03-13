@@ -12,9 +12,9 @@ foreach ($songs as $song) {
 
 <script>
 	$(function() {
-		$('.song').click(function() {
-			sound.changeSong({ src: `/mp3/${$(this).data('song-id')}`});
-			sound.play();
+		$('.song').dblclick(async function() {
+			musicPlayer.changeSong($(this).data('song-id'));
+			musicPlayer.play();
 		});
 	});
 </script>

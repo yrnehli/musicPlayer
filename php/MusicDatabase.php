@@ -49,38 +49,13 @@ class MusicDatabase {
 		$stmt->execute();
 	}
 
-	public function getAlbums() {
-		$stmt = $this->conn->prepare("SELECT * FROM `albums`");
-		$stmt->execute();
-		return $stmt->fetchAll();
-	}
-
-	public function getSong($songId) {
-		$stmt = $this->conn->prepare(
-			"SELECT *
-			FROM `songs`
-			WHERE `id` = :id"
-		);
-		$stmt->bindParam(":id", $songId);
-		$stmt->execute();
-		return $stmt->fetch();
-	}
-
-	public function getSongs($albumId) {
-		$stmt = $this->conn->prepare(
-			"SELECT `songs`.*
-			FROM `songs`
-			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
-			WHERE `song-album`.`albumId` = :albumId"
-		);
-		$stmt->bindParam(":albumId", $albumId);
-		$stmt->execute();
-		return $stmt->fetchAll();
-	}
-
 	public function resetDatabase() {
 		$this->conn->prepare("DELETE FROM `songs`")->execute();
 		$this->conn->prepare("DELETE FROM `albums`")->execute();
+	}
+
+	public function getConn() {
+		return $this->conn;
 	}
 }
 
