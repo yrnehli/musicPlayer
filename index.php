@@ -14,7 +14,7 @@ foreach (['userData', 'userData/albumArt'] as $directory) {
 		mkdir($directory);
 }
 
-Flight::map('renderView', function($viewName, $viewData, $title) {
+Flight::map('renderView', function($viewName, $viewData) {
 	if (filter_var(Flight::request()->query->partial, FILTER_VALIDATE_BOOLEAN)) {
 		Flight::render($viewName, $viewData);
 		return;
@@ -22,14 +22,14 @@ Flight::map('renderView', function($viewName, $viewData, $title) {
 	
 	Flight::render($viewName, $viewData, 'partial');
 	Flight::render('musicControl', [], 'musicControl');
-	Flight::render('shell', ['title' => $title]);
+	Flight::render('shell');
 });
 
 Flight::route("GET /", function() use ($conn) {
 	$stmt = $conn->prepare("SELECT * FROM `albums`");
 	$stmt->execute();
 	$albums = $stmt->fetchAll();
-	Flight::renderView('home', compact('albums'), "Home");
+	Flight::renderView('home', compact('albums'));
 });
 
 Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
@@ -43,7 +43,7 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 	$stmt->bindParam(":albumId", $albumId);
 	$stmt->execute();
 	$songs = $stmt->fetchAll();
-	Flight::renderView('album', compact('songs'), "Album");
+	Flight::renderView('album', compact('songs'));
 });
 
 Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
@@ -81,7 +81,7 @@ Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
 
 Flight::route("GET /api/musicPlayer/@songId", function($songId) use ($conn) {
 	$stmt = $conn->prepare(
-		"SELECT `songs`.`songName`, `songs`.`songArtist`, `albums`.`albumArtFilepath`
+		"SELECT `songs`.`songName`, `songs`.`songArtist`, `albums`.`albumArtFilepath`, `albums`.`albumName`
 		FROM `songs`
 		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
 		INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
