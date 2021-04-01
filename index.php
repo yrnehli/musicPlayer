@@ -10,8 +10,9 @@ $db = new MusicDatabase();
 $conn = $db->getConn();
 
 foreach (['userData', 'userData/albumArt'] as $directory) {
-	if (!file_exists($directory))
+	if (!file_exists($directory)) {
 		mkdir($directory);
+	}
 }
 
 Flight::map('renderView', function($viewName, $viewData) {
@@ -38,7 +39,7 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 		FROM `songs`
 		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
 		WHERE `song-album`.`albumId` = :albumId
-		ORDER BY `songs`.`trackNumber`"
+		ORDER BY `songs`.`discNumber`, `songs`.`trackNumber`"
 	);
 	$stmt->bindParam(":albumId", $albumId);
 	$stmt->execute();

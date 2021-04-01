@@ -8,7 +8,8 @@
 		<script src="https://kit.fontawesome.com/8562f52657.js" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
 		<script src="/assets/js/MusicPlayer.js"></script>
-		<link rel="stylesheet" href="/assets/css/musicControl.css">
+		<script src="/assets/js/global.js"></script>
+		<link rel="stylesheet" href="/assets/css/global.css">
 		<title>Music</title>
 	</head>
 	<body>

@@ -9,6 +9,8 @@ class MusicPlayer {
 		this.history = [];
 		this.$playButton = $musicControl.find('#playButton');
 		this.$songName = $musicControl.find('#songName');
+		this.$artistName = $musicControl.find('#artistName');
+		this.$albumArt = $musicControl.find("#albumArt");
 		this.metadata = metadata;
 		this.sound.on('end', e => this.skip(e));
 	}
@@ -80,7 +82,9 @@ class MusicPlayer {
 	async updateMusicControl() {
 		var res = await $.get(`/api/musicPlayer/${this.songId}`);
 		
-		this.$songName.text(`${res.songArtist} - ${res.songName}`);
+		this.$songName.text(res.songName);
+		this.$artistName.text(res.songArtist);
+		this.$albumArt.prop('src', res.albumArtFilepath);
 		this.metadata.title = res.songName;
 		this.metadata.artist = res.songArtist;
 		this.metadata.album = res.albumName;

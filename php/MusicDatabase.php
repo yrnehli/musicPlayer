@@ -11,14 +11,15 @@ class MusicDatabase {
 
 	public function insertSong($song) {
 		$stmt = $this->conn->prepare(
-			"INSERT INTO `songs` (`songName`, `songArtist`, `albumName`, `albumArtist`, `trackNumber`, `year`, `genre`, `duration`, `filepath`)
-			VALUES (:songName, :songArtist, :albumName, :albumArtist, :trackNumber, :year, :genre, :duration, :filepath)"
+			"INSERT INTO `songs` (`songName`, `songArtist`, `albumName`, `albumArtist`, `trackNumber`, `discNumber`, `year`, `genre`, `duration`, `filepath`)
+			VALUES (:songName, :songArtist, :albumName, :albumArtist, :trackNumber, :discNumber, :year, :genre, :duration, :filepath)"
 		);
 		$stmt->bindParam(":songName", $song->songName);
 		$stmt->bindParam(":songArtist", $song->songArtist);
 		$stmt->bindParam(":albumName", $song->albumName);
 		$stmt->bindParam(":albumArtist", $song->albumArtist);
 		$stmt->bindParam(":trackNumber", $song->trackNumber);
+		$stmt->bindParam(":discNumber", $song->discNumber);
 		$stmt->bindParam(":year", $song->year);
 		$stmt->bindParam(":genre", $song->genre);
 		$stmt->bindParam(":duration", $song->duration);
