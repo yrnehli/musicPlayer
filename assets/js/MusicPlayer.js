@@ -33,18 +33,12 @@ class MusicPlayer {
 
 	play() {
 		this.sound.play();
-		this.$playButton
-			.addClass('playing')
-			.removeClass('paused')
-			.text('Pause');
+		this.$playButton.removeClass("paused");
 	}
 
 	pause() {
 		this.sound.pause();
-		this.$playButton
-			.addClass('paused')
-			.removeClass('playing')
-			.text('Play');
+		this.$playButton.addClass("paused");
 	}
 
 	enqueue(songId) {

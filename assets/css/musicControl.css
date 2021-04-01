@@ -7,6 +7,26 @@
 	padding-right: 16px;
 }
 
+#musicControl svg {
+	fill: #b3b3b3;
+}
+
+#musicControl svg:hover {
+	fill: white;
+}
+
+#musicControl button {
+	position: relative;
+	width: 32px;
+	min-width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: transparent;
+	border: none;
+}
+
 #songName {
 	font-size: 14px;
 	font-weight: 400;
@@ -25,18 +45,15 @@
 }
 
 #albumArt {
+	display: none;
+}
+
+#albumArt[src] {
+	display: block;
 	height: 56px;
 	width: 56px;
 	margin-right: 14px;
 	box-shadow: 0 0 10px rgb(0 0 0 / 30%);
-}
-
-#volumeButton {
-	fill: #b3b3b3;
-}
-
-#volumeButton:hover {
-	fill: #fff;
 }
 
 #playerControls {
@@ -45,7 +62,7 @@
 	transform: translateX(-50%);
 }
 
-#volume {
+#volumeSlider {
 	width: 93px;
 }
 
@@ -63,4 +80,33 @@
 
 #volumeButton.mute path {
 	d: path('M0 5v6h2.804L8 14V2L2.804 5H0zm7-1.268v8.536L3.072 10H1V6h2.072L7 3.732zm8.623 2.121l-.707-.707-2.147 2.147-2.146-2.147-.707.707L12.062 8l-2.146 2.146.707.707 2.146-2.147 2.147 2.147.707-.707L13.477 8l2.146-2.147z');
+}
+
+#playButton {
+	transition: none 33ms cubic-bezier(.3,0,.7,1);
+	transition-property: all;
+	border: none;
+	background-color: white !important;
+	position: relative;
+	border-radius: 32px;
+}
+
+#playButton svg {
+	fill: black !important;
+}
+
+#playButton:hover {
+	transform: scale(1.06);
+}
+
+#playButton:active {
+	transform: scale(1);
+}
+
+#playButton.paused path {
+	d: path("M4.018 14L14.41 8 4.018 2z");
+}
+
+#playButton path {
+	d: path("M3 2h3v12H3zM10 2h3v12h-3z");
 }
