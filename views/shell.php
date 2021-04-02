@@ -8,10 +8,11 @@
 		<script src="https://kit.fontawesome.com/8562f52657.js" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
-		<script src="/assets/js/MusicPlayer.js"></script>
 		<script src="/assets/js/global.js"></script>
+		<script src="/assets/js/MusicPlayer.js"></script>
 		<link rel="stylesheet" href="https://code.jquery.com/git/ui/jquery-ui-git.css">
 		<link rel="stylesheet" href="/assets/css/global.css">
+		<link rel="manifest" href="/manifest.webmanifest">
 		<title>Music</title>
 	</head>
 	<body>

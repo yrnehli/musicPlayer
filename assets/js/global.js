@@ -1,3 +1,7 @@
+if ('serviceWorker' in navigator) {
+	navigator.serviceWorker.register('/assets/js/sw.js');
+}
+
 function initSlider($slider, events) {
 	$slider.slider({
 		min: 0,
