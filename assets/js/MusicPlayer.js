@@ -1,6 +1,6 @@
-class MusicPlayer {
+class MusicPlayer extends Howl {
 	constructor($musicControl, metadata) {
-		this.sound = new Howl({
+		super({
 			src: [null],
 			format: 'mp3',
 			html5: true
@@ -12,32 +12,33 @@ class MusicPlayer {
 		this.$artistName = $musicControl.find('#artistName');
 		this.$albumArt = $musicControl.find("#albumArt");
 		this.metadata = metadata;
-		this.sound.on('end', e => this.skip(e));
+		this.on('end', e => this.skip(e));
 	}
 
 	changeSong(songId, play) {
 		this.songId = songId;
-		this.sound.unload();
-		this.sound._duration = 0
-		this.sound._src = `/mp3/${songId}`;
-		this.sound.load();
+		this.unload();
+		this._duration = 0
+		this._src = `/mp3/${songId}`;
+		this.load();
 		this.updateMusicControl();
 
-		if (play)
+		if (play) {
 			this.play();
+		}
 	}
 
 	togglePlay() {
-		this.sound.playing() ? this.pause() : this.play();
+		this.playing() ? this.pause() : this.play();
 	}
 
 	play() {
-		this.sound.play();
+		super.play();
 		this.$playButton.removeClass("paused");
 	}
 
 	pause() {
-		this.sound.pause();
+		super.pause();
 		this.$playButton.addClass("paused");
 	}
 
@@ -47,11 +48,11 @@ class MusicPlayer {
 
 	previous() {
 		if (this.history.length === 0) {
-			this.sound.unload();
+			this.unload();
 			return;
 		}
 
-		var wasPlaying = this.sound.playing();
+		var wasPlaying = this.playing();
 
 		this.queue.unshift(this.songId);
 		this.changeSong(this.history.pop(), wasPlaying);
@@ -59,18 +60,14 @@ class MusicPlayer {
 
 	skip(e) {
 		if (this.queue.length === 0) {
-			this.sound.unload();
+			this.unload();
 			return;
 		}
 
-		var wasPlaying = this.sound.playing();
+		var wasPlaying = this.playing();
 
 		this.history.push(this.songId);
 		this.changeSong(this.queue.shift(), (wasPlaying || e));
-	}
-
-	volume(volume) {
-		this.sound.volume(volume);
 	}
 
 	async updateMusicControl() {

@@ -60,6 +60,13 @@
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+#playerControls>div:first-child {
+	flex: 0 1 100%;
 }
 
 #volumeSlider {
@@ -83,7 +90,7 @@
 }
 
 #playButton {
-	transition: none 33ms cubic-bezier(.3,0,.7,1);
+	transition: none 33ms cubic-bezier(.3, 0, .7, 1);
 	transition-property: all;
 	border: none;
 	background-color: white !important;
@@ -109,4 +116,8 @@
 
 #playButton path {
 	d: path("M3 2h3v12H3zM10 2h3v12h-3z");
+}
+
+#progressSlider {
+	width: 34vw;
 }

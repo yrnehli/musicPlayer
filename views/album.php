@@ -26,8 +26,6 @@ foreach ($songs as $song) {
 					$(this).data('song-id')
 				);
 			});
-
-			musicPlayer.play();
 		});
 	});
 </script>
