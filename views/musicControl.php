@@ -30,7 +30,9 @@
 		</div>
 		<div class="h-25 d-flex mx-auto">
 			<div class="mb-auto d-flex">
+				<div id="elapsedTime" class="time">0:00</div>
 				<div id="progressSlider"></div>
+				<div id="endTime" class="time">0:00</div>
 			</div>
 		</div>
 	</div>
@@ -38,8 +40,8 @@
 		<svg id="volumeButton" class="my-auto mr-2 mute" role="presentation" height="16" width="16">
 			<path></path>
 		</svg>
-		<div class="my-auto d-flex">
-			<div id="volumeSlider"></div>
+		<div class="d-flex h-100">
+			<div id="volumeSlider" class="my-auto"></div>
 		</div>
 	</div>
 </div>
@@ -58,9 +60,11 @@
 	var $volumeButton = $('#volumeButton');
 	var $musicControl = $('#musicControl');
 	var $progressSlider = $('#progressSlider');
+	var $elapsedTime = $('#elapsedTime');
+	var $endTime = $('#endTime');
 	var musicPlayer = new MusicPlayer($musicControl, navigator.mediaSession.metadata);
 
-	var updateVolumeSlider = function(event, ui) {
+	var updateVolume = function(e, ui) {
 		var volume = ui.value;
 
 		$volumeButton.removeClass('mute low-volume medium-volume high-volume');
@@ -78,17 +82,41 @@
 		musicPlayer.volume(volume / 100);
 	}
 
-	initSlider($volumeSlider, updateVolumeSlider, updateVolumeSlider);
-	initSlider($progressSlider, () => {}, () => {});
+	var intervalHandler = function() {
+		if (!musicPlayer.isLoaded()) {
+			return;
+		}
+
+		var duration = musicPlayer.duration();
+		var progress = musicPlayer.seek() / duration;
+		var elapsedSeconds = progress * duration;
+
+		$elapsedTime.text(getTimeString(elapsedSeconds));
+		$progressSlider.slider("value", progress * 100);
+	};
+
+	var progressInterval = setInterval(intervalHandler, 250);
+
+	initSlider($volumeSlider, { change: updateVolume, slide: updateVolume });
+	initSlider(
+		$progressSlider,
+		{
+			slide: (e, ui) => $elapsedTime.text(getTimeString(ui.value / 100 * musicPlayer.duration())),
+			start: e => clearInterval(progressInterval),
+			stop: (e, ui) => {
+				musicPlayer.seek(ui.value / 100 * musicPlayer.duration());
+				progressInterval = setInterval(intervalHandler, 250);
+			}
+		}
+	);
 
 	$prevButton.click(() => musicPlayer.previous());
 	$playButton.click(() => musicPlayer.togglePlay());
 	$skipButton.click(() => musicPlayer.skip());
 	$volumeButton.click(() => updateVolumeButton());
-	window.addEventListener('keydown', e => assignHotkeys(e));
-	musicPlayer.on('play', e => updateProgressSlider());
+	$(window).keydown(e => assignHotkeys(e));
 
-	$volumeSlider.on('mousewheel', function(e) {
+	$volumeSlider.parent().on('mousewheel', function(e) {
 		var volume = $volumeSlider.slider("value");
 
 		$volumeSlider.slider(
@@ -106,20 +134,6 @@
 		} else {
 			$volumeSlider.slider("value", $volumeSlider.data("volume") || 50);		
 		}
-	}
-
-	function updateProgressSlider() {
-		var intervalHandler = () => $progressSlider.slider("value", musicPlayer.seek() / musicPlayer.duration() * 100);
-		var interval = setInterval(intervalHandler, 250);
-
-		$progressSlider.mousedown(e => {
-			clearInterval(interval);
-
-			$(document).one('mouseup', e => {
-				interval = setInterval(intervalHandler, 250);
-				musicPlayer.seek($progressSlider.slider("value") / 100 * musicPlayer.duration());
-			});
-		});
 	}
 
 	function assignHotkeys(e) {

@@ -15,6 +15,10 @@ class MusicPlayer extends Howl {
 		this.on('end', e => this.skip(e));
 	}
 
+	isLoaded() {
+		return this._state === "loaded";
+	}
+
 	changeSong(songId, play) {
 		this.songId = songId;
 		this.unload();

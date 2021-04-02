@@ -2,7 +2,6 @@
 	height: 90px;
 	background-color: #181818;
 	border-top: 1px solid #282828;
-	color: white;
 	padding-left: 16px;
 	padding-right: 16px;
 }
@@ -29,19 +28,15 @@
 
 #songName {
 	font-size: 14px;
-	font-weight: 400;
-	line-height: 16px;
 	letter-spacing: normal;
-	text-transform: none
+	text-transform: none;
+	color: white;
 }
 
 #artistName {
 	font-size: 11px;
-	font-weight: 400;
-	line-height: 16px;
 	letter-spacing: normal;
 	text-transform: none;
-	color: #b3b3b3
 }
 
 #albumArt {
@@ -65,7 +60,7 @@
 	flex-wrap: wrap;
 }
 
-#playerControls>div:first-child {
+#playerControls > div:first-child {
 	flex: 0 1 100%;
 }
 
@@ -120,4 +115,11 @@
 
 #progressSlider {
 	width: 34vw;
+}
+
+.time {
+    font-size: 11px;
+	margin-top: -6px;
+	min-width: 40px;
+	text-align: center;
 }
