@@ -110,11 +110,12 @@
 		}
 	);
 
-	$prevButton.click(() => musicPlayer.previous());
-	$playButton.click(() => musicPlayer.togglePlay());
-	$skipButton.click(() => musicPlayer.skip());
-	$volumeButton.click(() => updateVolumeButton());
+	$prevButton.click(e => musicPlayer.previous());
+	$playButton.click(e => musicPlayer.togglePlay());
+	$skipButton.click(e => musicPlayer.skip());
+	$volumeButton.click(e => updateVolumeButton());
 	$(window).keydown(e => assignHotkeys(e));
+	musicPlayer.on('play', e => $endTime.text(getTimeString(musicPlayer.duration())));
 
 	$volumeSlider.parent().on('mousewheel', function(e) {
 		var volume = $volumeSlider.slider("value");
