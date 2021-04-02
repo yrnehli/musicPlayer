@@ -95,7 +95,7 @@
 		$progressSlider.slider("value", progress * 100);
 	};
 
-	var progressInterval = setInterval(intervalHandler, 250);
+	var progressInterval = setInterval(intervalHandler, 1000);
 
 	initSlider($volumeSlider, { change: updateVolume, slide: updateVolume });
 	initSlider(
@@ -105,7 +105,7 @@
 			start: e => clearInterval(progressInterval),
 			stop: (e, ui) => {
 				musicPlayer.seek(ui.value / 100 * musicPlayer.duration());
-				progressInterval = setInterval(intervalHandler, 250);
+				progressInterval = setInterval(intervalHandler, 1000);
 			}
 		}
 	);
@@ -133,7 +133,7 @@
 			$volumeSlider.data("volume", volume);
 			$volumeSlider.slider("value", 0);
 		} else {
-			$volumeSlider.slider("value", $volumeSlider.data("volume") || 50);		
+			$volumeSlider.slider("value", $volumeSlider.data("volume") || 10);		
 		}
 	}
 
