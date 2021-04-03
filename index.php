@@ -91,7 +91,6 @@ Flight::route("GET /api/musicPlayer/@songId", function($songId) use ($conn) {
 	$stmt->bindParam(":id", $songId);
 	$stmt->execute();
 	$res = $stmt->fetch();
-	$res['albumArtFilepath'] = str_replace(__DIR__, "", $res['albumArtFilepath']);
 	Flight::json($res);
 });
 

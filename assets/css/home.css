@@ -1,0 +1,36 @@
+#root {
+	height: calc(100vh - 90px);
+}
+
+.album-container {
+	padding: 16px;
+	background: #181818;
+	border-radius: 4px;
+	transition: background-color .3s ease;
+	cursor: pointer;
+	display: inline-block;
+	max-width: 241px;
+}
+
+.album-container:hover {
+	background: #282828;
+}
+
+.album-container .art {
+	margin-bottom: 16px;
+	height: 209px;
+	width: 209px;
+}
+
+.album-container .title {
+	font-size: 16px;
+    font-weight: 700;
+	color: white;
+	overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.album-container .artist {
+	font-size: 14px;
+}

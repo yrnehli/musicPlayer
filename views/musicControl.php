@@ -95,7 +95,8 @@
 		$progressSlider.slider("value", progress * 100);
 	};
 
-	var progressInterval = setInterval(intervalHandler, 1000);
+	const PROGRESS_INTERVAL_TIMEOUT = 100;
+	var progressInterval = setInterval(intervalHandler, PROGRESS_INTERVAL_TIMEOUT);
 
 	initSlider($volumeSlider, { change: updateVolume, slide: updateVolume });
 	initSlider(
@@ -105,7 +106,7 @@
 			start: e => clearInterval(progressInterval),
 			stop: (e, ui) => {
 				musicPlayer.seek(ui.value / 100 * musicPlayer.duration());
-				progressInterval = setInterval(intervalHandler, 1000);
+				progressInterval = setInterval(intervalHandler, PROGRESS_INTERVAL_TIMEOUT);
 			}
 		}
 	);

@@ -1,14 +1,8 @@
-<?php
-
-foreach ($songs as $song) {
-	print "
-		<div class='song' data-song-id='{$song['id']}'>
-			{$song['songName']}
-		</div>
-	";
-}
-
-?>
+<?php foreach ($songs as $song): ?>
+	<div class='song' data-song-id='<?= $song['id'] ?>'>
+		<?= $song['songName'] ?>
+	</div>
+<?php endforeach; ?>
 
 <script>
 	$(function() {

@@ -44,7 +44,7 @@ class MusicManager {
 				$album = new Album();
 				$album->albumName = $song->albumName;
 				$album->albumArtist = $song->albumArtist;
-				$album->albumArtFilepath = $albumArtFilepath;
+				$album->albumArtFilepath = str_replace(realpath("."), "", $albumArtFilepath);
 				$albumId = $musicDatabase->insertAlbum($album);
 
 				$albumRelations[$albumKey] = [

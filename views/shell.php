@@ -12,6 +12,8 @@
 		<script src="/assets/js/MusicPlayer.js"></script>
 		<link rel="stylesheet" href="https://code.jquery.com/git/ui/jquery-ui-git.css">
 		<link rel="stylesheet" href="/assets/css/global.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.css">
+		<script src="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.min.js"></script>
 		<link rel="manifest" href="/manifest.webmanifest">
 		<title>Music</title>
 	</head>
