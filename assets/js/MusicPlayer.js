@@ -1,18 +1,29 @@
 class MusicPlayer extends Howl {
 	constructor($musicControl, metadata) {
 		super({
-			src: [null],
+			src: ['/assets/misc/silence.mp3'],
 			format: 'mp3',
+			volume: localStorage.getItem("volume") || 0,
 			html5: true
 		});
-		this.queue = [];
-		this.history = [];
+
+		this.queue = JSON.parse(localStorage.getItem("queue")) || [];
+		this.history = JSON.parse(localStorage.getItem("history")) || [];
 		this.$playButton = $musicControl.find('#playButton');
 		this.$songName = $musicControl.find('#songName');
 		this.$artistName = $musicControl.find('#artistName');
 		this.$albumArt = $musicControl.find("#albumArt");
+		this.$volumeSlider = $musicControl.find("#volumeSlider");
+		this.$endTime = $musicControl.find("#endTime");
 		this.metadata = metadata;
 		this.on('end', e => this.skip(e));
+		this.on('load', e => this.$endTime.text(getTimeString(this.duration())));
+
+		var songId = localStorage.getItem("songId");
+
+		if (songId) {
+			this.changeSong(songId, false);
+		}
 	}
 
 	isLoaded() {
@@ -27,6 +38,8 @@ class MusicPlayer extends Howl {
 		this.load();
 		this.updateMusicControl();
 
+		localStorage.setItem("songId", this.songId);
+
 		if (play) {
 			this.play();
 		}
@@ -39,11 +52,15 @@ class MusicPlayer extends Howl {
 	play() {
 		super.play();
 		this.$playButton.removeClass("paused");
+		localStorage.setItem("queue", JSON.stringify(this.queue));
+		localStorage.setItem("history", JSON.stringify(this.history));
 	}
 
 	pause() {
 		super.pause();
 		this.$playButton.addClass("paused");
+		localStorage.setItem("queue", JSON.stringify(this.queue));
+		localStorage.setItem("history", JSON.stringify(this.history));	
 	}
 
 	enqueue(songId) {
@@ -51,8 +68,13 @@ class MusicPlayer extends Howl {
 	}
 
 	previous() {
+		if (this.seek() > 1) {
+			this.seek(0);
+			return;
+		}
+
 		if (this.history.length === 0) {
-			this.unload();
+			this.pause();
 			return;
 		}
 
@@ -64,7 +86,8 @@ class MusicPlayer extends Howl {
 
 	skip(e) {
 		if (this.queue.length === 0) {
-			this.unload();
+			this.seek(this.duration());
+			this.pause();
 			return;
 		}
 
@@ -72,6 +95,14 @@ class MusicPlayer extends Howl {
 
 		this.history.push(this.songId);
 		this.changeSong(this.queue.shift(), (wasPlaying || e));
+	}
+
+	volume(volume) {
+		if (volume) {
+			localStorage.setItem("volume", volume);
+		}
+
+		return super.volume(volume);
 	}
 
 	async updateMusicControl() {

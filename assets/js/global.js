@@ -2,11 +2,11 @@ if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('/assets/js/sw.js');
 }
 
-function initSlider($slider, events) {
+function initSlider($slider, initialValue, events) {
 	$slider.slider({
 		min: 0,
 		max: 100,
-		value: 0,
+		value: initialValue,
 		range: "min",
 		step: 0.1,
 		create: events.create || function() {},

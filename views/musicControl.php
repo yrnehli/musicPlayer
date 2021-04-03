@@ -98,9 +98,10 @@
 	const PROGRESS_INTERVAL_TIMEOUT = 100;
 	var progressInterval = setInterval(intervalHandler, PROGRESS_INTERVAL_TIMEOUT);
 
-	initSlider($volumeSlider, { change: updateVolume, slide: updateVolume });
+	initSlider($volumeSlider, musicPlayer.volume() * 100, { change: updateVolume, slide: updateVolume });
 	initSlider(
 		$progressSlider,
+		0,
 		{
 			slide: (e, ui) => $elapsedTime.text(getTimeString(ui.value / 100 * musicPlayer.duration())),
 			start: e => clearInterval(progressInterval),
@@ -116,7 +117,6 @@
 	$skipButton.click(e => musicPlayer.skip());
 	$volumeButton.click(e => updateVolumeButton());
 	$(window).keydown(e => assignHotkeys(e));
-	musicPlayer.on('play', e => $endTime.text(getTimeString(musicPlayer.duration())));
 
 	$volumeSlider.parent().on('mousewheel', function(e) {
 		var volume = $volumeSlider.slider("value");
