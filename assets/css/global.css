@@ -171,3 +171,19 @@ button:focus {
 ::-webkit-scrollbar {
 	width: 0px;
 }
+
+.simplebar-scrollbar::before {
+	background-color: hsla(0, 0% , 100%, .3) !important;
+	opacity: 1 !important;
+	border-radius: 0px !important;
+	transition: background-color .2s !important; 
+}
+
+.simplebar-track.simplebar-vertical {
+	width: 16px !important;
+	margin: 2px !important;
+}
+
+.simplebar-scrollbar.simplebar-hover::before {
+	background-color: hsla(0, 0% , 100%, .5) !important;
+}
