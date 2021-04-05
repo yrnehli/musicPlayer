@@ -87,6 +87,18 @@
 			return;
 		}
 
+		localStorage.setItem(
+			"state",
+			JSON.stringify({
+				volume: musicPlayer.volume(),
+				queue: musicPlayer.queue(),
+				history: musicPlayer.history(),
+				album: musicPlayer.album(),
+				seek: musicPlayer.seek(),
+				songId: musicPlayer.__songId
+			})
+		);
+
 		var duration = musicPlayer.duration();
 		var progress = musicPlayer.seek() / duration;
 		var elapsedSeconds = progress * duration;

@@ -7,19 +7,21 @@
 <script>
 	$(function() {
 		$('.song').dblclick(function() {
-			musicPlayer.queue = [];
-			musicPlayer.history = [];
+			var $self = $(this);
+			var album = { list: [], i: 0 };
 
-			musicPlayer.changeSong(
-				$(this).data('song-id'),
-				true
-			);
+			$(this).parent().find('.song').each(function(i) {
+				album.list.push($(this).data('song-id'));
 
-			$(this).nextAll('.song').each(function() {
-				musicPlayer.enqueue(
-					$(this).data('song-id')
-				);
+				if ($(this).get(0) === $self.get(0)) {
+					album.i = i;
+				}
 			});
+			
+			musicPlayer.queue([]);
+			musicPlayer.history([]);
+			musicPlayer.album(album);
+			musicPlayer.changeSong($self.data('song-id'), true);
 		});
 	});
 </script>

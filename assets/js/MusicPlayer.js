@@ -1,44 +1,45 @@
 class MusicPlayer extends Howl {
 	constructor($musicControl, metadata) {
+		var state = JSON.parse(localStorage.getItem("state")) || {};
+		
 		super({
 			src: ['/assets/misc/silence.mp3'],
 			format: 'mp3',
-			volume: localStorage.getItem("volume") || 0,
+			volume: state.volume || 0,
 			html5: true
 		});
 
-		this.queue = JSON.parse(localStorage.getItem("queue")) || [];
-		this.history = JSON.parse(localStorage.getItem("history")) || [];
-		this.$playButton = $musicControl.find('#playButton');
-		this.$songName = $musicControl.find('#songName');
-		this.$artistName = $musicControl.find('#artistName');
-		this.$albumArt = $musicControl.find("#albumArt");
-		this.$volumeSlider = $musicControl.find("#volumeSlider");
-		this.$endTime = $musicControl.find("#endTime");
-		this.metadata = metadata;
+		this.__queue = state.queue || [];
+		this.__history = state.history || [];
+		this.__album = state.album || { list: [], i: 0 };
+		this.__$playButton = $musicControl.find('#playButton');
+		this.__$songName = $musicControl.find('#songName');
+		this.__$artistName = $musicControl.find('#artistName');
+		this.__$albumArt = $musicControl.find("#albumArt");
+		this.__$volumeSlider = $musicControl.find("#volumeSlider");
+		this.__$endTime = $musicControl.find("#endTime");
+		this.__metadata = metadata;
 		this.on('end', e => this.skip(e));
-		this.on('load', e => this.$endTime.text(getTimeString(this.duration())));
+		this.on('load', e => this.__$endTime.text(getTimeString(this.duration())));
 
-		var songId = localStorage.getItem("songId");
-
-		if (songId) {
-			this.changeSong(songId, false);
+		if (state.songId) {
+			this.changeSong(state.songId, false);
 		}
+
+		this.seek(state.seek || 0);
 	}
 
 	isLoaded() {
-		return this._state === "loaded";
+		return (this._state === "loaded");
 	}
 
 	changeSong(songId, play) {
-		this.songId = songId;
+		this.__songId = songId;
 		this.unload();
 		this._duration = 0
 		this._src = `/mp3/${songId}`;
 		this.load();
 		this.updateMusicControl();
-
-		localStorage.setItem("songId", this.songId);
 
 		if (play) {
 			this.play();
@@ -51,20 +52,12 @@ class MusicPlayer extends Howl {
 
 	play() {
 		super.play();
-		this.$playButton.removeClass("paused");
-		localStorage.setItem("queue", JSON.stringify(this.queue));
-		localStorage.setItem("history", JSON.stringify(this.history));
+		this.__$playButton.removeClass("paused");
 	}
 
 	pause() {
 		super.pause();
-		this.$playButton.addClass("paused");
-		localStorage.setItem("queue", JSON.stringify(this.queue));
-		localStorage.setItem("history", JSON.stringify(this.history));	
-	}
-
-	enqueue(songId) {
-		this.queue.push(songId);
+		this.__$playButton.addClass("paused");
 	}
 
 	previous() {
@@ -73,47 +66,67 @@ class MusicPlayer extends Howl {
 			return;
 		}
 
-		if (this.history.length === 0) {
-			this.pause();
-			return;
-		}
-
 		var wasPlaying = this.playing();
-
-		this.queue.unshift(this.songId);
-		this.changeSong(this.history.pop(), wasPlaying);
+		
+		if (this.__album.list.length > 0 && this.__album.i - 1 >= 0) {
+			this.__album.i--;
+			this.changeSong(this.__album.list[this.__album.i], wasPlaying);
+		} else if (this.__history.length > 0) {
+			this.__queue.unshift(this.songId);
+			this.changeSong(this.__history.pop(), wasPlaying);
+		} else {
+			this.pause();
+		}
 	}
 
 	skip(e) {
-		if (this.queue.length === 0) {
+		var wasPlaying = (e || this.playing());
+
+		if (this.__queue.length > 0) {
+			this.__history.push(this.songId);
+			this.changeSong(this.__queue.shift(), (wasPlaying || e));
+		} else if (this.__album.list.length > 0 && this.__album.i + 1 < this.__album.list.length) {
+			this.__album.i++;
+			this.changeSong(this.__album.list[this.__album.i], wasPlaying);
+		} else {
 			this.seek(this.duration());
 			this.pause();
-			return;
 		}
-
-		var wasPlaying = this.playing();
-
-		this.history.push(this.songId);
-		this.changeSong(this.queue.shift(), (wasPlaying || e));
 	}
 
-	volume(volume) {
-		if (volume) {
-			localStorage.setItem("volume", volume);
+	album(album) {
+		if (album) {
+			this.__album = album;
+		} else {
+			return this.__album;
 		}
+	}
 
-		return super.volume(volume);
+	queue(queue) {
+		if (queue) {
+			this.__queue = queue;
+		} else {
+			return this.__queue;
+		}
+	}
+
+	history(history) {
+		if (history) {
+			this.__history = history;
+		} else {
+			return this.__history;
+		}
 	}
 
 	async updateMusicControl() {
-		var res = await $.get(`/api/musicPlayer/${this.songId}`);
+		var res = await $.get(`/api/musicPlayer/${this.__songId}`);
 		
-		this.$songName.text(res.songName);
-		this.$artistName.text(res.songArtist);
-		this.$albumArt.prop('src', res.albumArtFilepath);
-		this.metadata.title = res.songName;
-		this.metadata.artist = res.songArtist;
-		this.metadata.album = res.albumName;
-		this.metadata.artwork = [{ src: res.albumArtFilepath, sizes: '512x512', type: 'image/png' }];
+		this.__$songName.text(res.songName);
+		this.__$artistName.text(res.songArtist);
+		this.__$albumArt.prop('src', res.albumArtFilepath);
+		this.__metadata.title = res.songName;
+		this.__metadata.artist = res.songArtist;
+		this.__metadata.album = res.albumName;
+		this.__metadata.artwork = [{ src: res.albumArtFilepath, sizes: '512x512', type: 'image/png' }];
 	}
 }
