@@ -65,21 +65,21 @@
 	var musicPlayer = new MusicPlayer($musicControl, navigator.mediaSession.metadata);
 
 	var updateVolume = function(e, ui) {
-		var volume = ui.value;
+		var volume = ui.value / 100;
 
 		$volumeButton.removeClass('mute low-volume medium-volume high-volume');
 	
 		if (volume === 0) {
 			$volumeButton.addClass('mute');
-		} else if (volume <= 33) {
+		} else if (volume <= 0.33) {
 			$volumeButton.addClass('low-volume');
-		} else if (volume <= 66) {
+		} else if (volume <= 0.66) {
 			$volumeButton.addClass('medium-volume');
 		} else {
 			$volumeButton.addClass('high-volume');
 		}
 
-		musicPlayer.volume(volume / 100);
+		musicPlayer.volume(volume);
 	}
 
 	var intervalHandler = function() {
