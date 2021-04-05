@@ -64,6 +64,24 @@
 	var $endTime = $('#endTime');
 	var musicPlayer = new MusicPlayer($musicControl, navigator.mediaSession.metadata);
 
+	setInterval(() => {
+		if (!musicPlayer.isLoaded()) {
+			return;
+		}
+
+		localStorage.setItem(
+			"state",
+			JSON.stringify({
+				volume: musicPlayer.volume(),
+				queue: musicPlayer.queue(),
+				history: musicPlayer.history(),
+				album: musicPlayer.album(),
+				seek: musicPlayer.seek(),
+				songId: musicPlayer.__songId
+			})
+		);
+	}, 1000);
+
 	var updateVolume = function(e, ui) {
 		var volume = ui.value / 100;
 
@@ -82,22 +100,10 @@
 		musicPlayer.volume(volume);
 	}
 
-	var intervalHandler = function() {
+	var progressIntervalCallback = function() {
 		if (!musicPlayer.isLoaded()) {
 			return;
 		}
-
-		localStorage.setItem(
-			"state",
-			JSON.stringify({
-				volume: musicPlayer.volume(),
-				queue: musicPlayer.queue(),
-				history: musicPlayer.history(),
-				album: musicPlayer.album(),
-				seek: musicPlayer.seek(),
-				songId: musicPlayer.__songId
-			})
-		);
 
 		var duration = musicPlayer.duration();
 		var progress = musicPlayer.seek() / duration;
@@ -108,7 +114,7 @@
 	};
 
 	const PROGRESS_INTERVAL_TIMEOUT = 100;
-	var progressInterval = setInterval(intervalHandler, PROGRESS_INTERVAL_TIMEOUT);
+	var progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 
 	initSlider($volumeSlider, musicPlayer.volume() * 100, { change: updateVolume, slide: updateVolume });
 	initSlider(
@@ -119,7 +125,7 @@
 			start: e => clearInterval(progressInterval),
 			stop: (e, ui) => {
 				musicPlayer.seek(ui.value / 100 * musicPlayer.duration());
-				progressInterval = setInterval(intervalHandler, PROGRESS_INTERVAL_TIMEOUT);
+				progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 			}
 		}
 	);
