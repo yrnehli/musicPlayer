@@ -10,10 +10,12 @@
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
 		<script src="/assets/js/global.js"></script>
 		<script src="/assets/js/MusicPlayer.js"></script>
+		<script src="/assets/js/partials.js"></script>
 		<link rel="stylesheet" href="https://code.jquery.com/git/ui/jquery-ui-git.css">
 		<link rel="stylesheet" href="/assets/css/global.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.css">
 		<script src="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.waitforimages/1.5.0/jquery.waitforimages.min.js"></script>
 		<link rel="manifest" href="/manifest.webmanifest">
 		<title>Music</title>
 	</head>
@@ -22,36 +24,5 @@
 			<?= $partial ?>
 		</div>
 		<?= $musicControl ?>
-		<script>
-			var $partial = $('#partial');
-
-			$(function() {
-				$(window).on('popstate', e => {
-					var oState = e.originalEvent.state;
-
-					if (oState) {
-						$partial.html(oState.html);
-					}
-				});
-			});
-
-			async function loadPartial(url) {
-				if (!loadPartial.hasBeenCalled) {
-					history.pushState(getCurrentState(), "", document.URL);
-					loadPartial.hasBeenCalled = true;
-				}
-
-				var res = await $.get(url, { partial: true });
-
-				$partial.html(res);
-				history.pushState(getCurrentState(), "", url);
-			}
-
-			loadPartial.hasBeenCalled = false;
-
-			function getCurrentState() {
-				return { html: $partial.html() };
-			}
-		</script>
 	</body>
 </html>

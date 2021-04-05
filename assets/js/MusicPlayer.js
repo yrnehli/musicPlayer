@@ -41,8 +41,11 @@ class MusicPlayer extends Howl {
 		this.load();
 		this.updateMusicControl();
 
-		if (play) {
-			this.play();
+		// Play even if we want don't want to so we get the media session metadata
+		this.play();
+		
+		if (!play) {
+			this.pause();
 		}
 	}
 
@@ -88,9 +91,11 @@ class MusicPlayer extends Howl {
 		} else if (this.__album.list.length > 0 && this.__album.i + 1 < this.__album.list.length) {
 			this.__album.i++;
 			this.changeSong(this.__album.list[this.__album.i], wasPlaying);
+		} else if (this.__album.list.length > 0) {
+			this.__album.i = 0;
+			this.changeSong(this.__album.list[0], false);
 		} else {
-			this.seek(this.duration());
-			this.pause();
+			
 		}
 	}
 
