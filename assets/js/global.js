@@ -2,6 +2,12 @@ if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('/assets/js/sw.js');
 }
 
+var partialManager;
+
+$(function() {
+	partialManager = new PartialHandler($('#partial'));
+});
+
 function initSlider($slider, initialValue, events) {
 	$slider.slider({
 		min: 0,
@@ -47,3 +53,11 @@ function getTimeString(totalSeconds) {
 function str_pad_left(string, pad, length) {
     return (new Array(length + 1).join(pad) + string).slice(-length);
 }
+
+$.fn.scrollStopped = function(callback) {
+	var that = this, $this = $(that);
+	$this.scroll(function(ev) {
+		clearTimeout($this.data('scrollTimeout'));
+		$this.data('scrollTimeout', setTimeout(callback.bind(that), 250, ev));
+	});
+};

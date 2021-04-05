@@ -187,3 +187,7 @@ button:focus {
 .simplebar-scrollbar.simplebar-hover::before {
 	background-color: hsla(0, 0% , 100%, .5) !important;
 }
+
+#partial.fade {
+	transition: opacity 0.2s ease-in;
+}

@@ -19,7 +19,7 @@
 <script>
 	$(function() {
 		$('.album-container').click(function() {
-			loadPartial(`/album/${$(this).data('album-id')}`);
+			partialManager.loadPartial(`/album/${$(this).data('album-id')}`);
 		});
 	});
 </script>
