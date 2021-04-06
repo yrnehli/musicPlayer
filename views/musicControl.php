@@ -64,86 +64,98 @@
 	var $endTime = $('#endTime');
 	var musicPlayer = new MusicPlayer($musicControl, navigator.mediaSession.metadata);
 
-	setInterval(() => {
-		if (!musicPlayer.isLoaded()) {
-			return;
-		}
+	initStateInterval();
+	initSliders();
+	initEvents();
 
-		localStorage.setItem(
-			"state",
-			JSON.stringify({
-				volume: musicPlayer.volume(),
-				queue: musicPlayer.queue(),
-				history: musicPlayer.history(),
-				album: musicPlayer.album(),
-				seek: musicPlayer.seek(),
-				songId: musicPlayer.__songId
-			})
-		);
-	}, 1000);
+	function initStateInterval() {
+		setInterval(() => {
+			if (!musicPlayer.isLoaded()) {
+				return;
+			}
 
-	var updateVolume = function(e, ui) {
-		var volume = ui.value / 100;
-
-		$volumeButton.removeClass('mute low-volume medium-volume high-volume');
-	
-		if (volume === 0) {
-			$volumeButton.addClass('mute');
-		} else if (volume <= 0.33) {
-			$volumeButton.addClass('low-volume');
-		} else if (volume <= 0.66) {
-			$volumeButton.addClass('medium-volume');
-		} else {
-			$volumeButton.addClass('high-volume');
-		}
-
-		musicPlayer.volume(volume);
+			localStorage.setItem(
+				"state",
+				JSON.stringify({
+					volume: musicPlayer.volume(),
+					queue: musicPlayer.queue(),
+					history: musicPlayer.history(),
+					album: musicPlayer.album(),
+					seek: musicPlayer.seek(),
+					songId: musicPlayer.__songId
+				})
+			);
+		}, 1000);
 	}
 
-	var progressIntervalCallback = function() {
-		if (!musicPlayer.isLoaded()) {
-			return;
-		}
+	function initSliders() {
+		const PROGRESS_INTERVAL_TIMEOUT = 100;
 
-		var duration = musicPlayer.duration();
-		var progress = musicPlayer.seek() / duration;
-		var elapsedSeconds = progress * duration;
+		var updateVolume = function(e, ui) {
+			var volume = ui.value / 100;
 
-		$elapsedTime.text(getTimeString(elapsedSeconds));
-		$progressSlider.slider("value", progress * 100);
-	};
-
-	const PROGRESS_INTERVAL_TIMEOUT = 100;
-	var progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
-
-	initSlider($volumeSlider, musicPlayer.volume() * 100, { change: updateVolume, slide: updateVolume });
-	initSlider(
-		$progressSlider,
-		0,
-		{
-			slide: (e, ui) => $elapsedTime.text(getTimeString(ui.value / 100 * musicPlayer.duration())),
-			start: e => clearInterval(progressInterval),
-			stop: (e, ui) => {
-				musicPlayer.seek(ui.value / 100 * musicPlayer.duration());
-				progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
+			$volumeButton.removeClass('mute low-volume medium-volume high-volume');
+		
+			if (volume === 0) {
+				$volumeButton.addClass('mute');
+			} else if (volume <= 0.33) {
+				$volumeButton.addClass('low-volume');
+			} else if (volume <= 0.66) {
+				$volumeButton.addClass('medium-volume');
+			} else {
+				$volumeButton.addClass('high-volume');
 			}
+
+			musicPlayer.volume(volume);
 		}
-	);
 
-	$prevButton.click(e => musicPlayer.previous());
-	$playButton.click(e => musicPlayer.togglePlay());
-	$skipButton.click(e => musicPlayer.skip());
-	$volumeButton.click(e => updateVolumeButton());
-	$(window).keydown(e => assignHotkeys(e));
+		var progressIntervalCallback = function() {
+			if (!musicPlayer.isLoaded()) {
+				return;
+			}
 
-	$volumeSlider.parent().on('mousewheel', function(e) {
-		var volume = $volumeSlider.slider("value");
+			var duration = musicPlayer.duration();
+			var progress = musicPlayer.seek() / duration;
+			var elapsedSeconds = progress * duration;
 
-		$volumeSlider.slider(
-			"value",
-			(e.originalEvent.wheelDelta > 0) ? volume + 10 : volume - 10
+			$elapsedTime.text(getTimeString(elapsedSeconds));
+			$progressSlider.slider("value", progress * 100);
+		};
+
+		var progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
+
+		initSlider($volumeSlider, musicPlayer.volume() * 100, { change: updateVolume, slide: updateVolume });
+		initSlider(
+			$progressSlider,
+			0,
+			{
+				slide: (e, ui) => $elapsedTime.text(getTimeString(ui.value / 100 * musicPlayer.duration())),
+				start: e => clearInterval(progressInterval),
+				stop: (e, ui) => {
+					musicPlayer.seek(ui.value / 100 * musicPlayer.duration());
+					progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
+				}
+			},
+			musicPlayer.disabled()
 		);
-    });
+	}
+
+	function initEvents() {
+		$prevButton.click(e => musicPlayer.previous());
+		$playButton.click(e => musicPlayer.togglePlay());
+		$skipButton.click(e => musicPlayer.skip());
+		$volumeButton.click(e => updateVolumeButton());
+		$(window).keydown(e => assignHotkeys(e));
+
+		$volumeSlider.parent().on('mousewheel', function(e) {
+			var volume = $volumeSlider.slider("value");
+
+			$volumeSlider.slider(
+				"value",
+				(e.originalEvent.wheelDelta > 0) ? volume + 10 : volume - 10
+			);
+		});
+	}
 
 	function updateVolumeButton() {
 		var volume = $volumeSlider.slider("value");

@@ -9,10 +9,14 @@ class MusicPlayer extends Howl {
 			html5: true
 		});
 
+		this.__disabled = false;
 		this.__queue = state.queue || [];
 		this.__history = state.history || [];
 		this.__album = state.album || { list: [], i: 0 };
+		this.__$prevButton = $musicControl.find('#prevButton');
 		this.__$playButton = $musicControl.find('#playButton');
+		this.__$skipButton = $musicControl.find('#skipButton');
+		this.__$progressSlider = $musicControl.find('#progressSlider');
 		this.__$songName = $musicControl.find('#songName');
 		this.__$artistName = $musicControl.find('#artistName');
 		this.__$albumArt = $musicControl.find("#albumArt");
@@ -20,13 +24,48 @@ class MusicPlayer extends Howl {
 		this.__$endTime = $musicControl.find("#endTime");
 		this.__metadata = metadata;
 		this.on('end', e => this.skip(e));
-		this.on('load', e => this.__$endTime.text(getTimeString(this.duration())));
+		this.on('load', e => this.__$endTime.text((this.__disabled) ? "0:00" : getTimeString(this.duration())));
 
 		if (state.songId) {
 			this.changeSong(state.songId, false);
+		} else {
+			this.disable();
 		}
 
 		this.seek(state.seek || 0);
+	}
+
+	disabled() {
+		return this.__disabled;
+	}
+
+	disable() {
+		this.__disabled = true;
+		this.__songId = null;
+		this.__$albumArt.removeAttr('src');
+		this.__$songName.text('');
+		this.__$artistName.text('');
+		this.__$endTime.text('0:00');
+		this.__$prevButton.prop('disabled', true);
+		this.__$playButton.prop('disabled', true);
+		this.__$skipButton.prop('disabled', true);
+		if (this.__$progressSlider.hasClass('ui-slider')) {
+			this.__$progressSlider.slider("disable");
+		}
+		this.pause();
+		this.seek(0);
+	}
+
+	enable() {
+		if (this.__disabled === false) {
+			return;
+		}
+
+		this.__disabled = false;
+		this.__$prevButton.prop('disabled', false);
+		this.__$playButton.prop('disabled', false);
+		this.__$skipButton.prop('disabled', false);
+		this.__$progressSlider.slider('enable');
 	}
 
 	isLoaded() {
@@ -35,11 +74,13 @@ class MusicPlayer extends Howl {
 
 	changeSong(songId, play) {
 		this.__songId = songId;
+		this.enable();
+		this.updateMusicControl();
+
 		this.unload();
-		this._duration = 0
+		this._duration = 0;
 		this._src = `/mp3/${songId}`;
 		this.load();
-		this.updateMusicControl();
 
 		// Play even if we want don't want to so we get the media session metadata
 		this.play();
@@ -95,7 +136,7 @@ class MusicPlayer extends Howl {
 			this.__album.i = 0;
 			this.changeSong(this.__album.list[0], false);
 		} else {
-			
+			this.disable();
 		}
 	}
 

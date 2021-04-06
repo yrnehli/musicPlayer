@@ -17,6 +17,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.waitforimages/1.5.0/jquery.waitforimages.min.js"></script>
 		<link rel="manifest" href="/manifest.webmanifest">
+		<link rel="icon" href="data:,">
 		<title>Music</title>
 	</head>
 	<body>

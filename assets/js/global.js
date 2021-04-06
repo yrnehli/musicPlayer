@@ -8,7 +8,7 @@ $(function() {
 	partialManager = new PartialHandler($('#partial'));
 });
 
-function initSlider($slider, initialValue, events) {
+function initSlider($slider, initialValue, events, disabled = false) {
 	$slider.slider({
 		min: 0,
 		max: 100,
@@ -19,7 +19,8 @@ function initSlider($slider, initialValue, events) {
 		change: events.change || function() {},
 		slide: events.slide || function() {},
 		start: events.start || function() {},
-		stop: events.stop || function() {}
+		stop: events.stop || function() {},
+		disabled: disabled
 	});
 
 	var $sliderHandle = $slider.find('.ui-slider-handle');
