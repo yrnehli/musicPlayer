@@ -8,7 +8,7 @@
 		<div class="d-flex mx-2">
 			<div class="mt-auto">
 				<div id="album">ALBUM</div>
-				<div id="albumName">
+				<div id="albumName" style="visibility: hidden;">
 					<?= $album['albumName'] ?>
 				</div>
 				<div class="album-details">
@@ -90,6 +90,9 @@
 
 <script>
 	$(function() {
+		$('#root').waitForImages(() =>scaleAlbumNameText());
+		$(window).resize(() => scaleAlbumNameText());
+
 		$('.tracklist-row').dblclick(function() {
 			var $self = $(this);
 			var album = { list: [], i: 0 };
@@ -108,4 +111,31 @@
 			musicPlayer.changeSong($self.data('song-id'), true);
 		});
 	});
+	
+	function scaleAlbumNameText() {
+		var fontSize = 96;
+		var $albumName = $('#albumName').css({ "font-size": `${fontSize}px`, "white-space": "nowrap" });
+		var $div = $('<div></div>').width('99999px');
+		var $parent = $albumName.parent().append($div);
+		var $container = $parent.parent().css('overflow', 'hidden');
+		var maxWidth = $container.width();
+
+		$div.remove();
+
+		if ($albumName.width() > maxWidth) {
+			fontSize = Math.max(
+				Math.floor(fontSize / ($albumName.width() / maxWidth)),
+				48
+			);
+		}
+
+		$albumName.css({
+			"font-size": `${fontSize}px`,
+			"line-height": `${fontSize}px`,
+			"white-space": "",
+			"visibility": "visible"
+		});
+
+		$container.css('overflow', '');
+	}
 </script>

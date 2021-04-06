@@ -2,6 +2,7 @@
 	width: 100%;
 	min-width: 192px;
 	max-width: 232px;
+	box-shadow: 0 0 10px rgb(0 0 0 / 30%);
 }
 
 #album {
@@ -11,8 +12,6 @@
 }
 
 #albumName {
-	font-size: clamp(48px, calc((75vw) / 7), 96px);
-	line-height: clamp(48px, calc((75vw) / 7), 96px);
 	font-weight: 900;
 	letter-spacing: -.04em;
 	color: white;
