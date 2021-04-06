@@ -1,4 +1,4 @@
-class PartialHandler {
+class PartialManager {
 	constructor($partial) {
 		this.initiatedHistory = false;
 		this.$partial = $partial;
@@ -12,6 +12,10 @@ class PartialHandler {
 	}
 
 	async loadPartial(url) {
+		if (window.location.pathname === url) {
+			return;
+		}
+		
 		if (!this.initiatedHistory) {
 			history.pushState(this.getCurrentState(), "", document.URL);
 			this.initiatedHistory = true;

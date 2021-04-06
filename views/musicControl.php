@@ -53,6 +53,7 @@
 	navigator.mediaSession.setActionHandler('previoustrack', () => musicPlayer.previous());
 	navigator.mediaSession.setActionHandler('nexttrack', () => musicPlayer.skip());
 
+	var $songName = $('#songName');
 	var $prevButton = $('#prevButton');
 	var $playButton = $('#playButton');
 	var $skipButton = $('#skipButton');
@@ -141,6 +142,7 @@
 	}
 
 	function initEvents() {
+		$songName.click(e => partialManager.loadPartial(`/album/${$songName.data('albumId')}`));
 		$prevButton.click(e => musicPlayer.previous());
 		$playButton.click(e => musicPlayer.togglePlay());
 		$skipButton.click(e => musicPlayer.skip());

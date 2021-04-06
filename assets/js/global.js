@@ -5,7 +5,7 @@ if ('serviceWorker' in navigator) {
 var partialManager;
 
 $(function() {
-	partialManager = new PartialHandler($('#partial'));
+	partialManager = new PartialManager($('#partial'));
 });
 
 function initSlider($slider, initialValue, events, disabled = false) {
