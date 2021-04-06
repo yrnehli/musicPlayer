@@ -4,7 +4,7 @@
 	<div class="mx-auto centre">
 		<?php foreach ($albums as $album): ?>
 			<div class="album-container mx-2 my-2" data-album-id="<?= $album['id'] ?>">
-				<img class="art" src="<?= $album['albumArtFilepath'] ?>">
+				<img class="album-art" src="<?= $album['albumArtFilepath'] ?>">
 				<div class="title">
 					<?= $album['albumName'] ?>
 				</div>

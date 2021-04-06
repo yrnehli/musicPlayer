@@ -35,6 +35,15 @@ Flight::route("GET /", function() use ($conn) {
 
 Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 	$stmt = $conn->prepare(
+		"SELECT *
+		FROM `albums`
+		WHERE `id` = :id"
+	);
+	$stmt->bindParam(":id", $albumId);
+	$stmt->execute();
+	$album = $stmt->fetch();
+
+	$stmt = $conn->prepare(
 		"SELECT `songs`.*
 		FROM `songs`
 		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
@@ -44,7 +53,8 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 	$stmt->bindParam(":albumId", $albumId);
 	$stmt->execute();
 	$songs = $stmt->fetchAll();
-	Flight::renderView('album', compact('songs'));
+
+	Flight::renderView('album', compact('songs', 'album'));
 });
 
 Flight::route("GET /mp3/@songId", function($songId) use ($conn) {

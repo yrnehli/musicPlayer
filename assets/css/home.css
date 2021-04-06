@@ -1,7 +1,3 @@
-#root {
-	height: calc(100vh - 90px);
-}
-
 .album-container {
 	padding: 16px;
 	background: #181818;
@@ -16,7 +12,7 @@
 	background: #282828;
 }
 
-.album-container .art {
+.album-container .album-art {
 	margin-bottom: 16px;
 	height: 209px;
 	width: 209px;

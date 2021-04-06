@@ -42,6 +42,9 @@ class MusicPlayer extends Howl {
 	disable() {
 		this.__disabled = true;
 		this.__songId = null;
+		this.__queue = [];
+		this.__history = [];
+		this.__album = { list: [], i: 0 };
 		this.__$albumArt.removeAttr('src');
 		this.__$songName.text('');
 		this.__$artistName.text('');
@@ -54,6 +57,7 @@ class MusicPlayer extends Howl {
 		}
 		this.pause();
 		this.seek(0);
+		localStorage.clear();
 	}
 
 	enable() {
