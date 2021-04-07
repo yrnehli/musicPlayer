@@ -35,13 +35,22 @@ Flight::route("GET /", function() use ($conn) {
 
 Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 	$stmt = $conn->prepare(
-		"SELECT *
+		"SELECT `albums`.*, `albumDetails`.*
 		FROM `albums`
+		INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
 		WHERE `id` = :id"
 	);
 	$stmt->bindParam(":id", $albumId);
 	$stmt->execute();
 	$album = $stmt->fetch();
+
+	if ($album === false) {
+		Flight::response()
+			->header('Location', '/')
+			->status(404)
+			->send()
+		;
+	}
 
 	$stmt = $conn->prepare(
 		"SELECT `songs`.*
@@ -87,7 +96,8 @@ Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
 		->header('Content-Range', "bytes $startOffset-" . ($endOffset - 1) . "/$filesize")
 		->status(206)
 		->write($data)
-		->send();
+		->send()
+	;
 });
 
 Flight::route("GET /api/musicPlayer/@songId", function($songId) use ($conn) {

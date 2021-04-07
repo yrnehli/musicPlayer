@@ -30,11 +30,12 @@ class MusicDatabase {
 
 	public function insertAlbum($album) {
 		$stmt = $this->conn->prepare(
-			"INSERT INTO `albums` (`albumName`, `albumArtist`, `albumArtFilepath`)
-			VALUES (:albumName, :albumArtist, :albumArtFilepath)"
+			"INSERT INTO `albums` (`albumName`, `albumArtist`, `albumYear`, `albumArtFilepath`)
+			VALUES (:albumName, :albumArtist, :albumYear, :albumArtFilepath)"
 		);
 		$stmt->bindParam(":albumName", $album->albumName);
 		$stmt->bindParam(":albumArtist", $album->albumArtist);
+		$stmt->bindParam(":albumYear", $album->albumYear);
 		$stmt->bindParam(":albumArtFilepath", $album->albumArtFilepath);
 		$stmt->execute();
 		return $this->conn->lastInsertId();

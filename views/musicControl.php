@@ -71,7 +71,7 @@
 
 	function initStateInterval() {
 		setInterval(() => {
-			if (!musicPlayer.isLoaded()) {
+			if (!musicPlayer.loaded() || musicPlayer.disabled()) {
 				return;
 			}
 
@@ -83,7 +83,7 @@
 					history: musicPlayer.history(),
 					album: musicPlayer.album(),
 					seek: musicPlayer.seek(),
-					songId: musicPlayer.__songId
+					songId: musicPlayer.songId()
 				})
 			);
 		}, 1000);
@@ -111,7 +111,7 @@
 		}
 
 		var progressIntervalCallback = function() {
-			if (!musicPlayer.isLoaded()) {
+			if (!musicPlayer.loaded() || musicPlayer.disabled()) {
 				return;
 			}
 

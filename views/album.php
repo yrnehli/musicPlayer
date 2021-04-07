@@ -17,10 +17,23 @@
 					</div>
 					<div class="dot"></div>
 					<div>
-						<?= "Placeholder year" ?>
+						<?= $album['albumYear'] ?>
 					</div>
 					<div class="dot"></div>
-					<div>PLACEHOLDER - 17 songs, 1 hr 17 min</div>
+					<div>
+						<?= $album['length'] . " Songs" ?>
+					</div>
+					<div class="dot"></div>
+					<div>
+						<?php
+						
+						$hours = floor($album['duration'] / 60 / 60);
+						$minutes = floor(($album['duration'] / 60) - ($hours * 60));
+
+						print ($hours > 0) ? "$hours hr $minutes min" : "$minutes min";
+
+						?>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -77,7 +90,7 @@
 					<?php
 					
 					$minutes = floor($song['duration'] / 60);
-					$seconds = $song['duration'] - ($minutes * 60);
+					$seconds = str_pad($song['duration'] - ($minutes * 60), 2, "0", STR_PAD_LEFT);
 
 					print "$minutes:$seconds";
 					

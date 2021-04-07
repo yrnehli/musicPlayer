@@ -26,17 +26,25 @@ class MusicPlayer extends Howl {
 		this.on('end', e => this.skip(e));
 		this.on('load', e => this.__$endTime.text((this.__disabled) ? "0:00" : getTimeString(this.duration())));
 
-		if (state.songId) {
-			this.changeSong(state.songId, false);
-		} else {
+		if (!state.songId) {
 			this.disable();
+			return;
 		}
+
+		$.ajax(`/mp3/${state.songId}`, {
+			statusCode: { 500: () => this.disable() },
+			success: () => this.changeSong(state.songId, false),
+		});
 
 		this.seek(state.seek || 0);
 	}
 
 	disabled() {
 		return this.__disabled;
+	}
+
+	songId() {
+		return this.__songId;
 	}
 
 	disable() {
@@ -72,7 +80,7 @@ class MusicPlayer extends Howl {
 		this.__$progressSlider.slider('enable');
 	}
 
-	isLoaded() {
+	loaded() {
 		return (this._state === "loaded");
 	}
 
