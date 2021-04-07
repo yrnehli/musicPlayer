@@ -103,7 +103,9 @@
 
 <script>
 	$(function() {
-		$('#root').waitForImages(() =>scaleAlbumNameText());
+		var $root = $('#root');
+		
+		scaleAlbumNameText();
 		$(window).resize(() => scaleAlbumNameText());
 
 		$('.tracklist-row').dblclick(function() {
@@ -127,13 +129,14 @@
 	
 	function scaleAlbumNameText() {
 		var fontSize = 96;
-		var $albumName = $('#albumName').css({ "font-size": `${fontSize}px`, "white-space": "nowrap" });
-		var $div = $('<div></div>').width('99999px');
-		var $parent = $albumName.parent().append($div);
-		var $container = $parent.parent().css('overflow', 'hidden');
-		var maxWidth = $container.width();
+		var $albumName = $('#albumName');
+		var maxWidth = $(window).width() - 312;
 
-		$div.remove();
+		$albumName.css({
+			"font-size": `${fontSize}px`,
+			"line-height": `${fontSize}px`,
+			"white-space": "nowrap",
+		});
 
 		if ($albumName.width() > maxWidth) {
 			fontSize = Math.max(
@@ -145,10 +148,8 @@
 		$albumName.css({
 			"font-size": `${fontSize}px`,
 			"line-height": `${fontSize}px`,
-			"white-space": "",
+			"white-space": "normal",
 			"visibility": "visible"
 		});
-
-		$container.css('overflow', '');
 	}
 </script>
