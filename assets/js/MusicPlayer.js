@@ -33,10 +33,11 @@ class MusicPlayer extends Howl {
 
 		$.ajax(`/mp3/${state.songId}`, {
 			statusCode: { 500: () => this.disable() },
-			success: () => this.changeSong(state.songId, false),
+			success: () => {
+				this.changeSong(state.songId, false);
+				this.seek(state.seek || 0);
+			},
 		});
-
-		this.seek(state.seek || 0);
 	}
 
 	disabled() {
@@ -91,6 +92,7 @@ class MusicPlayer extends Howl {
 
 		this.unload();
 		this._duration = 0;
+		this._sprite = {};
 		this._src = `/mp3/${songId}`;
 		this.load();
 
