@@ -111,11 +111,14 @@ class MusicPlayer extends Howl {
 	play() {
 		super.play();
 		this.__$playButton.removeClass("paused");
+		$('.tracklist-row.active').removeClass('active');
+		$(`.tracklist-row[data-song-id="${this.__songId}"]`).addClass('active');
 	}
 
 	pause() {
 		super.pause();
 		this.__$playButton.addClass("paused");
+		$('.tracklist-row.active').removeClass('active');
 	}
 
 	previous() {

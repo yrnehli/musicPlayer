@@ -84,8 +84,25 @@
 	margin-bottom: auto;
 }
 
+.tracklist-row .track-number .equalizer {
+	display: none;
+	width: 14px;
+	height: 14px;
+}
+
+.tracklist-row.active .track-number .equalizer {
+	display: block !important;
+}
+
+.tracklist-row.active .track-number div {
+	display: none;
+}
+
+
 .tracklist-row .track-number .play {
 	display: none;
+	width: 16px;
+	height: 16px;
 }
 
 .tracklist-row .track-number .play path {
@@ -97,7 +114,7 @@
 	display: none;
 }
 
-.tracklist-row:hover .track-number .play {
+.tracklist-row:not(.active):hover .track-number .play {
 	display: block !important;
 }
 

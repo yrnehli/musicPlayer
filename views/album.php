@@ -71,10 +71,11 @@
 		<?php foreach ($songs as $song): ?>
 			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>">
 				<div class="track-number">
-					<svg class="play" height="16" width="16">
+					<img class="equalizer" src="/assets/img/equalizer.gif">
+					<svg class="play">
 						<path></path>
 					</svg>
-					<div>
+					<div class="text-center">
 						<?= $song['trackNumber'] ?>
 					</div>
 				</div>
@@ -108,6 +109,9 @@
 		scaleAlbumNameText();
 		$(window).resize(() => scaleAlbumNameText());
 
+		$('.tracklist-row.active').removeClass('active');
+		$(`.tracklist-row[data-song-id="${musicPlayer.songId()}"]`).addClass('active');
+
 		$('.tracklist-row').dblclick(function() {
 			var $self = $(this);
 			var album = { list: [], i: 0 };
@@ -124,6 +128,9 @@
 			musicPlayer.history([]);
 			musicPlayer.album(album);
 			musicPlayer.changeSong($self.data('song-id'), true);
+
+			$('.tracklist-row.active').removeClass('active');
+			$self.addClass('active');
 		});
 	});
 	
