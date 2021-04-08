@@ -19,7 +19,7 @@
 					</div>
 					<div class="dot"></div>
 					<div>
-						<?= $album['length'] . " Songs" ?>
+						<?= $album['length'], " ", ($album['length'] > 1) ? "songs" : "song" ?>
 					</div>
 					<div class="dot"></div>
 					<div>
