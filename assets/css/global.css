@@ -214,3 +214,24 @@ button:focus {
 .btn-spotify svg {
 	fill: white;
 }
+
+#toastNotification {
+	opacity: 0;
+	min-width: 160px;
+	margin-left: -80px;
+	background-color: #2e77d0;
+	color: white;
+	text-align: center;
+	border-radius: 8px;
+	padding: 10px;
+	position: fixed;
+	z-index: 99999;
+	left: 50%;
+	bottom: 110px;
+	transition: opacity 0.2s ease-in;
+	box-shadow: 0 0 15px rgb(0 0 0 / 100%);
+}
+
+#toastNotification.show {
+	opacity: 1;
+}

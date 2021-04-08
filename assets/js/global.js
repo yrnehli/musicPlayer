@@ -62,3 +62,39 @@ $.fn.scrollStopped = function(callback) {
 		$this.data('scrollTimeout', setTimeout(callback.bind(that), 250, ev));
 	});
 };
+
+function shuffle(arr, options) {
+	if (!Array.isArray(arr)) {
+		throw new Error('shuffle expect an array as parameter.');
+	}
+  
+	options = options || {};
+  
+	var collection = arr;
+	var	len = arr.length;
+	var	rng = options.rng || Math.random;
+	var	random;
+	var	temp;
+  
+	if (options.copy === true) {
+		collection = arr.slice();
+	}
+  
+	while (len) {
+		random = Math.floor(rng() * len);
+		len -= 1;
+		temp = collection[len];
+		collection[len] = collection[random];
+		collection[random] = temp;
+	}
+  
+	return collection;
+}
+
+function showToastNotification(message, timeout = 3000) {
+	var $toastNotification = $('#toastNotification');
+
+	$toastNotification.text(message);
+	$toastNotification.addClass('show');
+	setTimeout(() => $toastNotification.removeClass('show'), timeout);
+}

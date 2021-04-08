@@ -21,6 +21,7 @@
 		<title>Music</title>
 	</head>
 	<body>
+		<div id="toastNotification"></div>
 		<div id="partial">
 			<?= $partial ?>
 		</div>

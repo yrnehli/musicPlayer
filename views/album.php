@@ -1,5 +1,3 @@
-<?php // var_dump($album); die() ?>
-
 <link rel="stylesheet" href="/assets/css/album.css">
 
 <div id="root" class="py-5 px-4" data-simplebar>
@@ -39,19 +37,19 @@
 		</div>
 	</div>
 	<div class="d-flex my-3 mx-3">
-		<button class="btn-spotify mr-1">
+		<button id="playAlbumButton" class="btn-spotify mr-1">
 			<svg class="my-auto mr-2" height="16" width="16">
 				<path d="M4.018 14L14.41 8 4.018 2z"></path>
 			</svg>
 			Play
 		</button>
-		<button class="btn-spotify mx-1">
+		<button id="shuffleAlbumButton" class="btn-spotify mx-1">
 			<svg class="my-auto mr-2" height="16" width="16">
 				<path d="M4.5 6.8l.7-.8C4.1 4.7 2.5 4 .9 4v1c1.3 0 2.6.6 3.5 1.6l.1.2zm7.5 4.7c-1.2 0-2.3-.5-3.2-1.3l-.6.8c1 1 2.4 1.5 3.8 1.5V14l3.5-2-3.5-2v1.5zm0-6V7l3.5-2L12 3v1.5c-1.6 0-3.2.7-4.2 2l-3.4 3.9c-.9 1-2.2 1.6-3.5 1.6v1c1.6 0 3.2-.7 4.2-2l3.4-3.9c.9-1 2.2-1.6 3.5-1.6z"></path>
 			</svg>
 			Shuffle
 		</button>
-		<button class="btn-spotify mx-1">
+		<button id="queueAlbumButton" class="btn-spotify mx-1">
 			<svg class="my-auto mr-2" height="16" width="16">
 				<path d="M14 7H9V2H7v5H2v2h5v5h2V9h5z"></path>
 			</svg>
@@ -103,60 +101,102 @@
 </div>
 
 <script>
-	$(function() {
-		var $root = $('#root');
-		
-		scaleAlbumNameText();
-		$(window).resize(() => scaleAlbumNameText());
+	(function() {
+		var $playAlbumButton = $('#playAlbumButton');
+		var $shuffleAlbumButton = $('#shuffleAlbumButton');
+		var $queueAlbumButton = $('#queueAlbumButton');
 
-		$('.tracklist-row.active').removeClass('active');
-		$(`.tracklist-row[data-song-id="${musicPlayer.songId()}"]`).addClass('active');
+		$(function() {
+			scaleAlbumNameText();
+			initTracklistRows();
+			initEvents();
+		});
 
-		$('.tracklist-row').dblclick(function() {
-			var $self = $(this);
-			var album = { list: [], i: 0 };
+		function initTracklistRows() {
+			$('.tracklist-row.active').removeClass('active');
+			$(`.tracklist-row[data-song-id="${musicPlayer.songId()}"]`).addClass('active');
 
-			$(this).parent().find('.tracklist-row').each(function(i) {
-				album.list.push($(this).data('song-id'));
+			$('.tracklist-row').dblclick(function() {
+				var $self = $(this);
+				var album = { list: [], i: 0 };
 
-				if ($(this).get(0) === $self.get(0)) {
-					album.i = i;
-				}
+				$('.tracklist-row').each(function(i) {
+					album.list.push($(this).data('song-id'));
+
+					if ($(this).get(0) === $self.get(0)) {
+						album.i = i;
+					}
+				});
+				
+				playAlbum($self.data('song-id'), album);
+
+				$('.tracklist-row.active').removeClass('active');
+				$self.addClass('active');
 			});
-			
+		}
+
+		function initEvents() {
+			$(window).resize(() => scaleAlbumNameText());
+
+			$playAlbumButton.click(() => {
+				var album = { list: [], i: 0 };
+
+				$('.tracklist-row').each(function() {
+					album.list.push($(this).data('song-id'));
+				});
+
+				playAlbum(album.list[0], album);
+			});
+
+			$shuffleAlbumButton.click(() => {
+				var songIds = shuffle(
+					$('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id'))
+				);
+
+				musicPlayer.album({ list: [], i: 0 });
+				musicPlayer.changeSong(songIds.shift(), true);
+				musicPlayer.queue(songIds);
+			});
+
+			$queueAlbumButton.click(() => {
+				$('.tracklist-row').each(function(i) {
+					musicPlayer.queue().push($(this).data('song-id'));
+					showToastNotification("Added to queue");
+				});
+			});
+		}
+
+		function playAlbum(songId, album) {
 			musicPlayer.queue([]);
 			musicPlayer.history([]);
 			musicPlayer.album(album);
-			musicPlayer.changeSong($self.data('song-id'), true);
-
-			$('.tracklist-row.active').removeClass('active');
-			$self.addClass('active');
-		});
-	});
-	
-	function scaleAlbumNameText() {
-		var fontSize = 96;
-		var $albumName = $('#albumName');
-		var maxWidth = $(window).width() - 312;
-
-		$albumName.css({
-			"font-size": `${fontSize}px`,
-			"line-height": `${fontSize}px`,
-			"white-space": "nowrap",
-		});
-
-		if ($albumName.width() > maxWidth) {
-			fontSize = Math.max(
-				Math.floor(fontSize / ($albumName.width() / maxWidth)),
-				48
-			);
+			musicPlayer.changeSong(songId, true);
 		}
+		
+		function scaleAlbumNameText() {
+			var fontSize = 96;
+			var $albumName = $('#albumName');
+			var maxWidth = $(window).width() - 312;
 
-		$albumName.css({
-			"font-size": `${fontSize}px`,
-			"line-height": `${fontSize}px`,
-			"white-space": "normal",
-			"visibility": "visible"
-		});
-	}
+			$albumName.css({
+				"font-size": `${fontSize}px`,
+				"line-height": `${fontSize}px`,
+				"white-space": "nowrap",
+			});
+
+			if ($albumName.width() > maxWidth) {
+				fontSize = Math.max(
+					Math.floor(fontSize / ($albumName.width() / maxWidth)),
+					48
+				);
+			}
+
+			$albumName.css({
+				"font-size": `${fontSize}px`,
+				"line-height": `${fontSize}px`,
+				"white-space": "normal",
+				"visibility": "visible"
+			});
+		}
+	})();
 </script>

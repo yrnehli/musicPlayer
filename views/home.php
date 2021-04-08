@@ -17,9 +17,11 @@
 </div>
 
 <script>
-	$(function() {
-		$('.album-container').click(function() {
-			partialManager.loadPartial(`/album/${$(this).data('album-id')}`);
+	(function() {
+		$(function() {
+			$('.album-container').click(function() {
+				partialManager.loadPartial(`/album/${$(this).data('album-id')}`);
+			});
 		});
-	});
+	})();
 </script>

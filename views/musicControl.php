@@ -47,135 +47,137 @@
 </div>
 
 <script>
-	navigator.mediaSession.metadata = new MediaMetadata();
-	navigator.mediaSession.setActionHandler('play', () => musicPlayer.togglePlay());
-	navigator.mediaSession.setActionHandler('pause', () => musicPlayer.togglePlay());
-	navigator.mediaSession.setActionHandler('previoustrack', () => musicPlayer.previous());
-	navigator.mediaSession.setActionHandler('nexttrack', () => musicPlayer.skip());
+	(function() {
+		navigator.mediaSession.metadata = new MediaMetadata();
+		navigator.mediaSession.setActionHandler('play', () => musicPlayer.togglePlay());
+		navigator.mediaSession.setActionHandler('pause', () => musicPlayer.togglePlay());
+		navigator.mediaSession.setActionHandler('previoustrack', () => musicPlayer.previous());
+		navigator.mediaSession.setActionHandler('nexttrack', () => musicPlayer.skip());
 
-	var $songName = $('#songName');
-	var $prevButton = $('#prevButton');
-	var $playButton = $('#playButton');
-	var $skipButton = $('#skipButton');
-	var $volumeSlider = $('#volumeSlider');
-	var $volumeButton = $('#volumeButton');
-	var $musicControl = $('#musicControl');
-	var $progressSlider = $('#progressSlider');
-	var $elapsedTime = $('#elapsedTime');
-	var $endTime = $('#endTime');
-	var musicPlayer = new MusicPlayer($musicControl, navigator.mediaSession.metadata);
+		var $songName = $('#songName');
+		var $prevButton = $('#prevButton');
+		var $playButton = $('#playButton');
+		var $skipButton = $('#skipButton');
+		var $volumeSlider = $('#volumeSlider');
+		var $volumeButton = $('#volumeButton');
+		var $musicControl = $('#musicControl');
+		var $progressSlider = $('#progressSlider');
+		var $elapsedTime = $('#elapsedTime');
+		var $endTime = $('#endTime');
+		musicPlayer = new MusicPlayer($musicControl, navigator.mediaSession.metadata);
 
-	initStateInterval();
-	initSliders();
-	initEvents();
+		initStateInterval();
+		initSliders();
+		initEvents();
 
-	function initStateInterval() {
-		setInterval(() => {
-			if (!musicPlayer.loaded() || musicPlayer.disabled()) {
-				return;
-			}
+		function initStateInterval() {
+			setInterval(() => {
+				if (!musicPlayer.loaded() || musicPlayer.disabled()) {
+					return;
+				}
 
-			localStorage.setItem(
-				"state",
-				JSON.stringify({
-					volume: musicPlayer.volume(),
-					queue: musicPlayer.queue(),
-					history: musicPlayer.history(),
-					album: musicPlayer.album(),
-					seek: musicPlayer.seek(),
-					songId: musicPlayer.songId()
-				})
-			);
-		}, 1000);
-	}
-
-	function initSliders() {
-		const PROGRESS_INTERVAL_TIMEOUT = 100;
-
-		var updateVolume = function(e, ui) {
-			var volume = ui.value / 100;
-
-			$volumeButton.removeClass('mute low-volume medium-volume high-volume');
-		
-			if (volume === 0) {
-				$volumeButton.addClass('mute');
-			} else if (volume <= 0.33) {
-				$volumeButton.addClass('low-volume');
-			} else if (volume <= 0.66) {
-				$volumeButton.addClass('medium-volume');
-			} else {
-				$volumeButton.addClass('high-volume');
-			}
-
-			musicPlayer.volume(volume);
+				localStorage.setItem(
+					"state",
+					JSON.stringify({
+						volume: musicPlayer.volume(),
+						queue: musicPlayer.queue(),
+						history: musicPlayer.history(),
+						album: musicPlayer.album(),
+						seek: musicPlayer.seek(),
+						songId: musicPlayer.songId()
+					})
+				);
+			}, 1000);
 		}
 
-		var progressIntervalCallback = function() {
-			if (!musicPlayer.loaded() || musicPlayer.disabled()) {
-				return;
+		function initSliders() {
+			const PROGRESS_INTERVAL_TIMEOUT = 100;
+
+			var updateVolume = function(e, ui) {
+				var volume = ui.value / 100;
+
+				$volumeButton.removeClass('mute low-volume medium-volume high-volume');
+			
+				if (volume === 0) {
+					$volumeButton.addClass('mute');
+				} else if (volume <= 0.33) {
+					$volumeButton.addClass('low-volume');
+				} else if (volume <= 0.66) {
+					$volumeButton.addClass('medium-volume');
+				} else {
+					$volumeButton.addClass('high-volume');
+				}
+
+				musicPlayer.volume(volume);
 			}
 
-			var duration = musicPlayer.duration();
-			var progress = musicPlayer.seek() / duration;
-			var elapsedSeconds = progress * duration;
-
-			$elapsedTime.text(getTimeString(elapsedSeconds));
-			$progressSlider.slider("value", progress * 100);
-		};
-
-		var progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
-
-		initSlider($volumeSlider, musicPlayer.volume() * 100, { change: updateVolume, slide: updateVolume });
-		initSlider(
-			$progressSlider,
-			0,
-			{
-				slide: (e, ui) => $elapsedTime.text(getTimeString(ui.value / 100 * musicPlayer.duration())),
-				start: e => clearInterval(progressInterval),
-				stop: (e, ui) => {
-					musicPlayer.seek(ui.value / 100 * musicPlayer.duration());
-					progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
+			var progressIntervalCallback = function() {
+				if (!musicPlayer.loaded() || musicPlayer.disabled()) {
+					return;
 				}
-			},
-			musicPlayer.disabled()
-		);
-	}
 
-	function initEvents() {
-		$songName.click(e => partialManager.loadPartial(`/album/${$songName.data('albumId')}`));
-		$prevButton.click(e => musicPlayer.previous());
-		$playButton.click(e => musicPlayer.togglePlay());
-		$skipButton.click(e => musicPlayer.skip());
-		$volumeButton.click(e => updateVolumeButton());
-		$(window).keydown(e => assignHotkeys(e));
+				var duration = musicPlayer.duration();
+				var progress = musicPlayer.seek() / duration;
+				var elapsedSeconds = progress * duration;
 
-		$volumeSlider.parent().on('mousewheel', function(e) {
+				$elapsedTime.text(getTimeString(elapsedSeconds));
+				$progressSlider.slider("value", progress * 100);
+			};
+
+			var progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
+
+			initSlider($volumeSlider, musicPlayer.volume() * 100, { change: updateVolume, slide: updateVolume });
+			initSlider(
+				$progressSlider,
+				0,
+				{
+					slide: (e, ui) => $elapsedTime.text(getTimeString(ui.value / 100 * musicPlayer.duration())),
+					start: e => clearInterval(progressInterval),
+					stop: (e, ui) => {
+						musicPlayer.seek(ui.value / 100 * musicPlayer.duration());
+						progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
+					}
+				},
+				musicPlayer.disabled()
+			);
+		}
+
+		function initEvents() {
+			$songName.click(e => partialManager.loadPartial(`/album/${$songName.data('albumId')}`));
+			$prevButton.click(e => musicPlayer.previous());
+			$playButton.click(e => musicPlayer.togglePlay());
+			$skipButton.click(e => musicPlayer.skip());
+			$volumeButton.click(e => updateVolumeButton());
+			$(window).keydown(e => assignHotkeys(e));
+
+			$volumeSlider.parent().on('mousewheel', function(e) {
+				var volume = $volumeSlider.slider("value");
+
+				$volumeSlider.slider(
+					"value",
+					(e.originalEvent.wheelDelta > 0) ? volume + 10 : volume - 10
+				);
+			});
+		}
+
+		function updateVolumeButton() {
 			var volume = $volumeSlider.slider("value");
 
-			$volumeSlider.slider(
-				"value",
-				(e.originalEvent.wheelDelta > 0) ? volume + 10 : volume - 10
-			);
-		});
-	}
-
-	function updateVolumeButton() {
-		var volume = $volumeSlider.slider("value");
-
-		if (volume !== 0) {
-			$volumeSlider.data("volume", volume);
-			$volumeSlider.slider("value", 0);
-		} else {
-			$volumeSlider.slider("value", $volumeSlider.data("volume") || 10);		
+			if (volume !== 0) {
+				$volumeSlider.data("volume", volume);
+				$volumeSlider.slider("value", 0);
+			} else {
+				$volumeSlider.slider("value", $volumeSlider.data("volume") || 10);		
+			}
 		}
-	}
 
-	function assignHotkeys(e) {
-		var key = e.which || e.keyCode;
+		function assignHotkeys(e) {
+			var key = e.which || e.keyCode;
 
-		if (key === 32) {
-			e.preventDefault();
-			musicPlayer.togglePlay();
+			if (key === 32) {
+				e.preventDefault();
+				musicPlayer.togglePlay();
+			}
 		}
-	}
+	})();
 </script>
