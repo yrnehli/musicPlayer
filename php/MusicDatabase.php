@@ -9,35 +9,34 @@ class MusicDatabase {
 		$this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 	}
 
-	public function insertSong($song) {
+	public function insertSong($name, $artist, $trackNumber, $discNumber, $duration, $filepath) {
 		$stmt = $this->conn->prepare(
-			"INSERT INTO `songs` (`songName`, `songArtist`, `albumName`, `albumArtist`, `trackNumber`, `discNumber`, `year`, `genre`, `duration`, `filepath`)
-			VALUES (:songName, :songArtist, :albumName, :albumArtist, :trackNumber, :discNumber, :year, :genre, :duration, :filepath)"
+			"INSERT INTO `songs` (`name`, `artist`, `trackNumber`, `discNumber`, `duration`, `filepath`)
+			VALUES (:name, :artist, :trackNumber, :discNumber, :duration, :filepath)"
 		);
-		$stmt->bindParam(":songName", $song->songName);
-		$stmt->bindParam(":songArtist", $song->songArtist);
-		$stmt->bindParam(":albumName", $song->albumName);
-		$stmt->bindParam(":albumArtist", $song->albumArtist);
-		$stmt->bindParam(":trackNumber", $song->trackNumber);
-		$stmt->bindParam(":discNumber", $song->discNumber);
-		$stmt->bindParam(":year", $song->year);
-		$stmt->bindParam(":genre", $song->genre);
-		$stmt->bindParam(":duration", $song->duration);
-		$stmt->bindParam(":filepath", $song->filepath);
+		$stmt->bindParam(":name", $name);
+		$stmt->bindParam(":artist", $artist);
+		$stmt->bindParam(":trackNumber", $trackNumber);
+		$stmt->bindParam(":discNumber", $discNumber);
+		$stmt->bindParam(":duration", $duration);
+		$stmt->bindParam(":filepath", $filepath);
 		$stmt->execute();
+		
 		return $this->conn->lastInsertId();
 	}
 
-	public function insertAlbum($album) {
+	public function insertAlbum($name, $artist, $genre, $year, $artFilepath) {
 		$stmt = $this->conn->prepare(
-			"INSERT INTO `albums` (`albumName`, `albumArtist`, `albumYear`, `albumArtFilepath`)
-			VALUES (:albumName, :albumArtist, :albumYear, :albumArtFilepath)"
+			"INSERT INTO `albums` (`name`, `artist`, `genre`, `year`, `artFilepath`)
+			VALUES (:name, :artist, :genre, :year, :artFilepath)"
 		);
-		$stmt->bindParam(":albumName", $album->albumName);
-		$stmt->bindParam(":albumArtist", $album->albumArtist);
-		$stmt->bindParam(":albumYear", $album->albumYear);
-		$stmt->bindParam(":albumArtFilepath", $album->albumArtFilepath);
+		$stmt->bindParam(":name", $name);
+		$stmt->bindParam(":artist", $artist);
+		$stmt->bindParam(":genre", $genre);
+		$stmt->bindParam(":year", $year);
+		$stmt->bindParam(":artFilepath", $artFilepath);
 		$stmt->execute();
+
 		return $this->conn->lastInsertId();
 	}
 

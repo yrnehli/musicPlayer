@@ -1,8 +1,6 @@
 <?php
 
 require_once 'MusicDatabase.php';
-require_once 'Song.php';
-require_once 'Album.php';
 
 class MusicManager {
 	public static function updateDatabase() {
@@ -21,40 +19,50 @@ class MusicManager {
 				array_key_exists("id3v2", $mp3Info['tags']) ? $mp3Info['tags']['id3v2'] : []
 			);
 
-			$song = new Song();
-			$song->songName = $tags['title'][0];
-			$song->songArtist = $tags['artist'][0];
-			$song->albumName = $tags['album'][0];
-			$song->albumArtist = $tags['band'][0];
-			$song->trackNumber = (array_key_exists('track_number', $tags)) ? $tags['track_number'][0] : null;
-			$song->discNumber = (array_key_exists('part_of_a_set', $tags)) ? intval($tags['part_of_a_set'][0]) : null;
-			$song->year = $tags['year'][0];
-			$song->genre = implode("/", $tags['genre']);
-			$song->duration = $mp3Info['playtime_seconds'];
-			$song->filepath = $mp3Info['filenamepath'];
-			$songId = $musicDatabase->insertSong($song);
+			$song['songName'] = $tags['title'][0];
+			$song['songArtist'] = $tags['artist'][0];
+			$song['albumName'] = $tags['album'][0];
+			$song['albumArtist'] = $tags['band'][0];
+			$song['trackNumber'] = (array_key_exists('track_number', $tags)) ? $tags['track_number'][0] : null;
+			$song['discNumber'] = (array_key_exists('part_of_a_set', $tags)) ? intval($tags['part_of_a_set'][0]) : null;
+			$song['year'] = $tags['year'][0];
+			$song['genre'] = implode("/", $tags['genre']);
+			$song['duration'] = $mp3Info['playtime_seconds'];
+			$song['filepath'] = $mp3Info['filenamepath'];
 
-			$albumKey = "$song->albumArtist - $song->albumName";
+			$songId = $musicDatabase->insertSong(
+				$song['songName'],
+				$song['songArtist'],
+				$song['trackNumber'],
+				$song['discNumber'],
+				$song['duration'],
+				$song['filepath']
+			);
 
-			if (!array_key_exists($albumKey, $albumRelations)) {
-				$albumArt = $mp3Info['comments']['picture'][0]['data'];
-				$albumArtFilepath = realpath("userData/albumArt") . "/" . md5($albumArt) . ".jpg";
-				file_put_contents($albumArtFilepath, $albumArt);
+			$albumKey = $song['albumArtist'] . " - " . $song['albumName'];
 
-				$album = new Album();
-				$album->albumName = $song->albumName;
-				$album->albumArtist = $song->albumArtist;
-				$album->albumYear = $song->year;
-				$album->albumArtFilepath = str_replace(realpath("."), "", $albumArtFilepath);
-				$albumId = $musicDatabase->insertAlbum($album);
-
-				$albumRelations[$albumKey] = [
-					'albumId' => $albumId,
-					'songIds' => [$songId]
-				];
-			} else {
+			if (array_key_exists($albumKey, $albumRelations)) {
 				$albumRelations[$albumKey]['songIds'][] = $songId;
+				continue;
 			}
+
+			$albumArt = $mp3Info['comments']['picture'][0]['data'];
+			$albumArtFilepath = realpath("userData/albumArt") . "/" . md5($albumArt) . ".jpg";
+
+			file_put_contents($albumArtFilepath, $albumArt);
+
+			$albumId = $musicDatabase->insertAlbum(
+				$song['albumName'],
+				$song['albumArtist'],
+				$song['genre'],
+				$song['year'],
+				str_replace(realpath("."), "", $albumArtFilepath)
+			);
+
+			$albumRelations[$albumKey] = [
+				'albumId' => $albumId,
+				'songIds' => [$songId]
+			];
 		}
 
 		foreach ($albumRelations as $albumRelation) {

@@ -4,12 +4,12 @@
 	<div class="mx-auto centre">
 		<?php foreach ($albums as $album): ?>
 			<div class="album-container mx-2 my-2" data-album-id="<?= $album['id'] ?>">
-				<img class="album-art" src="<?= $album['albumArtFilepath'] ?>">
+				<img class="album-art" src="<?= $album['artFilepath'] ?>">
 				<div class="title">
-					<?= $album['albumName'] ?>
+					<?= $album['name'] ?>
 				</div>
 				<div class="artist mb-2">
-					<?= $album['albumArtist'] ?>
+					<?= $album['artist'] ?>
 				</div>
 			</div>
 		<?php endforeach; ?>

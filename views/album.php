@@ -4,20 +4,20 @@
 
 <div id="root" class="py-5 px-4" data-simplebar>
 	<div class="d-flex mt-3 mb-4">
-		<img id="albumArtLarge" class="mx-3" src="<?= $album['albumArtFilepath'] ?>">		
+		<img id="albumArtLarge" class="mx-3" src="<?= $album['artFilepath'] ?>">		
 		<div class="d-flex mx-2">
 			<div class="mt-auto">
 				<div id="album">ALBUM</div>
 				<div id="albumName" style="visibility: hidden;">
-					<?= $album['albumName'] ?>
+					<?= $album['name'] ?>
 				</div>
 				<div class="album-details">
 					<div id="albumArtist">
-						<?= $album['albumArtist'] ?>
+						<?= $album['artist'] ?>
 					</div>
 					<div class="dot"></div>
 					<div>
-						<?= $album['albumYear'] ?>
+						<?= $album['year'] ?>
 					</div>
 					<div class="dot"></div>
 					<div>
@@ -81,10 +81,10 @@
 				</div>
 				<div class="track-name">
 					<div>
-						<?= $song['songName'] ?>
+						<?= $song['name'] ?>
 					</div>
 					<div>
-						<?= $song['songArtist'] ?>
+						<?= $song['artist'] ?>
 					</div>
 				</div>
 				<div class="total-time">

@@ -102,7 +102,12 @@ Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
 
 Flight::route("GET /api/musicPlayer/@songId", function($songId) use ($conn) {
 	$stmt = $conn->prepare(
-		"SELECT `songs`.`songName`, `songs`.`songArtist`, `albums`.`albumArtFilepath`, `albums`.`albumName`, `albums`.`id` AS 'albumId'
+		"SELECT
+			`songs`.`name` AS 'songName',
+			`songs`.`artist` AS 'songArtist',
+			`albums`.`artFilepath` AS 'albumArtFilepath',
+			`albums`.`name` AS 'albumName',
+			`albums`.`id` AS 'albumId'
 		FROM `songs`
 		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
 		INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
