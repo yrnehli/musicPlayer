@@ -182,7 +182,7 @@ class MusicPlayer extends Howl {
 	}
 
 	async updateMusicControl() {
-		var res = await $.get(`/api/musicPlayer/${this.__songId}`);
+		var res = await $.get(`/api/song/${this.__songId}`);
 		
 		this.__$songName.text(res.songName).data('albumId', res.albumId);
 		this.__$artistName.text(res.songArtist);

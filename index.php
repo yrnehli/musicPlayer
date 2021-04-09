@@ -100,7 +100,7 @@ Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
 	;
 });
 
-Flight::route("GET /api/musicPlayer/@songId", function($songId) use ($conn) {
+Flight::route("GET /api/song/@songId", function($songId) use ($conn) {
 	$stmt = $conn->prepare(
 		"SELECT
 			`songs`.`name` AS 'songName',
@@ -117,6 +117,35 @@ Flight::route("GET /api/musicPlayer/@songId", function($songId) use ($conn) {
 	$stmt->execute();
 	$res = $stmt->fetch();
 	Flight::json($res);
+});
+
+Flight::route("GET /api/search/@searchTerm", function($searchTerm) use ($conn) {
+	$searchTerm = preg_replace("/[^a-zA-Z0-9]/", "%", $searchTerm);
+	$searchTerm = "%" . implode('%', str_split($searchTerm)) . "%";
+
+	$stmt = $conn->prepare(
+		"SELECT `id`, `name`, `artist`, `artFilepath`
+		FROM `albums`
+		WHERE CONCAT(`name`, `artist`) LIKE :searchTerm
+		OR CONCAT(`artist`, `name`) LIKE :searchTerm"
+	);
+	$stmt->bindParam(":searchTerm", $searchTerm);
+	$stmt->execute();
+	$albums = $stmt->fetchAll();
+
+	$stmt = $conn->prepare(
+		"SELECT `songs`.`id`, `songs`.`name`, `songs`.`artist`, `albums`.`artFilepath`
+		FROM `songs`
+		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
+		INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
+		WHERE CONCAT(`songs`.`name`, `songs`.`artist`) LIKE :searchTerm
+		OR CONCAT(`songs`.`artist`, `songs`.`name`) LIKE :searchTerm"
+	);
+	$stmt->bindParam(":searchTerm", $searchTerm);
+	$stmt->execute();
+	$songs = $stmt->fetchAll();
+
+	Flight::json(compact('albums', 'songs'));
 });
 
 Flight::route("GET /api/update", function() {
