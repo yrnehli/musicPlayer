@@ -12,7 +12,7 @@ class MusicControl extends Howl {
 		this.__disabled = false;
 		this.__queue = state.queue || [];
 		this.__history = state.history || [];
-		this.__album = state.album || { list: [], i: 0 };
+		this.__nextUp = state.nextUp || { list: [], i: 0 };
 		this.__$prevButton = $musicControl.find('#prevButton');
 		this.__$playButton = $musicControl.find('#playButton');
 		this.__$skipButton = $musicControl.find('#skipButton');
@@ -53,7 +53,7 @@ class MusicControl extends Howl {
 		this.__songId = null;
 		this.__queue = [];
 		this.__history = [];
-		this.__album = { list: [], i: 0 };
+		this.__nextUp = { list: [], i: 0 };
 		this.__$albumArt.removeAttr('src');
 		this.__$songName.text('');
 		this.__$artistName.text('');
@@ -129,11 +129,11 @@ class MusicControl extends Howl {
 
 		var wasPlaying = this.playing();
 		
-		if (this.__album.list.length > 0 && this.__album.i - 1 >= 0) {
-			this.__album.i--;
-			this.changeSong(this.__album.list[this.__album.i], wasPlaying);
+		if (this.__nextUp.list.length > 0 && this.__nextUp.i - 1 >= 0) {
+			this.__nextUp.i--;
+			this.changeSong(this.__nextUp.list[this.__nextUp.i], wasPlaying);
 		} else if (this.__history.length > 0) {
-			this.__queue.unshift(this.songId);
+			this.__queue.unshift(this.__songId);
 			this.changeSong(this.__history.pop(), wasPlaying);
 		} else {
 			this.pause();
@@ -144,24 +144,21 @@ class MusicControl extends Howl {
 		var wasPlaying = (e || this.playing());
 
 		if (this.__queue.length > 0) {
-			this.__history.push(this.songId);
+			this.__history.push(this.__songId);
 			this.changeSong(this.__queue.shift(), (wasPlaying || e));
-		} else if (this.__album.list.length > 0 && this.__album.i + 1 < this.__album.list.length) {
-			this.__album.i++;
-			this.changeSong(this.__album.list[this.__album.i], wasPlaying);
-		} else if (this.__album.list.length > 0) {
-			this.__album.i = 0;
-			this.changeSong(this.__album.list[0], false);
+		} else if (this.__nextUp.list.length > 0 && this.__nextUp.i + 1 < this.__nextUp.list.length) {
+			this.__nextUp.i++;
+			this.changeSong(this.__nextUp.list[this.__nextUp.i], wasPlaying);
 		} else {
 			this.disable();
 		}
 	}
 
-	album(album) {
-		if (album) {
-			this.__album = album;
+	nextUp(nextUp) {
+		if (nextUp) {
+			this.__nextUp = nextUp;
 		} else {
-			return this.__album;
+			return this.__nextUp;
 		}
 	}
 
@@ -179,6 +176,13 @@ class MusicControl extends Howl {
 		} else {
 			return this.__history;
 		}
+	}
+
+	playNextUp(nextUp) {
+		this.__queue = [];
+		this.__history = [];
+		this.__nextUp = nextUp;
+		this.changeSong(nextUp.list[nextUp.i], true);
 	}
 
 	async updateMusicControl() {

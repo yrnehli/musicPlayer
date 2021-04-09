@@ -118,17 +118,17 @@
 
 			$('.tracklist-row').dblclick(function() {
 				var $self = $(this);
-				var album = { list: [], i: 0 };
+				var nextUp = { list: [], i: 0 };
 
 				$('.tracklist-row').each(function(i) {
-					album.list.push($(this).data('song-id'));
+					nextUp.list.push($(this).data('song-id'));
 
 					if ($(this).get(0) === $self.get(0)) {
-						album.i = i;
+						nextUp.i = i;
 					}
 				});
 				
-				playAlbum($self.data('song-id'), album);
+				musicControl.playNextUp(nextUp);
 
 				$('.tracklist-row.active').removeClass('active');
 				$self.addClass('active');
@@ -139,23 +139,19 @@
 			$(window).resize(() => scaleAlbumNameText());
 
 			$playAlbumButton.click(() => {
-				var album = { list: [], i: 0 };
-
-				$('.tracklist-row').each(function() {
-					album.list.push($(this).data('song-id'));
+				musicControl.playNextUp({
+					list: $('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id')),
+					i: 0
 				});
-
-				playAlbum(album.list[0], album);
 			});
 
 			$shuffleAlbumButton.click(() => {
-				var songIds = shuffle(
-					$('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id'))
-				);
-
-				musicControl.album({ list: [], i: 0 });
-				musicControl.changeSong(songIds.shift(), true);
-				musicControl.queue(songIds);
+				musicControl.playNextUp({
+					list: shuffle(
+						$('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id'))
+					),
+					i: 0
+				});
 			});
 
 			$queueAlbumButton.click(() => {
@@ -164,13 +160,6 @@
 					showToastNotification("Added to queue");
 				});
 			});
-		}
-
-		function playAlbum(songId, album) {
-			musicControl.queue([]);
-			musicControl.history([]);
-			musicControl.album(album);
-			musicControl.changeSong(songId, true);
 		}
 		
 		function scaleAlbumNameText() {

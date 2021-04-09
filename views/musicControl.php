@@ -82,7 +82,7 @@
 						volume: musicControl.volume(),
 						queue: musicControl.queue(),
 						history: musicControl.history(),
-						album: musicControl.album(),
+						nextUp: musicControl.nextUp(),
 						seek: musicControl.seek(),
 						songId: musicControl.songId()
 					})
@@ -189,9 +189,11 @@
 			// Ctrl + S
 			if (e.ctrlKey && e.keyCode === 83) {
 				e.preventDefault();
-				var queue = shuffle([<?= implode(", ", $songIds) ?>]);
-				musicControl.changeSong(queue.shift(), true);
-				musicControl.queue(queue);
+
+				musicControl.playNextUp({
+					list: shuffle([<?= implode(", ", $songIds) ?>]),
+					i: 0
+				});
 			}
 		}
 	})();
