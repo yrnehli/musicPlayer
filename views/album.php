@@ -114,7 +114,10 @@
 
 		function initTracklistRows() {
 			$('.tracklist-row.active').removeClass('active');
-			$(`.tracklist-row[data-song-id="${musicControl.songId()}"]`).addClass('active');
+
+			if (musicControl.playing()) {
+				$(`.tracklist-row[data-song-id="${musicControl.songId()}"]`).addClass('active');
+			}
 
 			$('.tracklist-row').dblclick(function() {
 				var $self = $(this);

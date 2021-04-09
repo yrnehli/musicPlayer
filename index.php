@@ -68,7 +68,7 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 	$stmt->execute();
 	$songs = $stmt->fetchAll();
 
-	Flight::renderView('album', compact('songs', 'album'));
+	Flight::renderView('album', compact('album', 'songs'));
 });
 
 Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
