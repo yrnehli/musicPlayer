@@ -28,16 +28,20 @@
 
 #songName {
 	font-size: 14px;
-	letter-spacing: normal;
-	text-transform: none;
 	color: white;
 	cursor: pointer;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: calc(100%);
 }
 
 #artistName {
 	font-size: 11px;
-	letter-spacing: normal;
-	text-transform: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: calc(100%);
 }
 
 #albumArt {
@@ -50,6 +54,11 @@
 	width: 56px;
 	margin-right: 14px;
 	box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+}
+
+#playerDetails {
+	max-width: 28vw;
+	overflow: hidden;
 }
 
 #playerControls {

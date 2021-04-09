@@ -1,9 +1,9 @@
 <link rel="stylesheet" href="/assets/css/musicControl.css">
 
 <div id="musicControl" class="fixed-bottom d-flex">
-	<div class="h-100 d-flex">
+	<div id="playerDetails" class="h-100 d-flex">
 		<img id="albumArt" class="my-auto"></img>
-		<div class="my-auto">
+		<div class="my-auto w-75">
 			<div id="songName"></div>
 			<div id="artistName"></div>
 		</div>
