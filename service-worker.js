@@ -1,6 +1,8 @@
+var cacheVersion = 1;
+
 self.addEventListener('install', e => {
 	e.waitUntil(
-		caches.open('music-store').then(cache => cache.addAll(['/'])),
+		caches.open(`music-store-${cacheVersion}`).then(cache => cache.addAll(['/'])),
 	);
 });
 
