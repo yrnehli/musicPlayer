@@ -148,7 +148,8 @@
 			$playButton.click(e => musicControl.togglePlay());
 			$skipButton.click(e => musicControl.skip());
 			$volumeButton.click(e => updateVolumeButton());
-			$(window).keydown(e => assignHotkeys(e));
+			$(window).keydown(e => assignKeydown(e));
+			$(window).keyup(e => assignKeyup(e));
 
 			$volumeSlider.parent().on('mousewheel', function(e) {
 				var volume = $volumeSlider.slider("value");
@@ -171,12 +172,26 @@
 			}
 		}
 
-		function assignHotkeys(e) {
-			var key = e.which || e.keyCode;
+		function assignKeydown(e) {
+			// Ctrl + S
+			if (e.ctrlKey && e.keyCode === 83) {
+				e.preventDefault();
+			}
 
-			if (key === 32) {
+			// Space
+			if (e.keyCode === 32) {
 				e.preventDefault();
 				musicControl.togglePlay();
+			}
+		}
+
+		function assignKeyup(e) {
+			// Ctrl + S
+			if (e.ctrlKey && e.keyCode === 83) {
+				e.preventDefault();
+				var queue = shuffle([<?= implode(", ", $songIds) ?>]);
+				musicControl.changeSong(queue.shift(), true);
+				musicControl.queue(queue);
 			}
 		}
 	})();

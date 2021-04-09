@@ -15,14 +15,18 @@ foreach (['userData', 'userData/albumArt'] as $directory) {
 	}
 }
 
-Flight::map('renderView', function($viewName, $viewData) {
+Flight::map('renderView', function($viewName, $viewData) use ($conn) {
 	if (filter_var(Flight::request()->query->partial, FILTER_VALIDATE_BOOLEAN)) {
 		Flight::render($viewName, $viewData);
 		return;
 	}
+
+	$stmt = $conn->prepare("SELECT `id` FROM `songs`");
+	$stmt->execute();
+	$songIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
 	
 	Flight::render($viewName, $viewData, 'partial');
-	Flight::render('musicControl', [], 'musicControl');
+	Flight::render('musicControl', compact('songIds'), 'musicControl');
 	Flight::render('shell');
 });
 
@@ -30,6 +34,7 @@ Flight::route("GET /", function() use ($conn) {
 	$stmt = $conn->prepare("SELECT * FROM `albums`");
 	$stmt->execute();
 	$albums = $stmt->fetchAll();
+
 	Flight::renderView('home', compact('albums'));
 });
 
