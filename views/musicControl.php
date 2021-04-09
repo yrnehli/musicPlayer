@@ -49,10 +49,10 @@
 <script>
 	(function() {
 		navigator.mediaSession.metadata = new MediaMetadata();
-		navigator.mediaSession.setActionHandler('play', () => musicPlayer.togglePlay());
-		navigator.mediaSession.setActionHandler('pause', () => musicPlayer.togglePlay());
-		navigator.mediaSession.setActionHandler('previoustrack', () => musicPlayer.previous());
-		navigator.mediaSession.setActionHandler('nexttrack', () => musicPlayer.skip());
+		navigator.mediaSession.setActionHandler('play', () => musicControl.togglePlay());
+		navigator.mediaSession.setActionHandler('pause', () => musicControl.togglePlay());
+		navigator.mediaSession.setActionHandler('previoustrack', () => musicControl.previous());
+		navigator.mediaSession.setActionHandler('nexttrack', () => musicControl.skip());
 
 		var $songName = $('#songName');
 		var $prevButton = $('#prevButton');
@@ -64,7 +64,7 @@
 		var $progressSlider = $('#progressSlider');
 		var $elapsedTime = $('#elapsedTime');
 		var $endTime = $('#endTime');
-		musicPlayer = new MusicPlayer($musicControl, navigator.mediaSession.metadata);
+		musicControl = new MusicControl($musicControl, navigator.mediaSession.metadata);
 
 		initStateInterval();
 		initSliders();
@@ -72,19 +72,19 @@
 
 		function initStateInterval() {
 			setInterval(() => {
-				if (!musicPlayer.loaded() || musicPlayer.disabled()) {
+				if (!musicControl.loaded() || musicControl.disabled()) {
 					return;
 				}
 
 				localStorage.setItem(
 					"state",
 					JSON.stringify({
-						volume: musicPlayer.volume(),
-						queue: musicPlayer.queue(),
-						history: musicPlayer.history(),
-						album: musicPlayer.album(),
-						seek: musicPlayer.seek(),
-						songId: musicPlayer.songId()
+						volume: musicControl.volume(),
+						queue: musicControl.queue(),
+						history: musicControl.history(),
+						album: musicControl.album(),
+						seek: musicControl.seek(),
+						songId: musicControl.songId()
 					})
 				);
 			}, 1000);
@@ -108,16 +108,16 @@
 					$volumeButton.addClass('high-volume');
 				}
 
-				musicPlayer.volume(volume);
+				musicControl.volume(volume);
 			}
 
 			var progressIntervalCallback = function() {
-				if (!musicPlayer.loaded() || musicPlayer.disabled()) {
+				if (!musicControl.loaded() || musicControl.disabled()) {
 					return;
 				}
 
-				var duration = musicPlayer.duration();
-				var progress = musicPlayer.seek() / duration;
+				var duration = musicControl.duration();
+				var progress = musicControl.seek() / duration;
 				var elapsedSeconds = progress * duration;
 
 				$elapsedTime.text(getTimeString(elapsedSeconds));
@@ -126,27 +126,27 @@
 
 			var progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 
-			initSlider($volumeSlider, musicPlayer.volume() * 100, { change: updateVolume, slide: updateVolume });
+			initSlider($volumeSlider, musicControl.volume() * 100, { change: updateVolume, slide: updateVolume });
 			initSlider(
 				$progressSlider,
 				0,
 				{
-					slide: (e, ui) => $elapsedTime.text(getTimeString(ui.value / 100 * musicPlayer.duration())),
+					slide: (e, ui) => $elapsedTime.text(getTimeString(ui.value / 100 * musicControl.duration())),
 					start: e => clearInterval(progressInterval),
 					stop: (e, ui) => {
-						musicPlayer.seek(ui.value / 100 * musicPlayer.duration());
+						musicControl.seek(ui.value / 100 * musicControl.duration());
 						progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 					}
 				},
-				musicPlayer.disabled()
+				musicControl.disabled()
 			);
 		}
 
 		function initEvents() {
 			$songName.click(e => partialManager.loadPartial(`/album/${$songName.data('albumId')}`));
-			$prevButton.click(e => musicPlayer.previous());
-			$playButton.click(e => musicPlayer.togglePlay());
-			$skipButton.click(e => musicPlayer.skip());
+			$prevButton.click(e => musicControl.previous());
+			$playButton.click(e => musicControl.togglePlay());
+			$skipButton.click(e => musicControl.skip());
 			$volumeButton.click(e => updateVolumeButton());
 			$(window).keydown(e => assignHotkeys(e));
 
@@ -176,7 +176,7 @@
 
 			if (key === 32) {
 				e.preventDefault();
-				musicPlayer.togglePlay();
+				musicControl.togglePlay();
 			}
 		}
 	})();

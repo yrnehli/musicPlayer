@@ -114,7 +114,7 @@
 
 		function initTracklistRows() {
 			$('.tracklist-row.active').removeClass('active');
-			$(`.tracklist-row[data-song-id="${musicPlayer.songId()}"]`).addClass('active');
+			$(`.tracklist-row[data-song-id="${musicControl.songId()}"]`).addClass('active');
 
 			$('.tracklist-row').dblclick(function() {
 				var $self = $(this);
@@ -153,24 +153,24 @@
 					$('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id'))
 				);
 
-				musicPlayer.album({ list: [], i: 0 });
-				musicPlayer.changeSong(songIds.shift(), true);
-				musicPlayer.queue(songIds);
+				musicControl.album({ list: [], i: 0 });
+				musicControl.changeSong(songIds.shift(), true);
+				musicControl.queue(songIds);
 			});
 
 			$queueAlbumButton.click(() => {
 				$('.tracklist-row').each(function(i) {
-					musicPlayer.queue().push($(this).data('song-id'));
+					musicControl.queue().push($(this).data('song-id'));
 					showToastNotification("Added to queue");
 				});
 			});
 		}
 
 		function playAlbum(songId, album) {
-			musicPlayer.queue([]);
-			musicPlayer.history([]);
-			musicPlayer.album(album);
-			musicPlayer.changeSong(songId, true);
+			musicControl.queue([]);
+			musicControl.history([]);
+			musicControl.album(album);
+			musicControl.changeSong(songId, true);
 		}
 		
 		function scaleAlbumNameText() {
