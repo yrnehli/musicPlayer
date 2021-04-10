@@ -11,7 +11,6 @@ class MusicControl extends Howl {
 
 		this.__disabled = false;
 		this.__queue = state.queue || [];
-		this.__history = state.history || [];
 		this.__nextUp = state.nextUp || { list: [], i: 0 };
 		this.__$prevButton = $musicControl.find('#prevButton');
 		this.__$playButton = $musicControl.find('#playButton');
@@ -21,6 +20,7 @@ class MusicControl extends Howl {
 		this.__$artistName = $musicControl.find('#artistName');
 		this.__$albumArt = $musicControl.find("#albumArt");
 		this.__$volumeSlider = $musicControl.find("#volumeSlider");
+		this.__$elapsedTime = $musicControl.find("#elapsedTime");
 		this.__$endTime = $musicControl.find("#endTime");
 		this.__metadata = metadata;
 		this.on('end', e => this.skip(e));
@@ -49,36 +49,28 @@ class MusicControl extends Howl {
 	}
 
 	disable() {
-		this.__disabled = true;
 		this.__songId = null;
 		this.__queue = [];
-		this.__history = [];
 		this.__nextUp = { list: [], i: 0 };
 		this.__$albumArt.removeAttr('src');
 		this.__$songName.text('');
 		this.__$artistName.text('');
+		this.__$elapsedTime.text('0:00');
 		this.__$endTime.text('0:00');
-		this.__$prevButton.prop('disabled', true);
-		this.__$playButton.prop('disabled', true);
-		this.__$skipButton.prop('disabled', true);
+		this.pause();
+		localStorage.clear();
+
 		if (this.__$progressSlider.hasClass('ui-slider')) {
+			this.__$progressSlider.slider("value", 0);
 			this.__$progressSlider.slider("disable");
 		}
-		this.pause();
-		this.seek(0);
-		localStorage.clear();
+
+		this.__disabled = true;
 	}
 
 	enable() {
-		if (this.__disabled === false) {
-			return;
-		}
-
-		this.__disabled = false;
-		this.__$prevButton.prop('disabled', false);
-		this.__$playButton.prop('disabled', false);
-		this.__$skipButton.prop('disabled', false);
 		this.__$progressSlider.slider('enable');
+		this.__disabled = false;
 	}
 
 	loaded() {
@@ -109,19 +101,33 @@ class MusicControl extends Howl {
 	}
 
 	play() {
+		if (this.__disabled) {
+			return;
+		}
+
 		super.play();
 		this.__$playButton.removeClass("paused");
+
 		$('.tracklist-row.active').removeClass('active');
 		$(`.tracklist-row[data-song-id="${this.__songId}"]`).addClass('active');
 	}
 
 	pause() {
+		if (this.__disabled) {
+			return;
+		}
+
 		super.pause();
 		this.__$playButton.addClass("paused");
+
 		$('.tracklist-row.active').removeClass('active');
 	}
 
 	previous() {
+		if (this.__disabled) {
+			return;
+		}
+
 		if (this.seek() > 1) {
 			this.seek(0);
 			return;
@@ -132,19 +138,19 @@ class MusicControl extends Howl {
 		if (this.__nextUp.list.length > 0 && this.__nextUp.i - 1 >= 0) {
 			this.__nextUp.i--;
 			this.changeSong(this.__nextUp.list[this.__nextUp.i], wasPlaying);
-		} else if (this.__history.length > 0) {
-			this.__queue.unshift(this.__songId);
-			this.changeSong(this.__history.pop(), wasPlaying);
 		} else {
-			this.pause();
+			this.disable();
 		}
 	}
 
 	skip(e) {
+		if (this.__disabled) {
+			return;
+		}
+
 		var wasPlaying = (e || this.playing());
 
 		if (this.__queue.length > 0) {
-			this.__history.push(this.__songId);
 			this.changeSong(this.__queue.shift(), (wasPlaying || e));
 		} else if (this.__nextUp.list.length > 0 && this.__nextUp.i + 1 < this.__nextUp.list.length) {
 			this.__nextUp.i++;
@@ -170,17 +176,8 @@ class MusicControl extends Howl {
 		}
 	}
 
-	history(history) {
-		if (history) {
-			this.__history = history;
-		} else {
-			return this.__history;
-		}
-	}
-
 	playNextUp(nextUp) {
 		this.__queue = [];
-		this.__history = [];
 		this.__nextUp = nextUp;
 		this.changeSong(nextUp.list[nextUp.i], true);
 	}

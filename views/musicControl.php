@@ -81,7 +81,6 @@
 					JSON.stringify({
 						volume: musicControl.volume(),
 						queue: musicControl.queue(),
-						history: musicControl.history(),
 						nextUp: musicControl.nextUp(),
 						seek: musicControl.seek(),
 						songId: musicControl.songId()
