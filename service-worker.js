@@ -1,13 +1,21 @@
-var cacheVersion = 1;
+// self.addEventListener('activate', e => {
+// 	e.waitUntil(
+// 		caches.keys().then(cacheNames => {
+// 			return Promise.all(
+// 				cacheNames.map(cacheName => caches.delete(cacheName))
+// 			);
+// 	  	})
+// 	);
+// });
 
-self.addEventListener('install', e => {
-	e.waitUntil(
-		caches.open(`music-store-${cacheVersion}`).then(cache => cache.addAll(['/'])),
-	);
-});
+// self.addEventListener('install', e => {
+// 	e.waitUntil(
+// 		caches.open('music-cache').then(cache => cache.addAll(['/'])),
+// 	);
+// });
 
-self.addEventListener('fetch', e => {
-	e.respondWith(
-		caches.match(e.request).then(response => response || fetch(e.request)),
-	);
-});
+// self.addEventListener('fetch', e => {
+// 	e.respondWith(
+// 		caches.match(e.request).then(response => response || fetch(e.request)),
+// 	);
+// });
