@@ -155,7 +155,8 @@ Flight::route("GET /api/search", function() use ($conn) {
 		FROM `albums`
 		INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
 		WHERE CONCAT(`name`, `artist`) LIKE :searchTerm
-		OR CONCAT(`artist`, `name`) LIKE :searchTerm"
+		OR CONCAT(`artist`, `name`) LIKE :searchTerm
+		LIMIT 5"
 	);
 	$stmt->bindParam(":searchTerm", $searchTerm);
 	$stmt->execute();
@@ -167,7 +168,8 @@ Flight::route("GET /api/search", function() use ($conn) {
 		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
 		INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
 		WHERE CONCAT(`songs`.`name`, `songs`.`artist`) LIKE :searchTerm
-		OR CONCAT(`songs`.`artist`, `songs`.`name`) LIKE :searchTerm"
+		OR CONCAT(`songs`.`artist`, `songs`.`name`) LIKE :searchTerm
+		LIMIT 5"
 	);
 	$stmt->bindParam(":searchTerm", $searchTerm);
 	$stmt->execute();

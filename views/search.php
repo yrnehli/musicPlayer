@@ -23,7 +23,6 @@
 		var $albums = $('#albums');
 		var $songsContainer = $('#songsContainer');
 		var $albumsContainer = $('#albumsContainer');
-		var keyupTimer;
 
 		$(function() {
 			$searchBar.focus();
@@ -35,9 +34,7 @@
 			$(window).keyup(e => assignKeyup(e));
 		}
 
-		function search() {
-			clearInterval(keyupTimer);
-
+		async function search() {
 			var term = $searchBar.val();
 
 			if (term.trim() === "") {
@@ -46,29 +43,13 @@
 				return;
 			}
 
-			keyupTimer = setInterval(async () => {
-				var res = await $.get('/api/search', { term: term});
+			var res = await $.get('/api/search', { term: term });
 
-				$songsContainer.empty().append(res.songs.map(song => createResultRow('song', song.id, song.name, song.artist, song.duration, song.artFilepath)));
-				$albumsContainer.empty().append(res.albums.map(album => createResultRow('album', album.id, album.name, album.artist, album.duration, album.artFilepath)));
+			$songsContainer.empty().append(res.songs.map(song => createResultRow('song', song.id, song.name, song.artist, song.duration, song.artFilepath)));
+			$albumsContainer.empty().append(res.albums.map(album => createResultRow('album', album.id, album.name, album.artist, album.duration, album.artFilepath)));
 
-				$songsContainer.children().each(function(i) {
-					if (i >= 5) {
-						$(this).hide();
-					}
-				});
-
-				$albumsContainer.children().each(function(i) {
-					if (i >= 5) {
-						$(this).hide();
-					}
-				});
-
-				(res.songs.length > 0) ? $songs.show() : $songs.hide();
-				(res.albums.length > 0) ? $albums.show() : $albums.hide();
-
-				clearInterval(keyupTimer);
-			}, 300);
+			(res.songs.length > 0) ? $songs.show() : $songs.hide();
+			(res.albums.length > 0) ? $albums.show() : $albums.hide();
 		}
 
 		function assignKeyup(e) {
