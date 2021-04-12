@@ -80,7 +80,7 @@
 		}
 
 		function createResultRow(type, id, name, artist, duration, artFilepath) {
-			var $resultRow = $('<div class="result-row"></div>');
+			var $resultRow = $(`<div class="result-row" data-${type}-id=${id}></div>`);
 			var $img = $('<img>').prop('src', artFilepath);
 			var $artwork = $('<div class="artwork"></div>').append($img);
 			var $details = $('<div class="details"></div>').append([
@@ -88,13 +88,23 @@
 				$('<div></div>').text(artist),
 			]);
 			var $totalTime = $('<div class="total-time"></div>').text(secondsToTimeString(duration));
-			
+
+			$resultRow.dblclick(() => (type === 'song') ? playSong($resultRow) : playAlbum($resultRow));
 			$resultRow.append([
 				$('<div></div>').append([$artwork, $details]),
 				$totalTime
 			]);
 
 			return $resultRow;
+		}
+
+		function playSong($resultRow) {
+			musicControl.changeSong($resultRow.data('song-id'), true);
+		}
+
+		async function playAlbum($resultRow) {
+			var res = await $.get(`/api/album/${$resultRow.data('album-id')}`);
+			musicControl.playNextUp({ list: res.songIds, i: 0 });
 		}
 	})();
 </script>

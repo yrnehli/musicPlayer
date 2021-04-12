@@ -126,12 +126,28 @@ Flight::route("GET /api/song/@songId", function($songId) use ($conn) {
 	$stmt->bindParam(":id", $songId);
 	$stmt->execute();
 	$res = $stmt->fetch();
+
 	Flight::json($res);
+});
+
+Flight::route("GET /api/album/@albumId", function($albumId) use ($conn) {
+	$stmt = $conn->prepare(
+		"SELECT `songs`.`id`
+		FROM `songs`
+		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
+		WHERE `song-album`.`albumId` = :albumId
+		ORDER BY `songs`.`discNumber`, `songs`.`trackNumber`"
+	);
+	$stmt->bindParam(":albumId", $albumId);
+	$stmt->execute();
+	$songIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+	Flight::json(compact('songIds'));
 });
 
 Flight::route("GET /api/search", function() use ($conn) {
 	$searchTerm = Flight::request()->query->term;
-	$searchTerm = preg_replace("/[^a-zA-Z0-9]/", "_", $searchTerm);
+	$searchTerm = str_replace(" ", "%", $searchTerm);
 	$searchTerm = "%$searchTerm%";
 
 	$stmt = $conn->prepare(

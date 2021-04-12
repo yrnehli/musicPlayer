@@ -1,14 +1,5 @@
 #searchBar {
-	background-color: #252525;
-	color: white;
-	border-width: 0px;
-	border-radius: 10px;
-	padding: 15px;
 	width: 100%;
-}
-
-#searchBar:focus  {
-	outline: none;
 }
 
 .result-row {
