@@ -1,6 +1,7 @@
 <?php
 
 require_once 'vendor/autoload.php';
+require_once 'php/global.php';
 require_once 'php/MusicManager.php';
 require_once 'php/MusicDatabase.php';
 
@@ -15,7 +16,7 @@ foreach (['userData', 'userData/albumArt'] as $directory) {
 	}
 }
 
-Flight::map('renderView', function($viewName, $viewData) use ($conn) {
+Flight::map('renderView', function($viewName, $viewData = []) use ($conn) {
 	if (filter_var(Flight::request()->query->partial, FILTER_VALIDATE_BOOLEAN)) {
 		Flight::render($viewName, $viewData);
 		return;
@@ -36,6 +37,10 @@ Flight::route("GET /", function() use ($conn) {
 	$albums = $stmt->fetchAll();
 
 	Flight::renderView('home', compact('albums'));
+});
+
+Flight::route("GET /search", function() {
+	Flight::renderView('search');
 });
 
 Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
@@ -124,13 +129,15 @@ Flight::route("GET /api/song/@songId", function($songId) use ($conn) {
 	Flight::json($res);
 });
 
-Flight::route("GET /api/search/@searchTerm", function($searchTerm) use ($conn) {
-	$searchTerm = preg_replace("/[^a-zA-Z0-9]/", "%", $searchTerm);
-	$searchTerm = "%" . implode('%', str_split($searchTerm)) . "%";
+Flight::route("GET /api/search", function() use ($conn) {
+	$searchTerm = Flight::request()->query->term;
+	$searchTerm = preg_replace("/[^a-zA-Z0-9]/", "_", $searchTerm);
+	$searchTerm = "%$searchTerm%";
 
 	$stmt = $conn->prepare(
-		"SELECT `id`, `name`, `artist`, `artFilepath`
+		"SELECT `id`, `name`, `artist`, `duration`, `albumDetails`.`duration`, `artFilepath`
 		FROM `albums`
+		INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
 		WHERE CONCAT(`name`, `artist`) LIKE :searchTerm
 		OR CONCAT(`artist`, `name`) LIKE :searchTerm"
 	);
@@ -139,7 +146,7 @@ Flight::route("GET /api/search/@searchTerm", function($searchTerm) use ($conn) {
 	$albums = $stmt->fetchAll();
 
 	$stmt = $conn->prepare(
-		"SELECT `songs`.`id`, `songs`.`name`, `songs`.`artist`, `albums`.`artFilepath`
+		"SELECT `songs`.`id`, `songs`.`name`, `songs`.`artist`,`songs`.`duration`, `albums`.`artFilepath`
 		FROM `songs`
 		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
 		INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`

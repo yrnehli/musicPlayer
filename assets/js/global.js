@@ -44,7 +44,7 @@ function initSlider($slider, initialValue, events, disabled = false) {
 	}
 }
 
-function getTimeString(totalSeconds) {
+function secondsToTimeString(totalSeconds) {
 	var minutes = Math.floor(totalSeconds / 60);
 	var seconds = Math.floor(totalSeconds - (minutes * 60));
 

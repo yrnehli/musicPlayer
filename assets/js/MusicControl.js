@@ -1,5 +1,5 @@
 class MusicControl extends Howl {
-	constructor($musicControl, metadata) {
+	constructor($musicControl) {
 		var state = JSON.parse(localStorage.getItem("state")) || {};
 		
 		super({
@@ -8,6 +8,12 @@ class MusicControl extends Howl {
 			volume: state.volume || 0,
 			html5: true
 		});
+
+		navigator.mediaSession.metadata = new MediaMetadata();
+		navigator.mediaSession.setActionHandler('play', () => this.togglePlay());
+		navigator.mediaSession.setActionHandler('pause', () => this.togglePlay());
+		navigator.mediaSession.setActionHandler('previoustrack', () => this.previous());
+		navigator.mediaSession.setActionHandler('nexttrack', () => this.skip());
 
 		this.__disabled = false;
 		this.__queue = state.queue || [];
@@ -22,9 +28,9 @@ class MusicControl extends Howl {
 		this.__$volumeSlider = $musicControl.find("#volumeSlider");
 		this.__$elapsedTime = $musicControl.find("#elapsedTime");
 		this.__$endTime = $musicControl.find("#endTime");
-		this.__metadata = metadata;
+		this.__metadata = navigator.mediaSession.metadata;
 		this.on('end', e => this.skip(e));
-		this.on('load', e => this.__$endTime.text((this.__disabled) ? "0:00" : getTimeString(this.duration())));
+		this.on('load', () => this.__$endTime.text((this.__disabled) ? "0:00" : secondsToTimeString(this.duration())));
 
 		if (!state.songId) {
 			this.disable();

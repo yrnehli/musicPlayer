@@ -12,18 +12,18 @@
 		<div class="h-75 d-flex">
 			<div class="d-flex mx-auto">
 				<button id="prevButton" class="my-auto mx-2">
-					<svg height="16" width="16">
-						<path d="M13 2.5L5 7.119V3H3v10h2V8.881l8 4.619z"></path>
+					<svg class="previous" height="16" width="16">
+						<path></path>
 					</svg>
 				</button>
 				<button id="playButton" class="my-auto mx-2 paused">
-					<svg height="16" width="16">
+					<svg class="play" height="16" width="16">
 						<path></path>
 					</svg>
 				</button>
 				<button id="skipButton" class="my-auto mx-2">
-					<svg height="16" width="16">
-						<path d="M11 3v4.119L3 2.5v11l8-4.619V13h2V3z"></path>
+					<svg class="skip" height="16" width="16">
+						<path></path>
 					</svg>
 				</button>
 			</div>
@@ -48,12 +48,6 @@
 
 <script>
 	(function() {
-		navigator.mediaSession.metadata = new MediaMetadata();
-		navigator.mediaSession.setActionHandler('play', () => musicControl.togglePlay());
-		navigator.mediaSession.setActionHandler('pause', () => musicControl.togglePlay());
-		navigator.mediaSession.setActionHandler('previoustrack', () => musicControl.previous());
-		navigator.mediaSession.setActionHandler('nexttrack', () => musicControl.skip());
-
 		var $songName = $('#songName');
 		var $prevButton = $('#prevButton');
 		var $playButton = $('#playButton');
@@ -64,7 +58,8 @@
 		var $progressSlider = $('#progressSlider');
 		var $elapsedTime = $('#elapsedTime');
 		var $endTime = $('#endTime');
-		musicControl = new MusicControl($musicControl, navigator.mediaSession.metadata);
+		
+		musicControl = new MusicControl($musicControl);
 
 		initStateInterval();
 		initSliders();
@@ -119,7 +114,7 @@
 				var progress = musicControl.seek() / duration;
 				var elapsedSeconds = progress * duration;
 
-				$elapsedTime.text(getTimeString(elapsedSeconds));
+				$elapsedTime.text(secondsToTimeString(elapsedSeconds));
 				$progressSlider.slider("value", progress * 100);
 			};
 
@@ -130,7 +125,7 @@
 				$progressSlider,
 				0,
 				{
-					slide: (e, ui) => $elapsedTime.text(getTimeString(ui.value / 100 * musicControl.duration())),
+					slide: (e, ui) => $elapsedTime.text(secondsToTimeString(ui.value / 100 * musicControl.duration())),
 					start: e => clearInterval(progressInterval),
 					stop: (e, ui) => {
 						musicControl.seek(ui.value / 100 * musicControl.duration());
@@ -142,22 +137,23 @@
 		}
 
 		function initEvents() {
-			$songName.click(e => partialManager.loadPartial(`/album/${$songName.data('albumId')}`));
-			$prevButton.click(e => musicControl.previous());
-			$playButton.click(e => musicControl.togglePlay());
-			$skipButton.click(e => musicControl.skip());
-			$volumeButton.click(e => updateVolumeButton());
+			$songName.click(() => partialManager.loadPartial(`/album/${$songName.data('albumId')}`));
+			$prevButton.click(() => musicControl.previous());
+			$playButton.click(() => musicControl.togglePlay());
+			$skipButton.click(() => musicControl.skip());
+			$volumeButton.click(() => updateVolumeButton());
+			$volumeSlider.parent().on('mousewheel', e => adjustVolume(e));
 			$(window).keydown(e => assignKeydown(e));
 			$(window).keyup(e => assignKeyup(e));
+		}
 
-			$volumeSlider.parent().on('mousewheel', function(e) {
-				var volume = $volumeSlider.slider("value");
+		function adjustVolume(e) {
+			var volume = $volumeSlider.slider("value");
 
-				$volumeSlider.slider(
-					"value",
-					(e.originalEvent.wheelDelta > 0) ? volume + 10 : volume - 10
-				);
-			});
+			$volumeSlider.slider(
+				"value",
+				(e.originalEvent.wheelDelta > 0) ? volume + 10 : volume - 10
+			);
 		}
 
 		function updateVolumeButton() {
@@ -177,10 +173,17 @@
 				e.preventDefault();
 			}
 
+			// Ctrl + F
+			if (e.ctrlKey && e.keyCode === 70) {
+				e.preventDefault();
+			}
+
 			// Space
 			if (e.keyCode === 32) {
-				e.preventDefault();
-				musicControl.togglePlay();
+				if ($(':focus').length === 0) {
+					e.preventDefault();
+					musicControl.togglePlay();
+				}
 			}
 		}
 
@@ -193,6 +196,12 @@
 					list: shuffle([<?= implode(", ", $songIds) ?>]),
 					i: 0
 				});
+			}
+
+			// Ctrl + F
+			if (e.ctrlKey && e.keyCode === 70) {
+				e.preventDefault();
+				partialManager.loadPartial('/search');
 			}
 		}
 	})();

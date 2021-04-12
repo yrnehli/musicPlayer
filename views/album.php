@@ -38,20 +38,20 @@
 	</div>
 	<div class="d-flex my-3 mx-3">
 		<button id="playAlbumButton" class="btn-spotify mr-1">
-			<svg class="my-auto mr-2" height="16" width="16">
-				<path d="M4.018 14L14.41 8 4.018 2z"></path>
+			<svg class="my-auto mr-2 play" height="16" width="16">
+				<path></path>
 			</svg>
 			Play
 		</button>
 		<button id="shuffleAlbumButton" class="btn-spotify mx-1">
-			<svg class="my-auto mr-2" height="16" width="16">
-				<path d="M4.5 6.8l.7-.8C4.1 4.7 2.5 4 .9 4v1c1.3 0 2.6.6 3.5 1.6l.1.2zm7.5 4.7c-1.2 0-2.3-.5-3.2-1.3l-.6.8c1 1 2.4 1.5 3.8 1.5V14l3.5-2-3.5-2v1.5zm0-6V7l3.5-2L12 3v1.5c-1.6 0-3.2.7-4.2 2l-3.4 3.9c-.9 1-2.2 1.6-3.5 1.6v1c1.6 0 3.2-.7 4.2-2l3.4-3.9c.9-1 2.2-1.6 3.5-1.6z"></path>
+			<svg class="my-auto mr-2 shuffle" height="16" width="16">
+				<path></path>
 			</svg>
 			Shuffle
 		</button>
 		<button id="queueAlbumButton" class="btn-spotify mx-1">
-			<svg class="my-auto mr-2" height="16" width="16">
-				<path d="M14 7H9V2H7v5H2v2h5v5h2V9h5z"></path>
+			<svg class="my-auto mr-2 queue" height="16" width="16">
+				<path></path>
 			</svg>
 			Add to queue
 		</button>
@@ -61,8 +61,8 @@
 			<div>#</div>
 			<div id="title">TITLE</div>
 			<div id="timeIcon">
-				<svg width="16" height="16">
-					<path d="M7.999 3H6.999V7V8H7.999H9.999V7H7.999V3ZM7.5 0C3.358 0 0 3.358 0 7.5C0 11.642 3.358 15 7.5 15C11.642 15 15 11.642 15 7.5C15 3.358 11.642 0 7.5 0ZM7.5 14C3.916 14 1 11.084 1 7.5C1 3.916 3.916 1 7.5 1C11.084 1 14 3.916 14 7.5C14 11.084 11.084 14 7.5 14Z" fill="currentColor"></path>
+				<svg class="time" width="16" height="16">
+					<path></path>
 				</svg>
 			</div>
 		</div>
@@ -86,14 +86,7 @@
 					</div>
 				</div>
 				<div class="total-time">
-					<?php
-					
-					$minutes = floor($song['duration'] / 60);
-					$seconds = str_pad($song['duration'] - ($minutes * 60), 2, "0", STR_PAD_LEFT);
-
-					print "$minutes:$seconds";
-					
-					?>
+					<?= secondsToTimeString($song['duration']) ?>
 				</div>
 			</div>
 		<?php endforeach; ?>
