@@ -61,7 +61,7 @@
 			<div>#</div>
 			<div id="title">TITLE</div>
 			<div id="timeIcon">
-				<svg class="time" width="16" height="16">
+				<svg class="time" width="16" height="16" fill="currentColor">
 					<path></path>
 				</svg>
 			</div>
