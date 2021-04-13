@@ -9,7 +9,7 @@
 		</div>
 	</div>
 	<div class="my-3">
-	<div id="albums" style="display: none;">
+		<div id="albums" style="display: none;">
 			<h2>Albums</h2>
 			<div id="albumsContainer"></div>
 		</div>
