@@ -32,7 +32,11 @@ Flight::map('renderView', function($viewName, $viewData = []) use ($conn) {
 });
 
 Flight::route("GET /", function() use ($conn) {
-	$stmt = $conn->prepare("SELECT * FROM `albums`");
+	$stmt = $conn->prepare(
+		"SELECT *
+		FROM `albums`
+		ORDER BY RAND()"
+	);
 	$stmt->execute();
 	$albums = $stmt->fetchAll();
 
