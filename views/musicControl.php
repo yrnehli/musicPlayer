@@ -120,7 +120,7 @@
 
 			var progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 
-			initSlider($volumeSlider, Math.pow(musicControl.volume() * 100, 1/4), { change: updateVolume, slide: updateVolume });
+			initSlider($volumeSlider, Math.pow(musicControl.volume(), 1/4) * 100, { change: updateVolume, slide: updateVolume });
 			initSlider(
 				$progressSlider,
 				0,
