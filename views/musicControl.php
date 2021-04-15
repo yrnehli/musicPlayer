@@ -88,7 +88,7 @@
 			const PROGRESS_INTERVAL_TIMEOUT = 100;
 
 			var updateVolume = function(e, ui) {
-				var volume = ui.value / 100;
+				var volume = Math.pow(ui.value / 100, 4);
 
 				$volumeButton.removeClass('mute low-volume medium-volume high-volume');
 			
@@ -120,7 +120,7 @@
 
 			var progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 
-			initSlider($volumeSlider, musicControl.volume() * 100, { change: updateVolume, slide: updateVolume });
+			initSlider($volumeSlider, Math.pow(musicControl.volume() * 100, 1/4), { change: updateVolume, slide: updateVolume });
 			initSlider(
 				$progressSlider,
 				0,
