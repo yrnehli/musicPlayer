@@ -173,8 +173,8 @@
 				e.preventDefault();
 			}
 
-			// Ctrl + F
-			if (e.ctrlKey && e.keyCode === 70) {
+			// Esc
+			if (e.keyCode === 27) {
 				e.preventDefault();
 			}
 
@@ -198,10 +198,10 @@
 				});
 			}
 
-			// Ctrl + F
-			if (e.ctrlKey && e.keyCode === 70) {
+			// Esc
+			if (e.keyCode === 27) {
 				e.preventDefault();
-				partialManager.loadPartial('/search');
+				partialManager.loadPartial('/');
 			}
 		}
 	})();

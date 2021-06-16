@@ -265,7 +265,7 @@ input[type="text"] {
 	color: white;
 	border-width: 0px;
 	border-radius: 10px;
-	padding: 15px;
+	padding: 10px 15px;
 }
 
 input[type="text"]:focus  {
