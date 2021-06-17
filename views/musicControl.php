@@ -92,11 +92,11 @@
 
 				$volumeButton.removeClass('mute low-volume medium-volume high-volume');
 			
-				if (volume === 0) {
+				if (ui.value === 0) {
 					$volumeButton.addClass('mute');
-				} else if (volume <= 0.33) {
+				} else if (ui.value <= 33) {
 					$volumeButton.addClass('low-volume');
-				} else if (volume <= 0.66) {
+				} else if (ui.value <= 66) {
 					$volumeButton.addClass('medium-volume');
 				} else {
 					$volumeButton.addClass('high-volume');
