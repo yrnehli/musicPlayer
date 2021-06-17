@@ -98,3 +98,16 @@ function showToastNotification(message, timeout = 3000) {
 	$toastNotification.addClass('show');
 	setTimeout(() => $toastNotification.removeClass('show'), timeout);
 }
+
+function componentToHex(c) {
+	var hex = c.toString(16);
+	return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function updateTitleBarColour(hex) {
+	$('meta[name="theme-color"]').attr('content', hex);
+}

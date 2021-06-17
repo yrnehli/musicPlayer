@@ -100,6 +100,7 @@
 		var $queueAlbumButton = $('#queueAlbumButton');
 
 		$(function() {
+			updateTitleBarColour(rgbToHex(<?= $rgb ?>));
 			scaleAlbumNameText();
 			initTracklistRows();
 			initEvents();
