@@ -37,7 +37,11 @@
 		</div>
 	</div>
 	<div class="h-100 d-flex ml-auto">
-		<svg id="volumeButton" class="my-auto mr-2 mute" role="presentation" height="16" width="16">
+		<svg id="followAlbumButton" class="my-auto mx-2" height="16" width="16">
+			<path></path>
+			<path></path>
+		</svg>
+		<svg id="volumeButton" class="my-auto mx-2 mute" height="16" width="16">
 			<path></path>
 		</svg>
 		<div class="d-flex h-100">
@@ -52,6 +56,7 @@
 		var $prevButton = $('#prevButton');
 		var $playButton = $('#playButton');
 		var $skipButton = $('#skipButton');
+		var $followAlbumButton = $('#followAlbumButton');
 		var $volumeSlider = $('#volumeSlider');
 		var $volumeButton = $('#volumeButton');
 		var $musicControl = $('#musicControl');
@@ -137,11 +142,12 @@
 		}
 
 		function initEvents() {
-			$songName.click(() => partialManager.loadPartial(`/album/${$songName.data('albumId')}`));
-			$prevButton.click(() => musicControl.previous());
-			$playButton.click(() => musicControl.togglePlay());
-			$skipButton.click(() => musicControl.skip());
-			$volumeButton.click(() => updateVolumeButton());
+			$songName.click(e => partialManager.loadPartial(`/album/${$songName.data('albumId')}`));
+			$prevButton.click(e => musicControl.previous());
+			$playButton.click(e => musicControl.togglePlay());
+			$skipButton.click(e => musicControl.skip());
+			$followAlbumButton.click(e => $followAlbumButton.toggleClass('active'));
+			$volumeButton.click(e => updateVolumeButton());
 			$volumeSlider.parent().on('mousewheel', e => adjustVolume(e));
 			$(window).keydown(e => assignKeydown(e));
 			$(window).keyup(e => assignKeyup(e));

@@ -28,6 +28,7 @@ class MusicControl extends Howl {
 		this.__$volumeSlider = $musicControl.find("#volumeSlider");
 		this.__$elapsedTime = $musicControl.find("#elapsedTime");
 		this.__$endTime = $musicControl.find("#endTime");
+		this.__$followAlbumButton = $musicControl.find("#followAlbumButton");
 		this.__metadata = navigator.mediaSession.metadata;
 		this.on('end', e => this.skip(e));
 		this.on('load', () => this.__$endTime.text((this.__disabled) ? "0:00" : secondsToTimeString(this.duration())));
@@ -198,5 +199,9 @@ class MusicControl extends Howl {
 		this.__metadata.artist = res.songArtist;
 		this.__metadata.album = res.albumName;
 		this.__metadata.artwork = [{ src: res.albumArtFilepath, sizes: '512x512', type: 'image/png' }];
+
+		if (this.__$followAlbumButton.hasClass('active')) {
+			partialManager.loadPartial(`/album/${res.albumId}`)
+		}
 	}
 }
