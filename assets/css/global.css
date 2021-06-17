@@ -131,6 +131,7 @@ body {
 	-webkit-font-smoothing: antialiased;
 	background-color: #121212;
 	color: #b3b3b3;
+	user-select: none;
 }
 
 button:focus {
