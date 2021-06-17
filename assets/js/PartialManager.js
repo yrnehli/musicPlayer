@@ -11,7 +11,7 @@ class PartialManager {
 		});
 	}
 
-	async loadPartial(url) {
+	async loadPartial(url, selectorToFocus) {
 		if (window.location.pathname === url) {
 			return;
 		}
@@ -21,11 +21,11 @@ class PartialManager {
 			this.initiatedHistory = true;
 		}
 	
-		this.updatePartial(await $.get(url, { partial: true }));
+		this.updatePartial(await $.get(url, { partial: true }), 0, selectorToFocus);
 		history.pushState(this.getCurrentState(), "", url);
 	}
 
-	updatePartial(html, scroll = 0) {
+	updatePartial(html, scroll, selectorToFocus) {
 		updateTitleBarColour('#121212');
 		this.$partial.removeClass('fade');
 		this.$partial.css('opacity', 0);
@@ -38,6 +38,10 @@ class PartialManager {
 				.off('scroll')
 				.scrollStopped(() => history.replaceState(this.getCurrentState(), "", document.URL))
 			;
+			if (selectorToFocus) {
+				console.log(selectorToFocus);
+				this.$partial.find(selectorToFocus).focus();
+			}
 		});
 	}
 	

@@ -181,6 +181,11 @@
 				e.preventDefault();
 			}
 
+			// Ctrl + F
+			if (e.ctrlKey && e.keyCode === 70) {
+				e.preventDefault();
+			}
+
 			// Esc
 			if (e.keyCode === 27) {
 				e.preventDefault();
@@ -199,11 +204,16 @@
 			// Ctrl + S
 			if (e.ctrlKey && e.keyCode === 83) {
 				e.preventDefault();
-
 				musicControl.playNextUp({
 					list: shuffle([<?= implode(", ", $songIds) ?>]),
 					i: 0
 				});
+			}
+
+			// Ctrl + F
+			if (e.ctrlKey && e.keyCode === 70) {
+				e.preventDefault();
+				partialManager.loadPartial('/', '#searchBar');
 			}
 
 			// Esc

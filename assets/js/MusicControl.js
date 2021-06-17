@@ -170,7 +170,7 @@ class MusicControl extends Howl {
 		var wasPlaying = (e || this.playing());
 
 		if (this.__queue.length > 0) {
-			this.changeSong(this.__queue.shift(), (wasPlaying || e));
+			this.changeSong(this.__queue.shift(), wasPlaying);
 		} else if (this.__nextUp.list.length > 0 && this.__nextUp.i + 1 < this.__nextUp.list.length) {
 			this.changeSong(this.__nextUp.list[++this.__nextUp.i], wasPlaying);
 		} else {
