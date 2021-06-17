@@ -33,6 +33,10 @@ class MusicControl extends Howl {
 		this.on('end', e => this.skip(e));
 		this.on('load', () => this.__$endTime.text((this.__disabled) ? "0:00" : secondsToTimeString(this.duration())));
 
+		if (state.followAlbum) {
+			this.__$followAlbumButton.addClass('active');
+		}
+
 		if (!state.songId) {
 			this.disable();
 			return;
@@ -135,7 +139,7 @@ class MusicControl extends Howl {
 			return;
 		}
 
-		if (this.seek() > 1) {
+		if (this.seek() >= 3) {
 			this.seek(0);
 			return;
 		}
@@ -143,8 +147,7 @@ class MusicControl extends Howl {
 		var wasPlaying = this.playing();
 		
 		if (this.__nextUp.list.length > 0 && this.__nextUp.i - 1 >= 0) {
-			this.__nextUp.i--;
-			this.changeSong(this.__nextUp.list[this.__nextUp.i], wasPlaying);
+			this.changeSong(this.__nextUp.list[--this.__nextUp.i], wasPlaying);
 		} else {
 			this.disable();
 		}

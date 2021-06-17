@@ -79,6 +79,7 @@
 				localStorage.setItem(
 					"state",
 					JSON.stringify({
+						followAlbum: $followAlbumButton.hasClass('active'),
 						volume: musicControl.volume(),
 						queue: musicControl.queue(),
 						nextUp: musicControl.nextUp(),
@@ -165,12 +166,13 @@
 		function updateVolumeButton() {
 			var volume = $volumeSlider.slider("value");
 
-			if (volume !== 0) {
-				$volumeSlider.data("volume", volume);
-				$volumeSlider.slider("value", 0);
-			} else {
-				$volumeSlider.slider("value", $volumeSlider.data("volume") || 10);		
+			if (volume === 0) {
+				$volumeSlider.slider("value", $volumeSlider.data("volume") || 10);
+				return;
 			}
+
+			$volumeSlider.data("volume", volume);
+			$volumeSlider.slider("value", 0);
 		}
 
 		function assignKeydown(e) {
