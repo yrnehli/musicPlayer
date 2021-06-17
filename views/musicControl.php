@@ -143,7 +143,7 @@
 		}
 
 		function initEvents() {
-			$songName.click(e => partialManager.loadPartial(`/album/${$songName.data('albumId')}`));
+			$songName.click(e => partialManager.loadPartial(`/album/${musicControl.albumId()}`));
 			$prevButton.click(e => musicControl.previous());
 			$playButton.click(e => musicControl.togglePlay());
 			$skipButton.click(e => musicControl.skip());

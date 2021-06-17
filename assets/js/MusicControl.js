@@ -45,7 +45,7 @@ class MusicControl extends Howl {
 		$.ajax(`/mp3/${state.songId}`, {
 			statusCode: { 500: () => this.disable() },
 			success: () => {
-				this.changeSong(state.songId, false);
+				this.changeSong(state.songId, false, true);
 				this.seek(state.seek || 0);
 			},
 		});
@@ -57,6 +57,10 @@ class MusicControl extends Howl {
 
 	songId() {
 		return this.__songId;
+	}
+
+	albumId() {
+		return this.__albumId;
 	}
 
 	disable() {
@@ -88,22 +92,27 @@ class MusicControl extends Howl {
 		return (this._state === "loaded");
 	}
 
-	changeSong(songId, play) {
+	async changeSong(songId, play, disableFollowAlbumArt = false) {
 		this.__songId = songId;
 		this.enable();
-		this.updateMusicControl();
-
+		
 		this.unload();
 		this._duration = 0;
 		this._sprite = {};
 		this._src = `/mp3/${songId}`;
 		this.load();
-
+		
 		// Play even if we want don't want to so we get the media session metadata
 		this.play();
 		
 		if (!play) {
 			this.pause();
+		}
+		
+		await this.updateMusicControl();
+
+		if (!disableFollowAlbumArt && this.__$followAlbumButton.hasClass('active')) {
+			partialManager.loadPartial(`/album/${this.__albumId}`)
 		}
 	}
 
@@ -163,8 +172,7 @@ class MusicControl extends Howl {
 		if (this.__queue.length > 0) {
 			this.changeSong(this.__queue.shift(), (wasPlaying || e));
 		} else if (this.__nextUp.list.length > 0 && this.__nextUp.i + 1 < this.__nextUp.list.length) {
-			this.__nextUp.i++;
-			this.changeSong(this.__nextUp.list[this.__nextUp.i], wasPlaying);
+			this.changeSong(this.__nextUp.list[++this.__nextUp.i], wasPlaying);
 		} else {
 			this.disable();
 		}
@@ -195,16 +203,13 @@ class MusicControl extends Howl {
 	async updateMusicControl() {
 		var res = await $.get(`/api/song/${this.__songId}`);
 		
-		this.__$songName.text(res.songName).data('albumId', res.albumId);
+		this.__albumId = res.albumId;
+		this.__$songName.text(res.songName);
 		this.__$artistName.text(res.songArtist);
 		this.__$albumArt.prop('src', res.albumArtFilepath);
 		this.__metadata.title = res.songName;
 		this.__metadata.artist = res.songArtist;
 		this.__metadata.album = res.albumName;
 		this.__metadata.artwork = [{ src: res.albumArtFilepath, sizes: '512x512', type: 'image/png' }];
-
-		if (this.__$followAlbumButton.hasClass('active')) {
-			partialManager.loadPartial(`/album/${res.albumId}`)
-		}
 	}
 }
