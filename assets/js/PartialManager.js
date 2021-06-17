@@ -24,22 +24,21 @@ class PartialManager {
 		this.updatePartial(await $.get(url, { partial: true }));
 		history.pushState(this.getCurrentState(), "", url);
 	}
-	
+
 	updatePartial(html, scroll = 0) {
 		updateTitleBarColour('#121212');
 		this.$partial.removeClass('fade');
 		this.$partial.css('opacity', 0);
 		this.$partial.html(html);
-	
-		var $scrollableContent = this.$partial.find('.simplebar-content-wrapper');
-	
 		this.$partial.waitForImages(() => {
 			this.$partial.addClass('fade');
 			this.$partial.css('opacity', 1);
-			$scrollableContent.scrollTop(scroll);
+			this.$partial.find('.simplebar-content-wrapper')
+				.scrollTop(scroll)
+				.off('scroll')
+				.scrollStopped(() => history.replaceState(this.getCurrentState(), "", document.URL))
+			;
 		});
-	
-		$scrollableContent.off('scroll').scrollStopped(() => history.replaceState(this.getCurrentState(), "", document.URL));
 	}
 	
 	getCurrentState() {
