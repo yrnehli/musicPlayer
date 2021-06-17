@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="/assets/css/album.css">
 
-<div id="root" class="py-5 px-4" data-simplebar>
-	<div class="d-flex mt-3 mb-4">
+<div id="root" class="py-5 px-4" style="background: linear-gradient(rgb(<?= $rgb ?>) 0%, rgb(24, 24, 24) 75%)" data-simplebar>
+	<div class="d-flex mb-4">
 		<img id="albumArtLarge" class="mx-3" src="<?= $album['artFilepath'] ?>">		
 		<div class="d-flex mx-2">
 			<div class="mt-auto">

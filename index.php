@@ -5,6 +5,8 @@ require_once 'php/global.php';
 require_once 'php/MusicManager.php';
 require_once 'php/MusicDatabase.php';
 
+use ColorThief\ColorThief;
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 $db = new MusicDatabase();
@@ -77,7 +79,33 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 	$stmt->execute();
 	$songs = $stmt->fetchAll();
 
-	Flight::renderView('album', compact('album', 'songs'));
+	$rgb = ColorThief::getColor(
+		file_get_contents(__DIR__ . $album['artFilepath'])
+	);
+
+	$darken = false;
+	$darknessFactor = 1;
+
+	foreach ($rgb as $x) {
+		if ($x > 60) {
+			$darken = true;
+			if ($darknessFactor > 60 / $x) {
+				$darknessFactor = 60 / $x;
+			}
+		}
+	}
+
+	$rgb = implode(
+		", ",
+		array_map(
+			function($x) use ($darken, $darknessFactor) {
+				return ($darken) ? $x * $darknessFactor : $x;
+			},
+			$rgb
+		)
+	);
+
+	Flight::renderView('album', compact('album', 'songs', 'rgb'));
 });
 
 Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
