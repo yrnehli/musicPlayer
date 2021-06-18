@@ -3,7 +3,7 @@ class MusicControl extends Howl {
 		var state = JSON.parse(localStorage.getItem("state")) || {};
 		
 		super({
-			src: ['/assets/misc/silence.mp3'],
+			src: [null],
 			format: 'mp3',
 			volume: state.volume || 0,
 			html5: true
@@ -131,8 +131,8 @@ class MusicControl extends Howl {
 			return;
 		}
 
-		super.play();
 		this.__$playButton.removeClass("paused");
+		super.play();
 
 		$('.tracklist-row.active').removeClass('active');
 		$(`.tracklist-row[data-song-id="${this.__songId}"]`).addClass('active');
@@ -143,8 +143,8 @@ class MusicControl extends Howl {
 			return;
 		}
 
-		super.pause();
 		this.__$playButton.addClass("paused");
+		super.pause();
 
 		$('.tracklist-row.active').removeClass('active');
 	}

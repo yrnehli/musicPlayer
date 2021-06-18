@@ -39,7 +39,6 @@ class PartialManager {
 				.scrollStopped(() => history.replaceState(this.getCurrentState(), "", document.URL))
 			;
 			if (selectorToFocus) {
-				console.log(selectorToFocus);
 				this.$partial.find(selectorToFocus).focus();
 			}
 		});
