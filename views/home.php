@@ -68,6 +68,9 @@
 		async function search() {
 			var term = $searchBar.val();
 
+			$searchBar.attr('value', term);
+			partialManager.updateCurrentState();
+
 			if (term.trim() === "") {
 				$clearSearchBar.hide();
 				$searchResults.hide();
@@ -144,7 +147,7 @@
 				width: `${width}px`,
 				visibility: "visible"
 			});
-			$clearSearchBar.css('right', `${($searchBar.outerWidth(true) - $searchBar.outerWidth()) / 2 + 32}px`);
+			$clearSearchBar.css('right', `${($searchBar.outerWidth(true) - $searchBar.outerWidth()) / 2 + 33}px`);
 		}
 	})();
 </script>

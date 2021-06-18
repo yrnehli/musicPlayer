@@ -36,12 +36,16 @@ class PartialManager {
 			this.$partial.find('.simplebar-content-wrapper')
 				.scrollTop(scroll)
 				.off('scroll')
-				.scrollStopped(() => history.replaceState(this.getCurrentState(), "", document.URL))
+				.scrollStopped(() => this.updateCurrentState())
 			;
 			if (selectorToFocus) {
 				this.$partial.find(selectorToFocus).focus();
 			}
 		});
+	}
+
+	updateCurrentState() {
+		history.replaceState(this.getCurrentState(), "", document.URL);
 	}
 	
 	getCurrentState() {
