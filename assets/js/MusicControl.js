@@ -45,7 +45,7 @@ class MusicControl extends Howl {
 		$.ajax(`/mp3/${state.songId}`, {
 			statusCode: { 500: () => this.disable() },
 			success: () => {
-				this.changeSong(state.songId, false, true);
+				this.changeSong(state.songId, false, false, true);
 				this.seek(state.seek || 0);
 			},
 		});
@@ -92,7 +92,7 @@ class MusicControl extends Howl {
 		return (this._state === "loaded");
 	}
 
-	async changeSong(songId, play, disableFollowAlbumArt = false) {
+	async changeSong(songId, play, delayFollowAlbumArt = true, disableFollowAlbumArt = false) {
 		this.__songId = songId;
 		this.enable();
 		
@@ -113,7 +113,12 @@ class MusicControl extends Howl {
 
 		if (!disableFollowAlbumArt && this.__$followAlbumButton.hasClass('active')) {
 			clearTimeout(this.__timeout);
-			this.__timeout = setTimeout(() => partialManager.loadPartial(`/album/${this.__albumId}`), 1000);
+
+			if (delayFollowAlbumArt) {
+				this.__timeout = setTimeout(() => partialManager.loadPartial(`/album/${this.__albumId}`), 1000);
+			} else {
+				partialManager.loadPartial(`/album/${this.__albumId}`);
+			}
 		}
 	}
 
@@ -171,9 +176,9 @@ class MusicControl extends Howl {
 		var wasPlaying = (e || this.playing());
 
 		if (this.__queue.length > 0) {
-			this.changeSong(this.__queue.shift(), wasPlaying);
+			this.changeSong(this.__queue.shift(), wasPlaying, !e);
 		} else if (this.__nextUp.list.length > 0 && this.__nextUp.i + 1 < this.__nextUp.list.length) {
-			this.changeSong(this.__nextUp.list[++this.__nextUp.i], wasPlaying);
+			this.changeSong(this.__nextUp.list[++this.__nextUp.i], wasPlaying, !e);
 		} else {
 			this.disable();
 		}
