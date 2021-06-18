@@ -21,7 +21,7 @@
 			</div>
 		</div>
 		<div id="albums" class="mx-auto centre">
-			<?php foreach ($albums as $album) : ?>
+			<?php foreach ($albums as $album): ?>
 				<div class="album-container mx-2 my-2" data-album-id="<?= $album['id'] ?>">
 					<img class="album-art" src="<?= $album['artFilepath'] ?>">
 					<div class="title">
@@ -81,9 +81,7 @@
 
 			$clearSearchBar.show();
 
-			var res = await $.get('/api/search', {
-				term: term
-			});
+			var res = await $.get('/api/search', { term: term });
 
 			$songsContainer.empty().append(res.songs.map(song => createResultRow('song', song.id, song.name, song.artist, song.duration, song.artFilepath)));
 			$albumsContainer.empty().append(res.albums.map(album => createResultRow('album', album.id, album.name, album.artist, album.duration, album.artFilepath)));
