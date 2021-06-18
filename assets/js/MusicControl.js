@@ -112,7 +112,8 @@ class MusicControl extends Howl {
 		await this.updateMusicControl();
 
 		if (!disableFollowAlbumArt && this.__$followAlbumButton.hasClass('active')) {
-			partialManager.loadPartial(`/album/${this.__albumId}`)
+			clearTimeout(this.__timeout);
+			this.__timeout = setTimeout(() => partialManager.loadPartial(`/album/${this.__albumId}`), 1000);
 		}
 	}
 
