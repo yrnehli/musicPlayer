@@ -66,6 +66,7 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 			->status(404)
 			->send()
 		;
+		return;
 	}
 
 	$stmt = $conn->prepare(
