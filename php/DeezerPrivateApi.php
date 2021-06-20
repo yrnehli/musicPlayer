@@ -31,13 +31,14 @@ class DeezerPrivateApi {
 	}
 
 	public function getSongData($songId) {
+		$regex = "/\(?feat\.? .*|\(?ft\.? .*|\(with .*|\(Deluxe.*|- Bonus.*/i";
 		$res = json_decode($this->request("deezer.pageTrack", json_encode(['sng_id' => $songId])));
 		$data = $res->results->DATA;
 
 		return [
 			'md5' => $data->MD5_ORIGIN,
 			'mediaVersion' => $data->MEDIA_VERSION,
-			'songName' => $data->SNG_TITLE,
+			'songName' => trim(preg_replace($regex, '', $data->SNG_TITLE)),
 			'songArtist' => implode(
 				", ",
 				array_map(
@@ -48,7 +49,7 @@ class DeezerPrivateApi {
 				)
 			),
 			'albumArtFilepath' => "https://cdns-images.dzcdn.net/images/cover/$data->ALB_PICTURE/500x500.jpg",
-			'albumName' => $data->ALB_TITLE
+			'albumName' => trim(preg_replace($regex, '', $data->ALB_TITLE))
 		];
 	}
 
