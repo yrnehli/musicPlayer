@@ -126,12 +126,12 @@
 		}
 
 		function playSong($resultRow) {
-			musicControl.changeSong($resultRow.data('song-id'), true);
+			musicPlayer.changeSong($resultRow.data('song-id'), true);
 		}
 
 		async function playAlbum($resultRow) {
 			var res = await $.get(`/api/album/${$resultRow.data('album-id')}`);
-			musicControl.playNextUp({
+			musicPlayer.playNextUp({
 				list: res.songIds,
 				i: 0
 			});

@@ -64,7 +64,7 @@
 		var $elapsedTime = $('#elapsedTime');
 		var $endTime = $('#endTime');
 		
-		musicControl = new MusicControl($musicControl);
+		musicPlayer = new MusicPlayer($musicControl);
 
 		initStateInterval();
 		initSliders();
@@ -72,7 +72,7 @@
 
 		function initStateInterval() {
 			setInterval(() => {
-				if (!musicControl.loaded() || musicControl.disabled()) {
+				if (!musicPlayer.loaded() || musicPlayer.disabled()) {
 					return;
 				}
 
@@ -80,11 +80,11 @@
 					"state",
 					JSON.stringify({
 						followAlbum: $followAlbumButton.hasClass('active'),
-						volume: musicControl.volume(),
-						queue: musicControl.queue(),
-						nextUp: musicControl.nextUp(),
-						seek: musicControl.seek(),
-						songId: musicControl.songId()
+						volume: musicPlayer.volume(),
+						queue: musicPlayer.queue(),
+						nextUp: musicPlayer.nextUp(),
+						seek: musicPlayer.seek(),
+						songId: musicPlayer.songId()
 					})
 				);
 			}, 1000);
@@ -108,16 +108,16 @@
 					$volumeButton.addClass('high-volume');
 				}
 
-				musicControl.volume(volume);
+				musicPlayer.volume(volume);
 			}
 
 			var progressIntervalCallback = function() {
-				if (!musicControl.loaded() || musicControl.disabled()) {
+				if (!musicPlayer.loaded() || musicPlayer.disabled()) {
 					return;
 				}
 
-				var duration = musicControl.duration();
-				var progress = musicControl.seek() / duration;
+				var duration = musicPlayer.duration();
+				var progress = musicPlayer.seek() / duration;
 				var elapsedSeconds = progress * duration;
 
 				$elapsedTime.text(secondsToTimeString(elapsedSeconds));
@@ -126,27 +126,27 @@
 
 			var progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 
-			initSlider($volumeSlider, Math.pow(musicControl.volume(), 1/4) * 100, { change: updateVolume, slide: updateVolume });
+			initSlider($volumeSlider, Math.pow(musicPlayer.volume(), 1/4) * 100, { change: updateVolume, slide: updateVolume });
 			initSlider(
 				$progressSlider,
 				0,
 				{
-					slide: (e, ui) => $elapsedTime.text(secondsToTimeString(ui.value / 100 * musicControl.duration())),
+					slide: (e, ui) => $elapsedTime.text(secondsToTimeString(ui.value / 100 * musicPlayer.duration())),
 					start: e => clearInterval(progressInterval),
 					stop: (e, ui) => {
-						musicControl.seek(ui.value / 100 * musicControl.duration());
+						musicPlayer.seek(ui.value / 100 * musicPlayer.duration());
 						progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 					}
 				},
-				musicControl.disabled()
+				musicPlayer.disabled()
 			);
 		}
 
 		function initEvents() {
-			$songName.click(e => partialManager.loadPartial(`/album/${musicControl.albumId()}`));
-			$prevButton.click(e => musicControl.previous());
-			$playButton.click(e => musicControl.togglePlay());
-			$skipButton.click(e => musicControl.skip());
+			$songName.click(e => { if (musicPlayer.albumId()) partialManager.loadPartial(`/album/${musicPlayer.albumId()}`) });
+			$prevButton.click(e => musicPlayer.previous());
+			$playButton.click(e => musicPlayer.togglePlay());
+			$skipButton.click(e => musicPlayer.skip());
 			$followAlbumButton.click(e => $followAlbumButton.toggleClass('active'));
 			$volumeButton.click(e => updateVolumeButton());
 			$volumeSlider.parent().on('mousewheel', e => adjustVolume(e));
@@ -195,7 +195,7 @@
 			if (e.keyCode === 32) {
 				if ($(':focus').length === 0) {
 					e.preventDefault();
-					musicControl.togglePlay();
+					musicPlayer.togglePlay();
 				}
 			}
 		}
@@ -204,7 +204,7 @@
 			// Ctrl + S
 			if (e.ctrlKey && e.keyCode === 83) {
 				e.preventDefault();
-				musicControl.playNextUp({
+				musicPlayer.playNextUp({
 					list: shuffle([<?= implode(", ", $songIds) ?>]),
 					i: 0
 				});
