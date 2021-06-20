@@ -67,6 +67,7 @@
 		}
 
 		function search() {
+			partialManager.updateCurrentState();
 			clearInterval(timeout);
 
 			timeout = setTimeout(
@@ -74,7 +75,6 @@
 					var term = $searchBar.val();
 		
 					$searchBar.attr('value', term);
-					partialManager.updateCurrentState();
 		
 					if (term.trim() === "") {
 						$clearSearchBar.hide();
