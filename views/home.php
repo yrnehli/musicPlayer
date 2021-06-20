@@ -67,7 +67,6 @@
 		}
 
 		function search() {
-			partialManager.updateCurrentState();
 			clearInterval(timeout);
 
 			timeout = setTimeout(
@@ -94,6 +93,8 @@
 					(res.songs.length > 0 || res.albums.length > 0) ? $searchResults.show() : $searchResults.hide();
 					(res.songs.length > 0) ? $songs.show(): $songs.hide();
 					(res.albums.length > 0) ? $albums.show(): $albums.hide();
+					
+					partialManager.updateCurrentState();
 				},
 				100
 			);
