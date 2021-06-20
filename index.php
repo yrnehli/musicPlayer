@@ -180,7 +180,7 @@ Flight::route("GET /api/song/@songId", function($songId) use ($conn) {
 			"SELECT
 				`songs`.`name` AS 'songName',
 				`songs`.`artist` AS 'songArtist',
-				`albums`.`artFilepath` AS 'albumArtFilepath',
+				`albums`.`artFilepath` AS 'albumArtUrl',
 				`albums`.`name` AS 'albumName',
 				`albums`.`id` AS 'albumId'
 			FROM `songs`

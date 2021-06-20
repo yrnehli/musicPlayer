@@ -48,7 +48,7 @@ class DeezerPrivateApi {
 					json_decode(json_encode($data->ARTISTS), true)
 				)
 			),
-			'albumArtFilepath' => "https://cdns-images.dzcdn.net/images/cover/$data->ALB_PICTURE/500x500.jpg",
+			'albumArtUrl' => "https://cdns-images.dzcdn.net/images/cover/$data->ALB_PICTURE/500x500.jpg",
 			'albumName' => trim(preg_replace($regex, '', $data->ALB_TITLE)),
 			'albumId' => "DEEZER-$data->ALB_ID"
 		];

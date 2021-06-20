@@ -212,10 +212,10 @@ class MusicPlayer extends Howl {
 		this.__albumId = res.albumId;
 		this.__$songName.text(res.songName);
 		this.__$artistName.text(res.songArtist);
-		this.__$albumArt.prop('src', res.albumArtFilepath);
+		this.__$albumArt.prop('src', res.albumArtUrl);
 		this.__metadata.title = res.songName;
 		this.__metadata.artist = res.songArtist;
 		this.__metadata.album = res.albumName;
-		this.__metadata.artwork = [{ src: res.albumArtFilepath, sizes: '512x512', type: 'image/png' }];
+		this.__metadata.artwork = [{ src: res.albumArtUrl, sizes: '512x512', type: 'image/png' }];
 	}
 }
