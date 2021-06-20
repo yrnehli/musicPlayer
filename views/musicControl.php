@@ -52,6 +52,7 @@
 
 <script>
 	(function() {
+		var $albumArt = $('#albumArt');
 		var $songName = $('#songName');
 		var $prevButton = $('#prevButton');
 		var $playButton = $('#playButton');
@@ -143,7 +144,8 @@
 		}
 
 		function initEvents() {
-			$songName.click(e => { if (musicPlayer.albumId()) partialManager.loadPartial(`/album/${musicPlayer.albumId()}`) });
+			$albumArt.click(e => partialManager.loadPartial('/'));
+			$songName.click(e => partialManager.loadPartial(`/album/${musicPlayer.albumId()}`));
 			$prevButton.click(e => musicPlayer.previous());
 			$playButton.click(e => musicPlayer.togglePlay());
 			$skipButton.click(e => musicPlayer.skip());
