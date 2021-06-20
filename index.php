@@ -179,6 +179,7 @@ Flight::route("GET /api/song/@songId", function($songId) use ($conn) {
 		if (!file_exists($filepath)) {
 			$deezerPrivateApi = new DeezerPrivateApi();
 			$res = $deezerPrivateApi->getSongData($songId);
+			
 			file_put_contents($filepath, serialize($res));
 		} else {
 			$res = unserialize(file_get_contents($filepath));
@@ -224,8 +225,12 @@ Flight::route("GET /api/search", function() use ($conn) {
 
 	if (str_starts_with($searchTerm, "e: ")) {
 		$searchTerm = substr($searchTerm, strlen("e: "));
+
 		$deezerApi = new DeezerApi();
-		extract($deezerApi->search($searchTerm));
+		$res = $deezerApi->search($searchTerm);
+
+		$albums = $res['albums'];
+		$songs = $res['songs'];
 	} else {
 		$searchTerm = str_replace(" ", "%", $searchTerm);
 		$searchTerm = "%$searchTerm%";
