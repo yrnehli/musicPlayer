@@ -4,6 +4,7 @@ require_once 'vendor/autoload.php';
 require_once 'php/global.php';
 require_once 'php/MusicManager.php';
 require_once 'php/MusicDatabase.php';
+require_once 'php/DeezerApi.php';
 require_once 'php/DeezerPrivateApi.php';
 
 use ColorThief\ColorThief;
@@ -205,33 +206,42 @@ Flight::route("GET /api/album/@albumId", function($albumId) use ($conn) {
 
 Flight::route("GET /api/search", function() use ($conn) {
 	$searchTerm = Flight::request()->query->term;
-	$searchTerm = str_replace(" ", "%", $searchTerm);
-	$searchTerm = "%$searchTerm%";
 
-	$stmt = $conn->prepare(
-		"SELECT `id`, `name`, `artist`, `duration`, `albumDetails`.`duration`, `artFilepath`
-		FROM `albums`
-		INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
-		WHERE CONCAT(`name`, `artist`) LIKE :searchTerm
-		OR CONCAT(`artist`, `name`) LIKE :searchTerm
-		LIMIT 5"
-	);
-	$stmt->bindParam(":searchTerm", $searchTerm);
-	$stmt->execute();
-	$albums = $stmt->fetchAll();
-
-	$stmt = $conn->prepare(
-		"SELECT `songs`.`id`, `songs`.`name`, `songs`.`artist`,`songs`.`duration`, `albums`.`artFilepath`
-		FROM `songs`
-		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
-		INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
-		WHERE CONCAT(`songs`.`name`, `songs`.`artist`) LIKE :searchTerm
-		OR CONCAT(`songs`.`artist`, `songs`.`name`) LIKE :searchTerm
-		LIMIT 5"
-	);
-	$stmt->bindParam(":searchTerm", $searchTerm);
-	$stmt->execute();
-	$songs = $stmt->fetchAll();
+	if (str_starts_with($searchTerm, "e: ")) {
+		$searchTerm = substr($searchTerm, strlen("e: "));
+		$deezerApi = new DeezerApi();
+		$res = $deezerApi->search($searchTerm);
+		$albums = array_slice($res['albums'], 0, 5);
+		$songs = array_slice($res['songs'], 0, 5);
+	} else {
+		$searchTerm = str_replace(" ", "%", $searchTerm);
+		$searchTerm = "%$searchTerm%";
+	
+		$stmt = $conn->prepare(
+			"SELECT `id`, `name`, `artist`, `duration`, `albumDetails`.`duration`, `artFilepath`
+			FROM `albums`
+			INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
+			WHERE CONCAT(`name`, `artist`) LIKE :searchTerm
+			OR CONCAT(`artist`, `name`) LIKE :searchTerm
+			LIMIT 5"
+		);
+		$stmt->bindParam(":searchTerm", $searchTerm);
+		$stmt->execute();
+		$albums = $stmt->fetchAll();
+	
+		$stmt = $conn->prepare(
+			"SELECT `songs`.`id`, `songs`.`name`, `songs`.`artist`, `songs`.`duration`, `albums`.`artFilepath`
+			FROM `songs`
+			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
+			INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
+			WHERE CONCAT(`songs`.`name`, `songs`.`artist`) LIKE :searchTerm
+			OR CONCAT(`songs`.`artist`, `songs`.`name`) LIKE :searchTerm
+			LIMIT 5"
+		);
+		$stmt->bindParam(":searchTerm", $searchTerm);
+		$stmt->execute();
+		$songs = $stmt->fetchAll();
+	}
 
 	Flight::json(compact('albums', 'songs'));
 });

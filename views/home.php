@@ -45,6 +45,7 @@
 		var $albums = $('#albums');
 		var $songsContainer = $('#songsContainer');
 		var $albumsContainer = $('#albumsContainer');
+		var timeout;
 
 		$(function() {
 			resizeSearch();
@@ -65,30 +66,37 @@
 			});
 		}
 
-		async function search() {
-			var term = $searchBar.val();
+		function search() {
+			clearInterval(timeout);
 
-			$searchBar.attr('value', term);
-			partialManager.updateCurrentState();
-
-			if (term.trim() === "") {
-				$clearSearchBar.hide();
-				$searchResults.hide();
-				$songs.hide();
-				$albums.hide();
-				return;
-			}
-
-			$clearSearchBar.show();
-
-			var res = await $.get('/api/search', { term: term });
-
-			$songsContainer.empty().append(res.songs.map(song => createResultRow('song', song.id, song.name, song.artist, song.duration, song.artFilepath)));
-			$albumsContainer.empty().append(res.albums.map(album => createResultRow('album', album.id, album.name, album.artist, album.duration, album.artFilepath)));
-
-			(res.songs.length > 0 || res.albums.length > 0) ? $searchResults.show() : $searchResults.hide();
-			(res.songs.length > 0) ? $songs.show(): $songs.hide();
-			(res.albums.length > 0) ? $albums.show(): $albums.hide();
+			timeout = setTimeout(
+				async() => {
+					var term = $searchBar.val();
+		
+					$searchBar.attr('value', term);
+					partialManager.updateCurrentState();
+		
+					if (term.trim() === "") {
+						$clearSearchBar.hide();
+						$searchResults.hide();
+						$songs.hide();
+						$albums.hide();
+						return;
+					}
+		
+					$clearSearchBar.show();
+		
+					var res = await $.get('/api/search', { term: term });
+		
+					$songsContainer.empty().append(res.songs.map(song => createResultRow('song', song.id, song.name, song.artist, song.duration, song.artFilepath)));
+					$albumsContainer.empty().append(res.albums.map(album => createResultRow('album', album.id, album.name, album.artist, album.duration, album.artFilepath)));
+		
+					(res.songs.length > 0 || res.albums.length > 0) ? $searchResults.show() : $searchResults.hide();
+					(res.songs.length > 0) ? $songs.show(): $songs.hide();
+					(res.albums.length > 0) ? $albums.show(): $albums.hide();
+				},
+				300
+			);
 		}
 
 		function assignKeydown(e) {
@@ -114,7 +122,7 @@
 				$('<div></div>').text(name),
 				$('<div></div>').text(artist),
 			]);
-			var $totalTime = $('<div class="total-time"></div>').text(secondsToTimeString(duration));
+			var $totalTime = (duration) ? $('<div class="total-time"></div>').text(secondsToTimeString(duration)) : "";
 
 			$resultRow.dblclick(() => (type === 'song') ? playSong($resultRow) : playAlbum($resultRow));
 			$resultRow.append([
