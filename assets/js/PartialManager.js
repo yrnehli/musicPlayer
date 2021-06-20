@@ -21,7 +21,17 @@ class PartialManager {
 			this.initiatedHistory = true;
 		}
 	
-		this.updatePartial(await $.get(url, { partial: true }), 0, selectorToFocus);
+		this.updatePartial(
+			await $.ajax(
+				url,
+				{
+					data: { partial: true },
+					statusCode: { 404: () => location.reload() }
+				}
+			),
+			0,
+			selectorToFocus
+		);
 		history.pushState(this.getCurrentState(), "", url);
 	}
 

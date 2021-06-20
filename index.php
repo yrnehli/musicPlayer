@@ -63,11 +63,7 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 	$album = $stmt->fetch();
 
 	if ($album === false) {
-		Flight::response()
-			->header('Location', '/')
-			->status(404)
-			->send()
-		;
+		Flight::response()->status(404)->send();
 		return;
 	}
 
