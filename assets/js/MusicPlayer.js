@@ -111,7 +111,7 @@ class MusicPlayer extends Howl {
 		
 		await this.updateMusicControl();
 
-		if (!disableFollowAlbumArt && this.__albumId && this.__$followAlbumButton.hasClass('active')) {
+		if (!disableFollowAlbumArt && !$('input:focus').length && this.__albumId && this.__$followAlbumButton.hasClass('active')) {
 			clearTimeout(this.__timeout);
 
 			if (delayFollowAlbumArt) {
