@@ -53,6 +53,30 @@ class DeezerApi {
 			)
 		);
 
+		$res = [
+			"album" => [
+				"artUrl" => $res->cover_big,
+				"name" => $res->title,
+				"artist" => $res->artist->name,
+				"year" => substr($res->release_date, 0, 4),
+				"length" => count($res->tracks->data),
+				"duration" => $res->duration,
+			],
+			"songs" => array_map(
+				function($song, $i) {
+					return [
+						"id" => "DEEZER-$song->id",
+						"trackNumber" => ++$i,
+						"name" => $song->title,
+						"artist" => $song->artist->name,
+						"duration" => $song->duration,
+					];
+				},
+				$res->tracks->data,
+				array_keys($res->tracks->data)
+			)
+		];
+
 		return $res;
 	}
 

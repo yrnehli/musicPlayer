@@ -9,6 +9,8 @@ require_once 'php/DeezerPrivateApi.php';
 
 use ColorThief\ColorThief;
 
+define("DEEZER_ID_PREFIX", "DEEZER-");
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 $db = new MusicDatabase();
@@ -52,35 +54,47 @@ Flight::route("GET /search", function() {
 });
 
 Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
-	$stmt = $conn->prepare(
-		"SELECT `albums`.*, `albumDetails`.*
-		FROM `albums`
-		INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
-		WHERE `id` = :id"
-	);
-	$stmt->bindParam(":id", $albumId);
-	$stmt->execute();
-	$album = $stmt->fetch();
+	if (str_contains($albumId, DEEZER_ID_PREFIX)) {
+		$albumId = str_replace(DEEZER_ID_PREFIX, "", $albumId);
 
-	if ($album === false) {
-		Flight::response()->status(404)->send();
-		return;
+		$deezerApi = new DeezerApi();
+		$res = $deezerApi->getAlbum($albumId);
+
+		$album = $res['album'];
+		$songs = $res['songs'];
+
+		$albumArt = file_get_contents($album['artUrl']);
+	} else {
+		$stmt = $conn->prepare(
+			"SELECT `albums`.*, `albums`.`artFilePath` AS 'artUrl', `albumDetails`.*
+			FROM `albums`
+			INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
+			WHERE `id` = :id"
+		);
+		$stmt->bindParam(":id", $albumId);
+		$stmt->execute();
+		$album = $stmt->fetch();
+	
+		if ($album === false) {
+			Flight::response()->status(404)->send();
+			return;
+		}
+	
+		$stmt = $conn->prepare(
+			"SELECT `songs`.*
+			FROM `songs`
+			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
+			WHERE `song-album`.`albumId` = :albumId
+			ORDER BY `songs`.`discNumber`, `songs`.`trackNumber`"
+		);
+		$stmt->bindParam(":albumId", $albumId);
+		$stmt->execute();
+		$songs = $stmt->fetchAll();
+
+		$albumArt = file_get_contents(__DIR__ . $album['artFilepath']);
 	}
-
-	$stmt = $conn->prepare(
-		"SELECT `songs`.*
-		FROM `songs`
-		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
-		WHERE `song-album`.`albumId` = :albumId
-		ORDER BY `songs`.`discNumber`, `songs`.`trackNumber`"
-	);
-	$stmt->bindParam(":albumId", $albumId);
-	$stmt->execute();
-	$songs = $stmt->fetchAll();
-
-	$rgb = ColorThief::getColor(
-		file_get_contents(__DIR__ . $album['artFilepath'])
-	);
+	
+	$rgb = ColorThief::getColor($albumArt);
 
 	$darken = false;
 	$darknessFactor = 1;
@@ -110,8 +124,8 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 });
 
 Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
-	if (str_contains($songId, "DEEZER")) {
-		$songId = str_replace("DEEZER-", "", $songId);
+	if (str_contains($songId, DEEZER_ID_PREFIX)) {
+		$songId = str_replace(DEEZER_ID_PREFIX, "", $songId);
 		$filepath = "userData/deezer/mp3/$songId";
 		
 		if (!file_exists($filepath)) {
@@ -160,8 +174,8 @@ Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
 });
 
 Flight::route("GET /api/song/@songId", function($songId) use ($conn) {
-	if (str_contains($songId, "DEEZER")) {
-		$songId = str_replace("DEEZER-", "", $songId);
+	if (str_contains($songId, DEEZER_ID_PREFIX)) {
+		$songId = str_replace(DEEZER_ID_PREFIX, "", $songId);
 		$filepath = "userData/deezer/metadata/$songId";
 
 		if (!file_exists($filepath)) {

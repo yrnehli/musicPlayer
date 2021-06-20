@@ -2,7 +2,7 @@
 
 <div id="root" class="py-5 px-4" style="background: linear-gradient(rgb(<?= $rgb ?>) 0%, rgb(24, 24, 24) 75%)" data-simplebar>
 	<div class="d-flex mb-4">
-		<img id="albumArtLarge" class="mx-3" src="<?= $album['artFilepath'] ?>">		
+		<img id="albumArtLarge" class="mx-3" src="<?= $album['artUrl'] ?>">		
 		<div class="d-flex mx-2">
 			<div class="mt-auto">
 				<div id="album">ALBUM</div>
