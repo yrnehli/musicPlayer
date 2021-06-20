@@ -206,12 +206,12 @@ class DeezerPrivateApi {
 		return $res;
 	}
 
-	private function processHeader($curl, $headerLine) {
-		if (preg_match("/Set-Cookie: sid=(.*?);/", $headerLine, $matches)) {
+	private function processHeader($curl, $header) {
+		if (preg_match("/Set-Cookie: sid=(.*?);/", $header, $matches)) {
 			$this->sid = $matches[1];
 		}
 
-		return strlen($headerLine);
+		return strlen($header);
 	}
 
 	private function str2hex($string) {	
