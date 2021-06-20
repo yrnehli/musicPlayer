@@ -15,7 +15,7 @@ class DeezerApi {
 		$res = json_decode(
 			$this->curlRequest(
 				"GET",
-				self::API_BASE . "/search&" . http_build_query(['q' => $term])
+				self::API_BASE . "/search?" . http_build_query(['q' => $term])
 			)
 		);
 
