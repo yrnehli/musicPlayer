@@ -122,7 +122,7 @@
 				$('<div></div>').text(name),
 				$('<div></div>').text(artist),
 			]);
-			var $totalTime = (duration) ? $('<div class="total-time"></div>').text(secondsToTimeString(duration)) : "";
+			var $totalTime = $('<div class="total-time"></div>').text(duration);
 
 			$resultRow.dblclick(() => (type === 'song') ? playSong($resultRow) : playAlbum($resultRow));
 			$resultRow.append([

@@ -3,7 +3,7 @@
 class DeezerApi {
 	private const API_BASE = "https://api.deezer.com";
 
-	public function search($term) {
+	public function search($term, $limit = 5) {
 		$songs = [];
 		$albums = [];
 
@@ -19,20 +19,22 @@ class DeezerApi {
 		);
 
 		foreach ($res->data as $song) {
-			$songs[] = [
-				"id" => "DEEZER-$song->id",
-				"name" => $song->title,
-				"artist" => $song->artist->name,
-				"duration" => $song->duration,
-				"artFilepath" => $song->album->cover
-			];
+			if (count($songs) < $limit) {
+				$songs[] = [
+					"id" => "DEEZER-$song->id",
+					"name" => $song->title,
+					"artist" => $song->artist->name,
+					"duration" => $song->duration,
+					"artFilepath" => $song->album->cover
+				];
+			}
 
-			if (!array_key_exists($song->album->id, $albums)) {
+			if (count($albums) < $limit && !array_key_exists($song->album->id, $albums)) {
 				$albums[$song->album->id] = [
 					"id" => "DEEZER-" . $song->album->id,
 					"name" => $song->album->title,
 					"artist" => $song->artist->name,
-					"duration" => null,
+					"duration" => $this->getAlbum($song->album->id)->duration,
 					"artFilepath" => $song->album->cover
 				];
 			}
@@ -41,6 +43,17 @@ class DeezerApi {
 		$albums = array_values($albums);
 
 		return compact('songs', 'albums');
+	}
+
+	public function getAlbum($id) {
+		$res = json_decode(
+			$this->curlRequest(
+				"GET",
+				self::API_BASE . "/album/$id"
+			)
+		);
+
+		return $res;
 	}
 
 	private function curlRequest($requestType, $url, $headers = [], $payload = "") {

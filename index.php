@@ -210,9 +210,7 @@ Flight::route("GET /api/search", function() use ($conn) {
 	if (str_starts_with($searchTerm, "e: ")) {
 		$searchTerm = substr($searchTerm, strlen("e: "));
 		$deezerApi = new DeezerApi();
-		$res = $deezerApi->search($searchTerm);
-		$albums = array_slice($res['albums'], 0, 5);
-		$songs = array_slice($res['songs'], 0, 5);
+		extract($deezerApi->search($searchTerm));
 	} else {
 		$searchTerm = str_replace(" ", "%", $searchTerm);
 		$searchTerm = "%$searchTerm%";
