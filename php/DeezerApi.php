@@ -34,7 +34,7 @@ class DeezerApi {
 					"id" => "DEEZER-" . $song->album->id,
 					"name" => $song->album->title,
 					"artist" => $song->artist->name,
-					"duration" => $this->getAlbum($song->album->id)->duration,
+					"duration" => null,
 					"artFilepath" => $song->album->cover
 				];
 			}

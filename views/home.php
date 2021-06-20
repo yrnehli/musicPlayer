@@ -95,7 +95,7 @@
 					(res.songs.length > 0) ? $songs.show(): $songs.hide();
 					(res.albums.length > 0) ? $albums.show(): $albums.hide();
 				},
-				300
+				100
 			);
 		}
 
@@ -122,7 +122,7 @@
 				$('<div></div>').text(name),
 				$('<div></div>').text(artist),
 			]);
-			var $totalTime = $('<div class="total-time"></div>').text(secondsToTimeString(duration));
+			var $totalTime = (duration) ? $('<div class="total-time"></div>').text(secondsToTimeString(duration)) : "";
 
 			$resultRow.dblclick(() => (type === 'song') ? playSong($resultRow) : playAlbum($resultRow));
 			$resultRow.append([
