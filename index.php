@@ -14,7 +14,7 @@ $dotenv->load();
 $db = new MusicDatabase();
 $conn = $db->getConn();
 
-foreach (['userData', 'userData/albumArt', 'userData/deezer'] as $directory) {
+foreach (['userData', 'userData/albumArt', 'userData/deezer', 'userData/deezer/mp3', 'userData/deezer/metadata'] as $directory) {
 	if (!file_exists($directory)) {
 		mkdir($directory);
 	}
@@ -116,7 +116,7 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
 	if (str_contains($songId, "DEEZER")) {
 		$songId = str_replace("DEEZER-", "", $songId);
-		$filepath = "userData/deezer/$songId";
+		$filepath = "userData/deezer/mp3/$songId";
 		
 		if (!file_exists($filepath)) {
 			$deezerPrivateApi = new DeezerPrivateApi();
@@ -166,8 +166,15 @@ Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
 Flight::route("GET /api/song/@songId", function($songId) use ($conn) {
 	if (str_contains($songId, "DEEZER")) {
 		$songId = str_replace("DEEZER-", "", $songId);
-		$deezerPrivateApi = new DeezerPrivateApi();
-		$res = $deezerPrivateApi->getSongData($songId);
+		$filepath = "userData/deezer/metadata/$songId";
+
+		if (!file_exists($filepath)) {
+			$deezerPrivateApi = new DeezerPrivateApi();
+			$res = $deezerPrivateApi->getSongData($songId);
+			file_put_contents($filepath, serialize($res));
+		} else {
+			$res = unserialize(file_get_contents($filepath));
+		}
 	} else {
 		$stmt = $conn->prepare(
 			"SELECT

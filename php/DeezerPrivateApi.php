@@ -49,7 +49,8 @@ class DeezerPrivateApi {
 				)
 			),
 			'albumArtFilepath' => "https://cdns-images.dzcdn.net/images/cover/$data->ALB_PICTURE/500x500.jpg",
-			'albumName' => trim(preg_replace($regex, '', $data->ALB_TITLE))
+			'albumName' => trim(preg_replace($regex, '', $data->ALB_TITLE)),
+			'albumId' => "DEEZER-$data->ALB_ID"
 		];
 	}
 
