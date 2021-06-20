@@ -4,6 +4,7 @@ require_once 'vendor/autoload.php';
 require_once 'php/global.php';
 require_once 'php/MusicManager.php';
 require_once 'php/MusicDatabase.php';
+require_once 'php/DeezerPrivateApi.php';
 
 use ColorThief\ColorThief;
 
@@ -12,7 +13,7 @@ $dotenv->load();
 $db = new MusicDatabase();
 $conn = $db->getConn();
 
-foreach (['userData', 'userData/albumArt'] as $directory) {
+foreach (['userData', 'userData/albumArt', 'userData/deezer'] as $directory) {
 	if (!file_exists($directory)) {
 		mkdir($directory);
 	}
@@ -112,10 +113,26 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 });
 
 Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
-	$stmt = $conn->prepare("SELECT `filepath` FROM `songs` WHERE `id` = :id");
-	$stmt->bindParam(":id", $songId);
-	$stmt->execute();
-	$filepath = $stmt->fetchColumn();
+	if (str_contains($songId, "DEEZER")) {
+		$songId = str_replace("DEEZER-", "", $songId);
+		$filepath = "userData/deezer/$songId";
+		
+		if (!file_exists($filepath)) {
+			$deezerPrivateApi = new DeezerPrivateApi();
+			$song = $deezerPrivateApi->getSong($songId);
+
+			file_put_contents(
+				$filepath,
+				($song !== false) ? $song : ""
+			);
+		}
+	} else {
+		$stmt = $conn->prepare("SELECT `filepath` FROM `songs` WHERE `id` = :id");
+		$stmt->bindParam(":id", $songId);
+		$stmt->execute();
+		$filepath = $stmt->fetchColumn();
+	}
+
 	$filesize = filesize($filepath);
 
 	if (isset($_SERVER['HTTP_RANGE'])) {
@@ -146,21 +163,27 @@ Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
 });
 
 Flight::route("GET /api/song/@songId", function($songId) use ($conn) {
-	$stmt = $conn->prepare(
-		"SELECT
-			`songs`.`name` AS 'songName',
-			`songs`.`artist` AS 'songArtist',
-			`albums`.`artFilepath` AS 'albumArtFilepath',
-			`albums`.`name` AS 'albumName',
-			`albums`.`id` AS 'albumId'
-		FROM `songs`
-		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
-		INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
-		WHERE `songs`.`id` = :id"
-	);
-	$stmt->bindParam(":id", $songId);
-	$stmt->execute();
-	$res = $stmt->fetch();
+	if (str_contains($songId, "DEEZER")) {
+		$songId = str_replace("DEEZER-", "", $songId);
+		$deezerPrivateApi = new DeezerPrivateApi();
+		$res = $deezerPrivateApi->getSongData($songId);
+	} else {
+		$stmt = $conn->prepare(
+			"SELECT
+				`songs`.`name` AS 'songName',
+				`songs`.`artist` AS 'songArtist',
+				`albums`.`artFilepath` AS 'albumArtFilepath',
+				`albums`.`name` AS 'albumName',
+				`albums`.`id` AS 'albumId'
+			FROM `songs`
+			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
+			INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
+			WHERE `songs`.`id` = :id"
+		);
+		$stmt->bindParam(":id", $songId);
+		$stmt->execute();
+		$res = $stmt->fetch();	
+	}
 
 	Flight::json($res);
 });

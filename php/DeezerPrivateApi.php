@@ -10,26 +10,27 @@ class DeezerPrivateApi {
 	}
 
 	public function getSong($songId) {
-		$songData = $this->getSongData($songId);
-		$encryptedSong = file_get_contents(
-			$this->getSongUrl(
-				$songId,
-				$songData['md5'],
-				$songData['mediaVersion']
-			)
-		);
+		try {
+			$songData = $this->getSongData($songId);
+			$encryptedSong = @file_get_contents(
+				$this->getSongUrl(
+					$songId,
+					$songData['md5'],
+					$songData['mediaVersion']
+				)
+			);
 
-		if (!$encryptedSong) {
-			throw new Exception("Yes");
+			if ($encryptedSong === false) {
+				return false;
+			}
+
+			return $this->decryptSong($songId, $encryptedSong);
+		} catch (Exception $e) {
+			return false;
 		}
-
-		return [
-			'data' => $this->decryptSong($songId, $encryptedSong),
-			'metadata' => $songData
-		];
 	}
 
-	private function getSongData($songId) {
+	public function getSongData($songId) {
 		$res = json_decode($this->request("deezer.pageTrack", json_encode(['sng_id' => $songId])));
 		$data = $res->results->DATA;
 
@@ -174,7 +175,7 @@ class DeezerPrivateApi {
 		$res = json_decode($this->request("deezer.getUserData"));
 		
 		if ($res->results->USER->USER_ID === 0) {
-			throw new Exception("Yes");
+			throw new Exception();
 		}
 		
 		return $res->results->checkForm;
