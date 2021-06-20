@@ -9,8 +9,6 @@ require_once 'php/DeezerPrivateApi.php';
 
 use ColorThief\ColorThief;
 
-define("DEEZER_ID_PREFIX", "DEEZER-");
-
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 $db = new MusicDatabase();
@@ -54,8 +52,8 @@ Flight::route("GET /search", function() {
 });
 
 Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
-	if (str_contains($albumId, DEEZER_ID_PREFIX)) {
-		$albumId = str_replace(DEEZER_ID_PREFIX, "", $albumId);
+	if (str_contains($albumId, DeezerApi::DEEZER_ID_PREFIX)) {
+		$albumId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $albumId);
 
 		$deezerApi = new DeezerApi();
 		$res = $deezerApi->getAlbum($albumId);
@@ -124,8 +122,8 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 });
 
 Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
-	if (str_contains($songId, DEEZER_ID_PREFIX)) {
-		$songId = str_replace(DEEZER_ID_PREFIX, "", $songId);
+	if (str_contains($songId, DeezerApi::DEEZER_ID_PREFIX)) {
+		$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
 		$filepath = "userData/deezer/mp3/$songId";
 		
 		if (!file_exists($filepath)) {
@@ -174,8 +172,8 @@ Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
 });
 
 Flight::route("GET /api/song/@songId", function($songId) use ($conn) {
-	if (str_contains($songId, DEEZER_ID_PREFIX)) {
-		$songId = str_replace(DEEZER_ID_PREFIX, "", $songId);
+	if (str_contains($songId, DeezerApi::DEEZER_ID_PREFIX)) {
+		$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
 		$filepath = "userData/deezer/metadata/$songId";
 
 		if (!file_exists($filepath)) {

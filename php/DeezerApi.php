@@ -1,6 +1,7 @@
 <?php
 
 class DeezerApi {
+	public const DEEZER_ID_PREFIX = "DEEZER-";
 	private const API_BASE = "https://api.deezer.com";
 
 	public function search($term, $limit = 5) {
@@ -21,7 +22,7 @@ class DeezerApi {
 		foreach ($res->data as $song) {
 			if (count($songs) < $limit) {
 				$songs[] = [
-					"id" => "DEEZER-$song->id",
+					"id" => self::DEEZER_ID_PREFIX . $song->id,
 					"name" => $song->title,
 					"artist" => $song->artist->name,
 					"duration" => $song->duration,
@@ -31,7 +32,7 @@ class DeezerApi {
 
 			if (count($albums) < $limit && !array_key_exists($song->album->id, $albums)) {
 				$albums[$song->album->id] = [
-					"id" => "DEEZER-" . $song->album->id,
+					"id" => self::DEEZER_ID_PREFIX . $song->album->id,
 					"name" => $song->album->title,
 					"artist" => $song->artist->name,
 					"duration" => null,
@@ -65,7 +66,7 @@ class DeezerApi {
 			"songs" => array_map(
 				function($song, $i) {
 					return [
-						"id" => "DEEZER-$song->id",
+						"id" => self::DEEZER_ID_PREFIX . $song->id,
 						"trackNumber" => ++$i,
 						"name" => $song->title,
 						"artist" => $song->artist->name,
