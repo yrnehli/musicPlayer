@@ -11,21 +11,30 @@ use ColorThief\ColorThief;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
-$db = new MusicDatabase();
-$conn = $db->getConn();
 
-foreach (['userData', 'userData/albumArt', 'userData/deezer', 'userData/deezer/mp3', 'userData/deezer/metadata'] as $directory) {
+$directories = [
+	'userData',
+	'userData/albumArt',
+	'userData/deezer',
+	'userData/deezer/mp3',
+	'userData/deezer/metadata',
+	'userData/deezer/album'
+];
+
+foreach ($directories as $directory) {
 	if (!file_exists($directory)) {
 		mkdir($directory);
 	}
 }
 
-Flight::map('renderView', function($viewName, $viewData = []) use ($conn) {
+Flight::map('renderView', function($viewName, $viewData = []) {
 	if (filter_var(Flight::request()->query->partial, FILTER_VALIDATE_BOOLEAN)) {
 		Flight::render($viewName, $viewData);
 		return;
 	}
 
+	$db = new MusicDatabase();
+	$conn = $db->getConn();
 	$stmt = $conn->prepare("SELECT `id` FROM `songs`");
 	$stmt->execute();
 	$songIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -35,7 +44,9 @@ Flight::map('renderView', function($viewName, $viewData = []) use ($conn) {
 	Flight::render('shell');
 });
 
-Flight::route("GET /", function() use ($conn) {
+Flight::route("GET /", function() {
+	$db = new MusicDatabase();
+	$conn = $db->getConn();
 	$stmt = $conn->prepare(
 		"SELECT *
 		FROM `albums`
@@ -51,18 +62,27 @@ Flight::route("GET /search", function() {
 	Flight::renderView('search');
 });
 
-Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
-	if (str_contains($albumId, DeezerApi::DEEZER_ID_PREFIX)) {
+Flight::route("GET /album/@albumId", function($albumId) {
+	if (str_starts_with($albumId, DeezerApi::DEEZER_ID_PREFIX)) {
 		$albumId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $albumId);
+		$filepath = "userData/deezer/album/$albumId";
 
-		$deezerApi = new DeezerApi();
-		$res = $deezerApi->getAlbum($albumId);
+		if (!file_exists($filepath)) {
+			$deezerApi = new DeezerApi();
+			$res = $deezerApi->getAlbum($albumId);
+			
+			file_put_contents($filepath, serialize($res));
+		} else {
+			$res = unserialize(file_get_contents($filepath));
+		}
 
 		$album = $res['album'];
 		$songs = $res['songs'];
 
 		$albumArt = file_get_contents($album['artUrl']);
 	} else {
+		$db = new MusicDatabase();
+		$conn = $db->getConn();
 		$stmt = $conn->prepare(
 			"SELECT `albums`.*, `albums`.`artFilePath` AS 'artUrl', `albumDetails`.*
 			FROM `albums`
@@ -121,8 +141,8 @@ Flight::route("GET /album/@albumId", function($albumId) use ($conn) {
 	Flight::renderView('album', compact('album', 'songs', 'rgb'));
 });
 
-Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
-	if (str_contains($songId, DeezerApi::DEEZER_ID_PREFIX)) {
+Flight::route("GET /mp3/@songId", function($songId) {
+	if (str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)) {
 		$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
 		$filepath = "userData/deezer/mp3/$songId";
 		
@@ -136,6 +156,8 @@ Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
 			);
 		}
 	} else {
+		$db = new MusicDatabase();
+		$conn = $db->getConn();
 		$stmt = $conn->prepare("SELECT `filepath` FROM `songs` WHERE `id` = :id");
 		$stmt->bindParam(":id", $songId);
 		$stmt->execute();
@@ -171,8 +193,8 @@ Flight::route("GET /mp3/@songId", function($songId) use ($conn) {
 	;
 });
 
-Flight::route("GET /api/song/@songId", function($songId) use ($conn) {
-	if (str_contains($songId, DeezerApi::DEEZER_ID_PREFIX)) {
+Flight::route("GET /api/song/@songId", function($songId) {
+	if (str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)) {
 		$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
 		$filepath = "userData/deezer/metadata/$songId";
 
@@ -185,6 +207,8 @@ Flight::route("GET /api/song/@songId", function($songId) use ($conn) {
 			$res = unserialize(file_get_contents($filepath));
 		}
 	} else {
+		$db = new MusicDatabase();
+		$conn = $db->getConn();
 		$stmt = $conn->prepare(
 			"SELECT
 				`songs`.`name` AS 'songName',
@@ -205,22 +229,40 @@ Flight::route("GET /api/song/@songId", function($songId) use ($conn) {
 	Flight::json($res);
 });
 
-Flight::route("GET /api/album/@albumId", function($albumId) use ($conn) {
-	$stmt = $conn->prepare(
-		"SELECT `songs`.`id`
-		FROM `songs`
-		INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
-		WHERE `song-album`.`albumId` = :albumId
-		ORDER BY `songs`.`discNumber`, `songs`.`trackNumber`"
-	);
-	$stmt->bindParam(":albumId", $albumId);
-	$stmt->execute();
-	$songIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+Flight::route("GET /api/album/@albumId", function($albumId) {
+	if (str_starts_with($albumId, DeezerApi::DEEZER_ID_PREFIX)) {
+		$albumId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $albumId);
+		$filepath = "userData/deezer/album/$albumId";
+
+		if (!file_exists($filepath)) {
+			$deezerApi = new DeezerApi();
+			$res = $deezerApi->getAlbum($albumId);
+			
+			file_put_contents($filepath, serialize($res));
+		} else {
+			$res = unserialize(file_get_contents($filepath));
+		}
+
+		$songIds = array_column($res['songs'], "id");
+	} else {
+		$db = new MusicDatabase();
+		$conn = $db->getConn();
+		$stmt = $conn->prepare(
+			"SELECT `songs`.`id`
+			FROM `songs`
+			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
+			WHERE `song-album`.`albumId` = :albumId
+			ORDER BY `songs`.`discNumber`, `songs`.`trackNumber`"
+		);
+		$stmt->bindParam(":albumId", $albumId);
+		$stmt->execute();
+		$songIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+	}
 
 	Flight::json(compact('songIds'));
 });
 
-Flight::route("GET /api/search", function() use ($conn) {
+Flight::route("GET /api/search", function() {
 	$searchTerm = Flight::request()->query->term;
 
 	if (str_starts_with($searchTerm, "e: ")) {
@@ -235,6 +277,8 @@ Flight::route("GET /api/search", function() use ($conn) {
 		$searchTerm = str_replace(" ", "%", $searchTerm);
 		$searchTerm = "%$searchTerm%";
 	
+		$db = new MusicDatabase();
+		$conn = $db->getConn();
 		$stmt = $conn->prepare(
 			"SELECT `id`, `name`, `artist`, `duration`, `albumDetails`.`duration`, `artFilepath`
 			FROM `albums`
