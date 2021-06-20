@@ -5,7 +5,7 @@ class MusicPlayer extends Howl {
 		super({
 			src: [null],
 			format: 'mp3',
-			volume: state.volume || 0,
+			volume: state.volume || 0.5,
 			html5: true
 		});
 
