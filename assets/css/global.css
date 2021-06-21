@@ -274,23 +274,24 @@ input[type="text"]:focus  {
 }
 
 #contextMenu {
-    display: none;
-    z-index: 1000;
-    position: absolute;
-    overflow: hidden;
-    border: 1px solid #CCC;
-    white-space: nowrap;
-    font-family: sans-serif;
-    background: #FFF;
-    color: #333;
-    border-radius: 5px;
+	display: none;
+	z-index: 1000;
+	position: absolute;
+	list-style-type: none;
+	background: #282828;
+	color: hsla(0, 0%, 100%, .9);
+	border-radius: 4px;
+	padding: 4px;
+	box-shadow: 0 16px 24px rgb(0 0 0 / 30%), 0 6px 8px rgb(0 0 0 / 20%);
 }
 
 #contextMenu li {
-    padding: 8px 12px;
-    cursor: pointer;
+	padding: 6px 10px;
+	cursor: pointer;
 }
 
 #contextMenu li:hover {
-    background-color: #DEF;
+	background-color: hsla(0,0%,100%,.1);
+    color: #fff;
+	border-radius: 2px;
 }
