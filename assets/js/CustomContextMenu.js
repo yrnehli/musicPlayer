@@ -39,7 +39,7 @@ class CustomContextMenu {
 			$contextMenu
 				.fadeIn(CustomContextMenu.FADE_DURATION)
 				.css({
-					top: `${e.pageY}px`,
+					top: `${e.pageY + 8}px`,
 					left: (e.pageX + $contextMenu.outerWidth() > $(window).width()) ? `${e.pageX - $contextMenu.outerWidth()}px` : `${e.pageX}px`
 				})
 			;
