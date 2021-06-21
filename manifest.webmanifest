@@ -34,6 +34,7 @@
 	],
 	"start_url": "/",
 	"display": "standalone",
+	"display_override": ["window-controls-overlay"],
 	"theme_color": "#121212",
 	"background_color": "#121212"
 }
