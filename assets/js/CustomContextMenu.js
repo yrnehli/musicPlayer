@@ -1,12 +1,16 @@
 class CustomContextMenu {
-	static initialised;
+	static sharedInstance;
 
-	constructor($contextMenu, actions) {		
-		if (CustomContextMenu.initialised) {
+	constructor($contextMenu, actions) {
+		var self = this;
+		
+		if (CustomContextMenu.sharedInstance) {
 			return;
 		} else {
-			CustomContextMenu.initialised = true;
+			CustomContextMenu.sharedInstance = self;
 		}
+
+		self.$contextMenu = $contextMenu;
 
 		$(document).on("contextmenu", e => {
 			e.preventDefault();
@@ -27,7 +31,7 @@ class CustomContextMenu {
 							.text(actions[action].text)
 							.click(function() {
 								actions[action].callback($target);
-								$contextMenu.fadeOut(CustomContextMenu.FADE_DURATION);
+								self.hide();
 							})
 					);
 				})
@@ -43,9 +47,13 @@ class CustomContextMenu {
 	
 		$(document).on("mousedown", function(e) {
 			if (!$(e.target).parents().get().some(parent => parent === $contextMenu.get(0))) {
-				$contextMenu.fadeOut(CustomContextMenu.FADE_DURATION);
+				self.hide();
 			}
 		});
+	}
+
+	hide() {
+		this.$contextMenu.fadeOut(CustomContextMenu.FADE_DURATION);
 	}
 
 	static get FADE_DURATION() {

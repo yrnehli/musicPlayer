@@ -23,6 +23,8 @@ class PartialManager {
 		if (window.location.pathname === url) {
 			return;
 		}
+
+		CustomContextMenu.sharedInstance.hide();
 		
 		if (!this.initiatedHistory) {
 			history.pushState(this.getCurrentState(), "", document.URL);
