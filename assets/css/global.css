@@ -290,7 +290,6 @@ input[type="text"]:focus  {
 
 #windowControlsOverlay {
 	display: flex;
-	background-color: #121212;
 	height: 60px;
 	width: 100%;
 	-webkit-app-region: drag;
@@ -322,4 +321,72 @@ input[type="text"]:focus  {
     left: 197px;
     position: absolute;
     font-size: 10pt;
+	cursor: pointer;
+}
+
+#searchResults .result-row {
+	grid-template-columns: [first] 4fr [last] minmax(120px,1fr);
+	height: 56px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	position: relative;
+	display: grid;
+	padding: 0 16px;
+	grid-gap: 16px;
+}
+
+#searchResults .result-row.active {
+	background-color: hsla(0,0%,100%,.1);
+}
+
+#searchResults .result-row:hover {
+	background-color: hsla(0,0%,100%,.1);
+}
+
+#searchResults .result-row div {
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+#searchResults .result-row div:first-child {
+	display: flex;
+}
+
+#searchResults .result-row .artwork {
+	margin-left: -8px;
+	margin-right: 16px;
+}
+
+#searchResults .result-row .artwork img {
+	height: 40px;
+	width: 40px;
+}
+
+#searchResults .result-row .details {
+	line-height: 18px;
+}
+
+#searchResults .result-row .details div:first-child {
+	color: white;
+}
+
+#searchResults .result-row .details div:last-child {
+	color: #b3b3b3;
+    font-size: 14px;
+}
+
+#searchResults .result-row .total-time {
+	justify-self: end;
+    font-variant-numeric: tabular-nums;
+    width: 4ch;
+    font-size: 14px;
+}
+
+h2 {
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 28px;
+	letter-spacing: -.04em;
+	text-transform: none;
+	color: white;
 }

@@ -129,16 +129,7 @@ function showToastNotification(message, timeout = 3000) {
 	setTimeout(() => $toastNotification.removeClass('show'), timeout);
 }
 
-function componentToHex(c) {
-	var hex = c.toString(16);
-	return hex.length == 1 ? "0" + hex : hex;
-}
-
-function rgbToHex(r, g, b) {
-	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-}
-
-function updateTitleBarColour(hex) {
-	$('#windowControlsOverlay').css('background-color', hex);
+function updateBodyColour(hex) {
+	$('body').css('background', `linear-gradient(${hex} 0%, ${hex} 5%, rgb(24, 24, 24) 75%)`);
 	$('meta[name="theme-color"]').attr('content', hex);
 }

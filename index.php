@@ -126,19 +126,21 @@ Flight::route("GET /album/@albumId", function($albumId) {
 		}
 	}
 
-	$rgb = implode(
-		", ",
+	$colour = "#" . implode(
+		"",
 		array_map(
 			function($x) use ($darken, $darknessFactor) {
-				return round(
-					($darken) ? $x * $darknessFactor : $x
+				return dechex(
+					round(
+						($darken) ? $x * $darknessFactor : $x
+					)
 				);
 			},
 			$rgb
 		)
 	);
 
-	Flight::renderView('album', compact('album', 'songs', 'rgb'));
+	Flight::renderView('album', compact('album', 'songs', 'colour'));
 });
 
 Flight::route("GET /mp3/@songId", function($songId) {

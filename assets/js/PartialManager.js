@@ -46,7 +46,6 @@ class PartialManager {
 	}
 
 	updatePartial(html, scroll, selectorToFocus) {
-		updateTitleBarColour('#121212');
 		this.$partial.removeClass('fade');
 		this.$partial.css('opacity', 0);
 		this.$partial.html(html);
