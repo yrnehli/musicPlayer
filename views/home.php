@@ -22,7 +22,7 @@
 		</div>
 		<div id="albums" class="mx-auto centre">
 			<?php foreach ($albums as $album): ?>
-				<div class="album-container mx-2 my-2" data-album-id="<?= $album['id'] ?>" data-context-menu-actions="QUEUE">
+				<div class="album-container mx-2 my-2" data-album-id="<?= $album['id'] ?>" data-context-menu-actions="QUEUE,GO_TO_ALBUM">
 					<img class="album-art" src="<?= $album['artFilepath'] ?>">
 					<div class="title">
 						<?= $album['name'] ?>
@@ -96,8 +96,8 @@
 		
 					var res = await $.get('/api/search', { term: term });
 		
-					$songsContainer.empty().append(res.songs.map(song => createResultRow('song', song.id, song.name, song.artist, song.duration, song.artFilepath)));
-					$albumsContainer.empty().append(res.albums.map(album => createResultRow('album', album.id, album.name, album.artist, album.duration, album.artFilepath)));
+					$songsContainer.empty().append(res.songs.map(song => createResultRow('song', song.id, song.albumId, song.name, song.artist, song.duration, song.artFilepath)));
+					$albumsContainer.empty().append(res.albums.map(album => createResultRow('album', album.id, album.id, album.name, album.artist, album.duration, album.artFilepath)));
 		
 					(res.songs.length > 0 || res.albums.length > 0) ? $searchResults.show() : $searchResults.hide();
 					(res.songs.length > 0) ? $songs.show(): $songs.hide();
@@ -124,8 +124,8 @@
 			}
 		}
 
-		function createResultRow(type, id, name, artist, duration, artFilepath) {
-			var $resultRow = $(`<div class="result-row" data-${type}-id=${id} data-context-menu-actions="QUEUE"></div>`);
+		function createResultRow(type, id, albumId, name, artist, duration, artFilepath) {
+			var $resultRow = $(`<div class="result-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="QUEUE,GO_TO_ALBUM"></div>`);
 			var $img = $('<img>').prop('src', artFilepath);
 			var $artwork = $('<div class="artwork"></div>').append($img);
 			var $details = $('<div class="details"></div>').append([

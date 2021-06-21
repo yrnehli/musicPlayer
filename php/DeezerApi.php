@@ -23,6 +23,7 @@ class DeezerApi {
 			if (count($songs) < $limit) {
 				$songs[] = [
 					"id" => self::DEEZER_ID_PREFIX . $song->id,
+					"albumId" => self::DEEZER_ID_PREFIX . $song->album->id,
 					"name" => $song->title,
 					"artist" => $song->artist->name,
 					"duration" => $song->duration,

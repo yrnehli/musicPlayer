@@ -292,7 +292,7 @@ Flight::route("GET /api/search", function() {
 		$albums = $stmt->fetchAll();
 	
 		$stmt = $conn->prepare(
-			"SELECT `songs`.`id`, `songs`.`name`, `songs`.`artist`, `songs`.`duration`, `albums`.`artFilepath`
+			"SELECT `songs`.`id`, `songs`.`name`, `songs`.`artist`, `songs`.`duration`, `albums`.`artFilepath`, `albums`.`id` AS `albumId`
 			FROM `songs`
 			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
 			INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`

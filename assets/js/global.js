@@ -13,19 +13,25 @@ $(function() {
 			QUEUE: {
 				text: "Add to queue",
 				callback: async function($target) {
-					if ($target.data('album-id')) {
+					if ($target.data('song-id')) {
+						MusicPlayer.sharedInstance.queue().push(
+							$target.data('song-id')
+						);
+					} else if ($target.data('album-id')) {
 						var res = await $.get('/api/album/' + $target.data('album-id'));
 						res
 							.songIds
 							.forEach(songId => MusicPlayer.sharedInstance.queue().push(songId))
 						;
-					} else if ($target.data('song-id')) {
-						MusicPlayer.sharedInstance.queue().push(
-							$target.data('song-id')
-						);
 					}
 					
 					showToastNotification("Added to queue");					
+				}
+			},
+			GO_TO_ALBUM: {
+				text: "Go to album",
+				callback: function($target) {
+					PartialManager.sharedInstance.loadPartial('/album/' + $target.data('album-id'));
 				}
 			}
 		}
