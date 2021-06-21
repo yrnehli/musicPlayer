@@ -115,9 +115,9 @@ class MusicPlayer extends Howl {
 			clearTimeout(this.__timeout);
 
 			if (delayFollowAlbumArt) {
-				this.__timeout = setTimeout(() => partialManager.loadPartial(`/album/${this.__albumId}`), 1000);
+				this.__timeout = setTimeout(() => PartialManager.sharedInstance.loadPartial(`/album/${this.__albumId}`), 1000);
 			} else {
-				partialManager.loadPartial(`/album/${this.__albumId}`);
+				PartialManager.sharedInstance.loadPartial(`/album/${this.__albumId}`);
 			}
 		}
 	}

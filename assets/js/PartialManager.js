@@ -1,5 +1,13 @@
 class PartialManager {
+	static sharedInstance;
+
 	constructor($partial) {
+		if (PartialManager.sharedInstance) {
+			return;
+		}
+
+		PartialManager.sharedInstance = this;
+
 		this.initiatedHistory = false;
 		this.$partial = $partial;
 		this.$partial.find('.simplebar-content-wrapper').scrollStopped(() => history.replaceState(this.getCurrentState(), "", document.URL));

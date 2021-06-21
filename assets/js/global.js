@@ -2,10 +2,10 @@ if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('/service-worker.js');
 }
 
-var partialManager;
-
 $(function() {
-	partialManager = new PartialManager($('#partial'));
+	var $partial = $('#partial');
+
+	new PartialManager($partial);
 });
 
 function initSlider($slider, initialValue, events, disabled = false) {

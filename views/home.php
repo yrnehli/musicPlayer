@@ -62,7 +62,7 @@
 				search();
 			});
 			$('.album-container').click(function() {
-				partialManager.loadPartial(`/album/${$(this).data('album-id')}`)
+				PartialManager.sharedInstance.loadPartial(`/album/${$(this).data('album-id')}`)
 			});
 		}
 
@@ -94,7 +94,7 @@
 					(res.songs.length > 0) ? $songs.show(): $songs.hide();
 					(res.albums.length > 0) ? $albums.show(): $albums.hide();
 
-					partialManager.updateCurrentState();
+					PartialManager.sharedInstance.updateCurrentState();
 				},
 				100
 			);

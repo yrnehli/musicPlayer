@@ -144,8 +144,8 @@
 		}
 
 		function initEvents() {
-			$albumArt.click(e => partialManager.loadPartial('/', '#searchBar'));
-			$songName.click(e => partialManager.loadPartial(`/album/${musicPlayer.albumId()}`));
+			$albumArt.click(e => PartialManager.sharedInstance.loadPartial('/', '#searchBar'));
+			$songName.click(e => PartialManager.sharedInstance.loadPartial(`/album/${musicPlayer.albumId()}`));
 			$prevButton.click(e => musicPlayer.previous());
 			$playButton.click(e => musicPlayer.togglePlay());
 			$skipButton.click(e => musicPlayer.skip());
@@ -215,13 +215,13 @@
 			// Ctrl + F
 			if (e.ctrlKey && e.keyCode === 70) {
 				e.preventDefault();
-				partialManager.loadPartial('/', '#searchBar');
+				PartialManager.sharedInstance.loadPartial('/', '#searchBar');
 			}
 
 			// Esc
 			if (e.keyCode === 27) {
 				e.preventDefault();
-				partialManager.loadPartial('/');
+				PartialManager.sharedInstance.loadPartial('/');
 			}
 		}
 	})();
