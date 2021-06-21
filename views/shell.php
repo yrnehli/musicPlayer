@@ -11,6 +11,7 @@
 		<script src="/assets/js/global.js"></script>
 		<script src="/assets/js/MusicPlayer.js"></script>
 		<script src="/assets/js/PartialManager.js"></script>
+		<script src="/assets/js/CustomContextMenu.js"></script>
 		<script src="/assets/js/fontAwesome.js"></script>
 		<link rel="stylesheet" href="https://code.jquery.com/git/ui/jquery-ui-git.css">
 		<link rel="stylesheet" href="/assets/css/global.css">
@@ -23,6 +24,7 @@
 	</head>
 	<body>
 		<div id="toastNotification"></div>
+		<ul id="contextMenu"></ul>
 		<div id="partial">
 			<?= $partial ?>
 		</div>

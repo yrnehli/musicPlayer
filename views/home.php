@@ -22,7 +22,7 @@
 		</div>
 		<div id="albums" class="mx-auto centre">
 			<?php foreach ($albums as $album): ?>
-				<div class="album-container mx-2 my-2" data-album-id="<?= $album['id'] ?>">
+				<div class="album-container mx-2 my-2" data-album-id="<?= $album['id'] ?>" data-context-menu-actions="QUEUE">
 					<img class="album-art" src="<?= $album['artFilepath'] ?>">
 					<div class="title">
 						<?= $album['name'] ?>
@@ -116,7 +116,7 @@
 		}
 
 		function createResultRow(type, id, name, artist, duration, artFilepath) {
-			var $resultRow = $(`<div class="result-row" data-${type}-id=${id}></div>`);
+			var $resultRow = $(`<div class="result-row" data-${type}-id=${id} data-context-menu-actions="QUEUE"></div>`);
 			var $img = $('<img>').prop('src', artFilepath);
 			var $artwork = $('<div class="artwork"></div>').append($img);
 			var $details = $('<div class="details"></div>').append([

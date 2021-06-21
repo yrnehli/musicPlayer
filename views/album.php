@@ -67,7 +67,7 @@
 			</div>
 		</div>
 		<?php foreach ($songs as $song): ?>
-			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>">
+			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>" data-context-menu-actions="QUEUE">
 				<div class="track-number">
 					<img class="equalizer" src="/assets/img/equalizer.gif">
 					<svg class="play">
@@ -152,8 +152,10 @@
 			});
 
 			$queueAlbumButton.click(() => {
-				$('.tracklist-row').each(function(i) {
-					MusicPlayer.sharedInstance.queue().push($(this).data('song-id'));
+				$('.tracklist-row').each(function() {
+					MusicPlayer.sharedInstance.queue().push(
+						$(this).data('song-id')
+					);
 					showToastNotification("Added to queue");
 				});
 			});

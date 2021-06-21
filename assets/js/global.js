@@ -4,8 +4,31 @@ if ('serviceWorker' in navigator) {
 
 $(function() {
 	var $partial = $('#partial');
+	var $contextMenu = $('#contextMenu');
 
 	new PartialManager($partial);
+	new CustomContextMenu(
+		$contextMenu,
+		{
+			QUEUE: {
+				text: "Add to queue",
+				callback: async function($target) {
+					if ($target.data('album-id')) {
+						await $.get('/api/album/' + $target.data('album-id'))
+							.songIds
+							.forEach(songId => MusicPlayer.sharedInstance.queue().push(songId))
+						;
+					} else if ($target.data('song-id')) {
+						MusicPlayer.sharedInstance.queue().push(
+							$target.data('song-id')
+						);
+					}
+					
+					showToastNotification("Added to queue");					
+				}
+			}
+		}
+	);
 });
 
 function initSlider($slider, initialValue, events, disabled = false) {
