@@ -65,7 +65,7 @@
 		var $elapsedTime = $('#elapsedTime');
 		var $endTime = $('#endTime');
 		
-		musicPlayer = new MusicPlayer($musicControl);
+		new MusicPlayer($musicControl);
 
 		initStateInterval();
 		initSliders();
@@ -73,7 +73,7 @@
 
 		function initStateInterval() {
 			setInterval(() => {
-				if (!musicPlayer.loaded() || musicPlayer.disabled()) {
+				if (!MusicPlayer.sharedInstance.loaded() || MusicPlayer.sharedInstance.disabled()) {
 					return;
 				}
 
@@ -81,11 +81,11 @@
 					"state",
 					JSON.stringify({
 						followAlbum: $followAlbumButton.hasClass('active'),
-						volume: musicPlayer.volume(),
-						queue: musicPlayer.queue(),
-						nextUp: musicPlayer.nextUp(),
-						seek: musicPlayer.seek(),
-						songId: musicPlayer.songId()
+						volume: MusicPlayer.sharedInstance.volume(),
+						queue: MusicPlayer.sharedInstance.queue(),
+						nextUp: MusicPlayer.sharedInstance.nextUp(),
+						seek: MusicPlayer.sharedInstance.seek(),
+						songId: MusicPlayer.sharedInstance.songId()
 					})
 				);
 			}, 1000);
@@ -109,16 +109,16 @@
 					$volumeButton.addClass('high-volume');
 				}
 
-				musicPlayer.volume(volume);
+				MusicPlayer.sharedInstance.volume(volume);
 			}
 
 			var progressIntervalCallback = function() {
-				if (!musicPlayer.loaded() || musicPlayer.disabled()) {
+				if (!MusicPlayer.sharedInstance.loaded() || MusicPlayer.sharedInstance.disabled()) {
 					return;
 				}
 
-				var duration = musicPlayer.duration();
-				var progress = musicPlayer.seek() / duration;
+				var duration = MusicPlayer.sharedInstance.duration();
+				var progress = MusicPlayer.sharedInstance.seek() / duration;
 				var elapsedSeconds = progress * duration;
 
 				$elapsedTime.text(secondsToTimeString(elapsedSeconds));
@@ -127,28 +127,28 @@
 
 			var progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 
-			initSlider($volumeSlider, Math.pow(musicPlayer.volume(), 1/4) * 100, { change: updateVolume, slide: updateVolume });
+			initSlider($volumeSlider, Math.pow(MusicPlayer.sharedInstance.volume(), 1/4) * 100, { change: updateVolume, slide: updateVolume });
 			initSlider(
 				$progressSlider,
 				0,
 				{
-					slide: (e, ui) => $elapsedTime.text(secondsToTimeString(ui.value / 100 * musicPlayer.duration())),
+					slide: (e, ui) => $elapsedTime.text(secondsToTimeString(ui.value / 100 * MusicPlayer.sharedInstance.duration())),
 					start: e => clearInterval(progressInterval),
 					stop: (e, ui) => {
-						musicPlayer.seek(ui.value / 100 * musicPlayer.duration());
+						MusicPlayer.sharedInstance.seek(ui.value / 100 * MusicPlayer.sharedInstance.duration());
 						progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 					}
 				},
-				musicPlayer.disabled()
+				MusicPlayer.sharedInstance.disabled()
 			);
 		}
 
 		function initEvents() {
 			$albumArt.click(e => PartialManager.sharedInstance.loadPartial('/', '#searchBar'));
-			$songName.click(e => PartialManager.sharedInstance.loadPartial(`/album/${musicPlayer.albumId()}`));
-			$prevButton.click(e => musicPlayer.previous());
-			$playButton.click(e => musicPlayer.togglePlay());
-			$skipButton.click(e => musicPlayer.skip());
+			$songName.click(e => PartialManager.sharedInstance.loadPartial(`/album/${MusicPlayer.sharedInstance.albumId()}`));
+			$prevButton.click(e => MusicPlayer.sharedInstance.previous());
+			$playButton.click(e => MusicPlayer.sharedInstance.togglePlay());
+			$skipButton.click(e => MusicPlayer.sharedInstance.skip());
 			$followAlbumButton.click(e => $followAlbumButton.toggleClass('active'));
 			$volumeButton.click(e => updateVolumeButton());
 			$volumeSlider.parent().on('mousewheel', e => adjustVolume(e));
@@ -197,7 +197,7 @@
 			if (e.keyCode === 32) {
 				if ($(':focus').length === 0) {
 					e.preventDefault();
-					musicPlayer.togglePlay();
+					MusicPlayer.sharedInstance.togglePlay();
 				}
 			}
 		}
@@ -206,7 +206,7 @@
 			// Ctrl + S
 			if (e.ctrlKey && e.keyCode === 83) {
 				e.preventDefault();
-				musicPlayer.playNextUp({
+				MusicPlayer.sharedInstance.playNextUp({
 					list: shuffle([<?= implode(", ", $songIds) ?>]),
 					i: 0
 				});

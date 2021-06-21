@@ -135,12 +135,12 @@
 		}
 
 		function playSong($resultRow) {
-			musicPlayer.changeSong($resultRow.data('song-id'), true);
+			MusicPlayer.sharedInstance.changeSong($resultRow.data('song-id'), true);
 		}
 
 		async function playAlbum($resultRow) {
 			var res = await $.get(`/api/album/${$resultRow.data('album-id')}`);
-			musicPlayer.playNextUp({
+			MusicPlayer.sharedInstance.playNextUp({
 				list: res.songIds,
 				i: 0
 			});

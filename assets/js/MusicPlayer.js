@@ -1,13 +1,21 @@
 class MusicPlayer extends Howl {
+	static sharedInstance;
+
 	constructor($musicControl) {
+		if (MusicPlayer.sharedInstance) {
+			return;
+		}
+
 		var state = JSON.parse(localStorage.getItem("state")) || {};
-		
+
 		super({
 			src: [null],
 			format: 'mp3',
 			volume: state.volume || 0.0625,
 			html5: true
 		});
+
+		MusicPlayer.sharedInstance = this;
 
 		navigator.mediaSession.metadata = new MediaMetadata();
 		navigator.mediaSession.setActionHandler('play', () => this.togglePlay());
