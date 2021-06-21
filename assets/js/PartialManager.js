@@ -4,9 +4,9 @@ class PartialManager {
 	constructor($partial) {
 		if (PartialManager.sharedInstance) {
 			return;
+		} else {
+			PartialManager.sharedInstance = this;
 		}
-
-		PartialManager.sharedInstance = this;
 
 		this.initiatedHistory = false;
 		this.$partial = $partial;
