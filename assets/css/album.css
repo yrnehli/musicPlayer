@@ -75,6 +75,10 @@
 	border-radius: 4px;
 }
 
+.tracklist-row.active {
+	background-color: hsla(0,0%,100%,.1);
+}
+
 .tracklist-row:hover {
 	background-color: hsla(0,0%,100%,.1);
 }
@@ -90,14 +94,13 @@
 	height: 14px;
 }
 
-.tracklist-row.active .track-number .equalizer {
+.tracklist-row.playing .track-number .equalizer {
 	display: block !important;
 }
 
-.tracklist-row.active .track-number div {
+.tracklist-row.playing .track-number div {
 	display: none;
 }
-
 
 .tracklist-row .track-number .play {
 	display: none;
@@ -110,11 +113,19 @@
 	fill: white;
 }
 
+.tracklist-row.active .track-number div {
+	display: none;
+}
+
 .tracklist-row:hover .track-number div {
 	display: none;
 }
 
-.tracklist-row:not(.active):hover .track-number .play {
+.tracklist-row.active:not(.playing) .track-number .play {
+	display: block !important;
+}
+
+.tracklist-row:not(.playing):hover .track-number .play {
 	display: block !important;
 }
 

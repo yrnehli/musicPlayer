@@ -56,6 +56,15 @@
 			$(window).keydown(e => assignKeydown(e));
 			$(window).keyup(e => assignKeyup(e));
 			$(window).resize(e => resizeSearch());
+			$(window).mousedown(function(e) {
+				$('.result-row.active').removeClass('active');
+
+				var $resultRow = $(e.target).is('.result-row') ? $(e.target) : $(e.target).parents('.result-row').first();
+
+				if ($resultRow) {
+					$resultRow.addClass('active');
+				}
+			});
 			$searchBar.keyup(() => search());
 			$clearSearchBar.click(e => {
 				$searchBar.val(null);

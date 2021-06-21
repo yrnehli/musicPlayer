@@ -11,7 +11,7 @@ class CustomContextMenu {
 		$(document).on("contextmenu", e => {
 			e.preventDefault();
 
-			var $target = $(e.target).parents('[data-context-menu-actions]').first();
+			var $target = $(e.target).is('[data-context-menu-actions]') ? $(e.target) : $(e.target).parents('[data-context-menu-actions]').first();
 
 			if (!$target.length) {
 				return;

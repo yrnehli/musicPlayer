@@ -142,8 +142,8 @@ class MusicPlayer extends Howl {
 		this.__$playButton.removeClass("paused");
 		super.play();
 
-		$('.tracklist-row.active').removeClass('active');
-		$(`.tracklist-row[data-song-id="${this.__songId}"]`).addClass('active');
+		$('.tracklist-row.playing').removeClass('playing');
+		$(`.tracklist-row[data-song-id="${this.__songId}"]`).addClass('playing');
 	}
 
 	pause() {
@@ -154,7 +154,7 @@ class MusicPlayer extends Howl {
 		this.__$playButton.addClass("paused");
 		super.pause();
 
-		$('.tracklist-row.active').removeClass('active');
+		$('.tracklist-row.playing').removeClass('playing');
 	}
 
 	previous() {

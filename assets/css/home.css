@@ -42,6 +42,10 @@
 	grid-gap: 16px;
 }
 
+.result-row.active {
+	background-color: hsla(0,0%,100%,.1);
+}
+
 .result-row:hover {
 	background-color: hsla(0,0%,100%,.1);
 }
