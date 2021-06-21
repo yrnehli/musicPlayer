@@ -28,6 +28,8 @@ foreach ($directories as $directory) {
 }
 
 Flight::map('renderView', function($viewName, $viewData = []) {
+	Flight::render('searchResults', [], 'searchResults');
+
 	if (filter_var(Flight::request()->query->partial, FILTER_VALIDATE_BOOLEAN)) {
 		Flight::render($viewName, $viewData);
 		return;

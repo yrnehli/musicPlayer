@@ -1,6 +1,9 @@
 <link rel="stylesheet" href="/assets/css/home.css">
 
 <div id="root" class="py-2 px-2 d-flex" data-simplebar>
+	<div class="mx-4">
+		<?= $searchResults ?>
+	</div>
 	<div id="albums" class="mx-auto centre">
 		<?php foreach ($albums as $album): ?>
 			<div class="album-container mx-2 my-2" data-album-id="<?= $album['id'] ?>" data-context-menu-actions="QUEUE,GO_TO_ALBUM">
