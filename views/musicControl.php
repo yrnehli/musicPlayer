@@ -37,7 +37,7 @@
 		</div>
 	</div>
 	<div class="h-100 d-flex ml-auto">
-		<svg id="followAlbumButton" class="my-auto mx-2 active" height="16" width="16">
+		<svg id="followAlbumButton" class="my-auto mx-2" height="16" width="16">
 			<path></path>
 			<path></path>
 		</svg>
