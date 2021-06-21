@@ -22,7 +22,7 @@
 <script>
 	(function() {
 		$(function() {
-			updateBodyColour('#121212');
+			updateBodyColour('#121212', false);
 			initEvents();
 		});
 

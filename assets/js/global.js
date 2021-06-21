@@ -129,7 +129,10 @@ function showToastNotification(message, timeout = 3000) {
 	setTimeout(() => $toastNotification.removeClass('show'), timeout);
 }
 
-function updateBodyColour(hex) {
-	$('body').css('background', `linear-gradient(${hex} 0%, ${hex} 5%, rgb(24, 24, 24) 75%)`);
+function updateBodyColour(hex, gradient = true) {
+	$('body').css(
+		'background',
+		(gradient) ? `linear-gradient(${hex} 0%, ${hex} 5%, rgb(24, 24, 24) 75%)` : hex
+	);
 	$('meta[name="theme-color"]').attr('content', hex);
 }
