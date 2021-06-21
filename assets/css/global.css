@@ -261,14 +261,6 @@ svg.skip path {
 	d: path("M11 3v4.119L3 2.5v11l8-4.619V13h2V3z");
 }
 
-input[type="text"] {
-	background-color: #252525;
-	color: white;
-	border-width: 0px;
-	border-radius: 4px;
-	padding: 10px 15px;
-}
-
 input[type="text"]:focus  {
 	outline: none;
 }
@@ -292,6 +284,42 @@ input[type="text"]:focus  {
 
 #contextMenu li:hover {
 	background-color: hsla(0,0%,100%,.1);
-    color: #fff;
+	color: #fff;
 	border-radius: 2px;
+}
+
+#windowControlsOverlay {
+	display: flex;
+	background-color: #121212;
+	height: 60px;
+	width: 100%;
+	-webkit-app-region: drag;
+}
+
+#searchBar {
+	z-index: 1;
+	background-color: hsla(0, 0% , 100%, .1);
+	color: white;
+	border-width: 0px;
+	border-radius: 30px;
+	padding-left: 15px;
+	padding-right: 30px;
+	height: 30px;
+	line-height: 30px;
+	margin-top: 15px;
+	margin-left: 15px;
+	font-size: 11pt;
+	-webkit-app-region: no-drag;
+}
+
+#searchBar::placeholder {
+	color: hsla(0, 0% , 100%, .2);
+}
+
+#clearSearchBar {
+    z-index: 1;
+    top: 24px;
+    left: 197px;
+    position: absolute;
+    font-size: 10pt;
 }

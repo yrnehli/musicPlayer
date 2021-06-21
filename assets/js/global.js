@@ -139,5 +139,6 @@ function rgbToHex(r, g, b) {
 }
 
 function updateTitleBarColour(hex) {
+	$('#windowControlsOverlay').css('background-color', hex);
 	$('meta[name="theme-color"]').attr('content', hex);
 }

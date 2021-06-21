@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/assets/css/album.css">
 
-<div id="root" class="py-5 px-4" style="background: linear-gradient(rgb(<?= $rgb ?>) 0%, rgb(24, 24, 24) 75%)" data-simplebar>
+<div id="root" class="py-4 px-4" style="background: linear-gradient(rgb(<?= $rgb ?>) 0%, rgb(24, 24, 24) 75%)" data-simplebar>
 	<div class="d-flex mb-4">
 		<img id="albumArtLarge" class="mx-3" src="<?= $album['artUrl'] ?>">		
 		<div class="d-flex mx-2">
