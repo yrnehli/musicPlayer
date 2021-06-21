@@ -14,7 +14,8 @@ $(function() {
 				text: "Add to queue",
 				callback: async function($target) {
 					if ($target.data('album-id')) {
-						await $.get('/api/album/' + $target.data('album-id'))
+						var res = await $.get('/api/album/' + $target.data('album-id'));
+						res
 							.songIds
 							.forEach(songId => MusicPlayer.sharedInstance.queue().push(songId))
 						;
