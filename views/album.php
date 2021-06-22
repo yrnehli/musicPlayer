@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="/assets/css/album.css">
 
-<div id="root" class="px-4" data-simplebar>
+<div id="root" class="px-4 pb-4" data-simplebar>
 	<?= $searchResults ?>
-	<div class="d-flex my-4">
+	<div class="d-flex pt-4">
 		<img id="albumArtLarge" class="mx-3" src="<?= $album['artUrl'] ?>">		
 		<div class="d-flex mx-2">
 			<div class="mt-auto">

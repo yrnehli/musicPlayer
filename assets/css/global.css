@@ -295,6 +295,10 @@ input[type="text"]:focus  {
 	-webkit-app-region: drag;
 }
 
+#searchResults {
+	margin-top: -1rem;
+}
+
 #searchBar {
 	z-index: 1;
 	background-color: hsla(0, 0% , 100%, .1);
