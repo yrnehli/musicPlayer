@@ -80,7 +80,6 @@
 				localStorage.setItem(
 					"state",
 					JSON.stringify({
-						nowPlaying: $nowPlayingButton.hasClass('active'),
 						volume: MusicPlayer.sharedInstance.volume(),
 						queue: MusicPlayer.sharedInstance.queue(),
 						nextUp: MusicPlayer.sharedInstance.nextUp(),

@@ -41,10 +41,6 @@ class MusicPlayer extends Howl {
 		this.on('end', e => this.skip(e));
 		this.on('load', () => this.__$endTime.text((this.__disabled) ? "0:00" : secondsToTimeString(this.duration())));
 
-		if (state.nowPlaying) {
-			this.__$nowPlayingButton.addClass('active');
-		}
-
 		if (!state.songId) {
 			this.disable();
 			return;
