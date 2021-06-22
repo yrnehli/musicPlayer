@@ -5,7 +5,10 @@ if ('serviceWorker' in navigator) {
 $(function() {
 	var $partial = $('#partial');
 	var $contextMenu = $('#contextMenu');
+	var $searchBar = $('#searchBar');
+	var $clearSearchBar = $('#clearSearchBar');
 
+	new SearchHandler($searchBar, $clearSearchBar);
 	new PartialManager($partial);
 	new CustomContextMenu(
 		$contextMenu,

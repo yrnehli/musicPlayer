@@ -24,6 +24,7 @@ class PartialManager {
 			return;
 		}
 
+		SearchHandler.sharedInstance.reset();
 		CustomContextMenu.sharedInstance.hide();
 		
 		if (!this.initiatedHistory) {
