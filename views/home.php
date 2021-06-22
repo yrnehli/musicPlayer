@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/assets/css/home.css">
 
-<div id="root" class="py-2 px-2 d-flex" data-simplebar>
+<div id="root" class="pt-2 pb-4 px-2 d-flex" data-simplebar>
 	<div class="mx-4">
 		<?= $searchResults ?>
 	</div>

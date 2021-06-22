@@ -190,7 +190,7 @@ button:focus {
 }
 
 #partial #root {
-	height: calc(100vh - 90px);
+	height: calc(100vh - 150px);
 }
 
 #partial.fade {
@@ -199,7 +199,7 @@ button:focus {
 
 .btn-spotify {
 	padding: .375rem .75rem;
-	background-color: hsla(0,0%,100%,.1);
+	background-color: hsla(0, 0%, 100%, .1);
 	border-radius: 4px;
 	transition: background-color .3s ease;
 	cursor: pointer;
@@ -283,7 +283,7 @@ input[type="text"]:focus  {
 }
 
 #contextMenu li:hover {
-	background-color: hsla(0,0%,100%,.1);
+	background-color: hsla(0, 0%, 100%, .1);
 	color: #fff;
 	border-radius: 2px;
 }
@@ -316,6 +316,7 @@ input[type="text"]:focus  {
 }
 
 #clearSearchBar {
+	color: hsla(0, 0% , 100%, .3);
     z-index: 1;
     top: 24px;
     left: 197px;
