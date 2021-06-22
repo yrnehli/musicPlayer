@@ -8,8 +8,10 @@ class PartialManager {
 			PartialManager.sharedInstance = this;
 		}
 
-		this.initiatedHistory = false;
 		this.$partial = $partial;
+		this.initiatedHistory = false;
+
+		this.initEvents();
 	}
 
 	initEvents() {

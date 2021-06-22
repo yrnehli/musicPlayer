@@ -5,7 +5,7 @@ class CustomContextMenu {
 		if (CustomContextMenu.sharedInstance) {
 			return;
 		} else {
-			CustomContextMenu.sharedInstance = self;
+			CustomContextMenu.sharedInstance = this;
 		}
 
 		this.$contextMenu = $contextMenu;
