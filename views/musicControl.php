@@ -37,7 +37,7 @@
 		</div>
 	</div>
 	<div class="h-100 d-flex ml-auto">
-		<svg id="followAlbumButton" class="my-auto mx-2" height="16" width="16">
+		<svg id="nowPlayingButton" class="my-auto mx-2" height="16" width="16">
 			<path></path>
 			<path></path>
 		</svg>
@@ -57,7 +57,7 @@
 		var $prevButton = $('#prevButton');
 		var $playButton = $('#playButton');
 		var $skipButton = $('#skipButton');
-		var $followAlbumButton = $('#followAlbumButton');
+		var $nowPlayingButton = $('#nowPlayingButton');
 		var $volumeSlider = $('#volumeSlider');
 		var $volumeButton = $('#volumeButton');
 		var $musicControl = $('#musicControl');
@@ -80,7 +80,7 @@
 				localStorage.setItem(
 					"state",
 					JSON.stringify({
-						followAlbum: $followAlbumButton.hasClass('active'),
+						nowPlaying: $nowPlayingButton.hasClass('active'),
 						volume: MusicPlayer.sharedInstance.volume(),
 						queue: MusicPlayer.sharedInstance.queue(),
 						nextUp: MusicPlayer.sharedInstance.nextUp(),
@@ -149,7 +149,13 @@
 			$prevButton.click(e => MusicPlayer.sharedInstance.previous());
 			$playButton.click(e => MusicPlayer.sharedInstance.togglePlay());
 			$skipButton.click(e => MusicPlayer.sharedInstance.skip());
-			$followAlbumButton.click(e => $followAlbumButton.toggleClass('active'));
+			$nowPlayingButton.click(e => {
+				$nowPlayingButton.toggleClass('active');
+
+				if (MusicPlayer.sharedInstance.albumId()) {
+					PartialManager.sharedInstance.loadPartial("/album/" + MusicPlayer.sharedInstance.albumId(), false);
+				}
+			});
 			$volumeButton.click(e => updateVolumeButton());
 			$volumeSlider.parent().on('mousewheel', e => adjustVolume(e));
 			$(window).keydown(e => assignKeydown(e));

@@ -1,7 +1,7 @@
 class PartialManager {
 	static sharedInstance;
 
-	constructor($partial) {
+	constructor($partial, $nowPlayingButton) {
 		if (PartialManager.sharedInstance) {
 			return;
 		} else {
@@ -9,6 +9,7 @@ class PartialManager {
 		}
 
 		this.$partial = $partial;
+		this.$nowPlayingButton = $nowPlayingButton;
 		this.initiatedHistory = false;
 
 		this.initEvents();
@@ -28,7 +29,7 @@ class PartialManager {
 		});
 	}
 
-	async loadPartial(url) {
+	async loadPartial(url, disableNowPlaying = true) {
 		if (window.location.pathname === url) {
 			return;
 		}
@@ -38,6 +39,10 @@ class PartialManager {
 		if (!this.initiatedHistory) {
 			history.pushState(this.getCurrentState(), "", document.URL);
 			this.initiatedHistory = true;
+		}
+
+		if (disableNowPlaying) {
+			this.$nowPlayingButton.removeClass('active');
 		}
 	
 		this.updatePartial(

@@ -36,13 +36,13 @@ class MusicPlayer extends Howl {
 		this.__$volumeSlider = $musicControl.find("#volumeSlider");
 		this.__$elapsedTime = $musicControl.find("#elapsedTime");
 		this.__$endTime = $musicControl.find("#endTime");
-		this.__$followAlbumButton = $musicControl.find("#followAlbumButton");
+		this.__$nowPlayingButton = $musicControl.find("#nowPlayingButton");
 		this.__metadata = navigator.mediaSession.metadata;
 		this.on('end', e => this.skip(e));
 		this.on('load', () => this.__$endTime.text((this.__disabled) ? "0:00" : secondsToTimeString(this.duration())));
 
-		if (state.followAlbum) {
-			this.__$followAlbumButton.addClass('active');
+		if (state.nowPlaying) {
+			this.__$nowPlayingButton.addClass('active');
 		}
 
 		if (!state.songId) {
@@ -100,7 +100,7 @@ class MusicPlayer extends Howl {
 		return (this._state === "loaded");
 	}
 
-	async changeSong(songId, play, delayFollowAlbumArt = true, disableFollowAlbumArt = false) {
+	async changeSong(songId, play, delayNowPlaying = true, disableNowPlaying = false) {
 		this.__songId = songId;
 		this.enable();
 		
@@ -119,13 +119,13 @@ class MusicPlayer extends Howl {
 		
 		await this.updateMusicControl();
 
-		if (!disableFollowAlbumArt && !$('input:focus').length && this.__albumId && this.__$followAlbumButton.hasClass('active')) {
+		if (!disableNowPlaying && !$('input:focus').length && this.__albumId && this.__$nowPlayingButton.hasClass('active')) {
 			clearTimeout(this.__timeout);
 
-			if (delayFollowAlbumArt) {
-				this.__timeout = setTimeout(() => PartialManager.sharedInstance.loadPartial(`/album/${this.__albumId}`), 1000);
+			if (delayNowPlaying) {
+				this.__timeout = setTimeout(() => PartialManager.sharedInstance.loadPartial('/album/' + this.__albumId, false), 1000);
 			} else {
-				PartialManager.sharedInstance.loadPartial(`/album/${this.__albumId}`);
+				PartialManager.sharedInstance.loadPartial('/album/' + this.__albumId, false);
 			}
 		}
 	}

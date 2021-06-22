@@ -7,9 +7,10 @@ $(function() {
 	var $contextMenu = $('#contextMenu');
 	var $searchBar = $('#searchBar');
 	var $clearSearchBar = $('#clearSearchBar');
+	var $nowPlayingButton = $("#nowPlayingButton");
 
 	new SearchHandler($searchBar, $clearSearchBar);
-	new PartialManager($partial);
+	new PartialManager($partial, $nowPlayingButton);
 	new CustomContextMenu(
 		$contextMenu,
 		{
