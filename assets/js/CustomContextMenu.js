@@ -1,17 +1,19 @@
 class CustomContextMenu {
 	static sharedInstance;
 
-	constructor($contextMenu, actions) {
-		var self = this;
-		
+	constructor($contextMenu, actions) {		
 		if (CustomContextMenu.sharedInstance) {
 			return;
 		} else {
 			CustomContextMenu.sharedInstance = self;
 		}
 
-		self.$contextMenu = $contextMenu;
+		this.$contextMenu = $contextMenu;
 
+		this.initEvents(actions);
+	}
+
+	initEvents(actions) {
 		$(document).on("contextmenu", e => {
 			e.preventDefault();
 
@@ -21,33 +23,36 @@ class CustomContextMenu {
 				return;
 			}
 
-			$contextMenu.empty();
+			this.$contextMenu.empty();
+
 			$target
 				.data('context-menu-actions')
 				.split(",")
 				.forEach(action => {
-					$contextMenu.append(
+					this.$contextMenu.append(
 						$('<li></li>')
 							.text(actions[action].text)
-							.click(function() {
+							.click(() => {
 								actions[action].callback($target);
-								self.hide();
+								this.hide();
 							})
 					);
 				})
 			;
-			$contextMenu
+
+			this
+				.$contextMenu
 				.fadeIn(CustomContextMenu.FADE_DURATION)
 				.css({
 					top: `${e.pageY + 8}px`,
-					left: (e.pageX + $contextMenu.outerWidth() > $(window).width()) ? `${e.pageX - $contextMenu.outerWidth()}px` : `${e.pageX}px`
+					left: (e.pageX + this.$contextMenu.outerWidth() > $(window).width()) ? `${e.pageX - this.$contextMenu.outerWidth()}px` : `${e.pageX}px`
 				})
 			;
 		});
 	
-		$(document).on("mousedown", function(e) {
-			if (!$(e.target).parents().get().some(parent => parent === $contextMenu.get(0))) {
-				self.hide();
+		$(document).on("mousedown", e => {
+			if (!$(e.target).parents().get().some(parent => parent === this.$contextMenu.get(0))) {
+				this.hide();
 			}
 		});
 	}

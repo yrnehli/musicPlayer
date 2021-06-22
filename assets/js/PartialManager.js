@@ -10,7 +10,14 @@ class PartialManager {
 
 		this.initiatedHistory = false;
 		this.$partial = $partial;
-		this.$partial.find('.simplebar-content-wrapper').scrollStopped(() => history.replaceState(this.getCurrentState(), "", document.URL));
+	}
+
+	initEvents() {
+		this
+			.$partial
+			.find('.simplebar-content-wrapper')
+			.scrollStopped(() => history.replaceState(this.getCurrentState(), "", document.URL))
+		;
 
 		$(window).on('popstate', e => {
 			if (e.originalEvent.state) {
