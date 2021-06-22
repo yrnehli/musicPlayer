@@ -267,7 +267,7 @@ input[type="text"]:focus  {
 
 #contextMenu {
 	display: none;
-	z-index: 1000;
+	z-index: 99999;
 	position: absolute;
 	list-style-type: none;
 	background: #282828;
