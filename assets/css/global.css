@@ -209,7 +209,7 @@ button:focus {
 }
 
 .btn-spotify:hover {
-	background: hsla(0,0%,100%,.2);
+	background: hsla(0 ,0%, 100%, .2);
 }
 
 .btn-spotify svg {
@@ -351,11 +351,11 @@ input[type="text"]:focus  {
 }
 
 #searchResults .result-row.active {
-	background-color: hsla(0,0%,100%,.1);
+	background-color: hsla(0 ,0%, 100%, .1);
 }
 
 #searchResults .result-row:hover {
-	background-color: hsla(0,0%,100%,.1);
+	background-color: hsla(0 ,0%, 100%, .1);
 }
 
 #searchResults .result-row div {
@@ -416,11 +416,11 @@ h2 {
 }
 
 .tracklist-row.active {
-	background-color: hsla(0,0%,100%,.1);
+	background-color: hsla(0 ,0%, 100%, .1);
 }
 
 .tracklist-row:hover {
-	background-color: hsla(0,0%,100%,.1);
+	background-color: hsla(0 ,0%, 100%, .1);
 }
 
 .tracklist-row div {

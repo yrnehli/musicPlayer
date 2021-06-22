@@ -43,7 +43,7 @@
 #tableHeader {
 	grid-template-columns: [index] 16px [first] 4fr [last] minmax(120px,1fr);
 	color: #b3b3b3;
-	border-bottom: 1px solid hsla(0,0%,100%,.1);
+	border-bottom: 1px solid hsla(0, 0%, 100%, .1);
 	display: grid;
 	padding: 0 16px;
 	grid-gap: 16px;

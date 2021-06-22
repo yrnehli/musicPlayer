@@ -1,3 +1,5 @@
 .over {
-	border: 3px dotted #666;
-  }
+	border-bottom: 1px solid hsla(0, 0%, 100%, .75);
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+}

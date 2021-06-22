@@ -32,7 +32,7 @@ $songs = [
 	<?= $searchResults ?>
 	<div>
 		<?php foreach ($songs as $song): ?>
-			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>" draggable="true" data-context-menu-actions="QUEUE">
+			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>" draggable="true" data-context-menu-actions="QUEUE" data-drag-counter="0">
 				<div class="track-number">
 					<img class="equalizer" src="/assets/img/equalizer.gif">
 					<svg class="play">
@@ -68,11 +68,8 @@ $songs = [
 	}
 
 	function handleDragEnd(e) {
-		$(this).removeClass('active');
-
-		$('.tracklist-row').get().forEach(function(item) {
-			item.classList.remove('over');
-		});
+		this.classList.remove('active');
+		tracklistRows.forEach(tracklistRow => tracklistRow.classList.remove('over'));
 	}
 	
 	function handleDragOver(e) {
@@ -84,11 +81,28 @@ $songs = [
 	}
 
 	function handleDragEnter(e) {
-		this.classList.add('over');
+		var $tracklistRow = $(this).is('.tracklist-row') ? $(this) : $(this).parents('.tracklist-row').get(0);
+		
+		$tracklistRow
+			.addClass('over')
+			.data(
+				'drag-counter', 
+				$tracklistRow.data('drag-counter') + 1
+			)
+		;
 	}
 
 	function handleDragLeave(e) {
-		this.classList.remove('over');
+		var $tracklistRow = $(this).is('.tracklist-row') ? $(this) : $(this).parents('.tracklist-row').get(0);
+
+		$tracklistRow.data(
+			'drag-counter', 
+			$tracklistRow.data('drag-counter') - 1
+		);
+
+        if ($tracklistRow.data('drag-counter') === 0) { 
+			$tracklistRow.removeClass('over');
+        }
 	}
 
 	function handleDrop(e) {
@@ -99,7 +113,7 @@ $songs = [
 		var selfIndex, dragSourceIndex;
 
 		if (dragSource !== self) {
-			tracklistRows.forEach(function(tracklistRow, i) {
+			tracklistRows.forEach((tracklistRow, i) => {
 				if (tracklistRow === self) {
 					selfIndex = i;
 				} else if (tracklistRow === dragSource) {
@@ -133,7 +147,7 @@ $songs = [
 		return false;
 	}
 
-	tracklistRows.forEach(function(tracklistRow) {
+	tracklistRows.forEach(tracklistRow => {
 		tracklistRow.addEventListener('dragstart', handleDragStart, false);
 		tracklistRow.addEventListener('dragend', handleDragEnd, false);
 		tracklistRow.addEventListener('drop', handleDrop, false);
