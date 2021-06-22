@@ -60,8 +60,8 @@ Flight::route("GET /", function() {
 	Flight::renderView('home', compact('albums'));
 });
 
-Flight::route("GET /search", function() {
-	Flight::renderView('search');
+Flight::route("GET /queue", function() {
+	Flight::renderView('queue');
 });
 
 Flight::route("GET /album/@albumId", function($albumId) {
