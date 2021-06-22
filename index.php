@@ -132,10 +132,15 @@ Flight::route("GET /album/@albumId", function($albumId) {
 		"",
 		array_map(
 			function($x) use ($darken, $darknessFactor) {
-				return dechex(
-					round(
-						($darken) ? $x * $darknessFactor : $x
-					)
+				return str_pad(
+					dechex(
+						round(
+							($darken) ? $x * $darknessFactor : $x
+						)
+					),
+					2,
+					"0",
+					STR_PAD_LEFT
 				);
 			},
 			$rgb
