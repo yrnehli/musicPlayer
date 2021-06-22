@@ -51,11 +51,11 @@ class PartialManager {
 			0
 		);
 		
-		SearchHandler.sharedInstance.reset();
 		history.pushState(this.getCurrentState(), "", url);
 	}
 
 	updatePartial(html, scroll) {
+		SearchHandler.sharedInstance.reset();
 		this.$partial.removeClass('fade');
 		this.$partial.css('opacity', 0);
 		this.$partial.html(html);
