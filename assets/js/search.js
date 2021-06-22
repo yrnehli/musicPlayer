@@ -1,21 +1,11 @@
 (function() {
 	var $searchBar;
-	var $searchResults;
 	var $clearSearchBar;
-	var $songs;
-	var $albums;
-	var $songsContainer;
-	var $albumsContainer;
 	var timeout;
 
 	$(function() {
 		$searchBar = $('#searchBar');
-		$searchResults = $('#searchResults');
 		$clearSearchBar = $('#clearSearchBar');
-		$songs = $('#songs');
-		$albums = $('#albums');
-		$songsContainer = $('#songsContainer');
-		$albumsContainer = $('#albumsContainer');
 		initEvents();
 	});
 
@@ -44,6 +34,11 @@
 		timeout = setTimeout(
 			async() => {
 				var term = $searchBar.val();
+				var $searchResults = $('#searchResults');
+				var $songs = $('#songs');
+				var $albums = $('#albums');
+				var $songsContainer = $('#songsContainer');
+				var $albumsContainer = $('#albumsContainer');
 	
 				$searchBar.attr('value', term);
 	
