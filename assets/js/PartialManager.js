@@ -19,7 +19,7 @@ class PartialManager {
 		});
 	}
 
-	async loadPartial(url, selectorToFocus) {
+	async loadPartial(url) {
 		if (window.location.pathname === url) {
 			return;
 		}
@@ -39,15 +39,14 @@ class PartialManager {
 					statusCode: { 404: () => location.reload() }
 				}
 			),
-			0,
-			selectorToFocus
+			0
 		);
 		
 		SearchHandler.sharedInstance.reset();
 		history.pushState(this.getCurrentState(), "", url);
 	}
 
-	updatePartial(html, scroll, selectorToFocus) {
+	updatePartial(html, scroll) {
 		this.$partial.removeClass('fade');
 		this.$partial.css('opacity', 0);
 		this.$partial.html(html);
@@ -59,9 +58,6 @@ class PartialManager {
 				.off('scroll')
 				.scrollStopped(() => this.updateCurrentState())
 			;
-			if (selectorToFocus) {
-				this.$partial.find(selectorToFocus).focus();
-			}
 		});
 	}
 

@@ -144,7 +144,7 @@
 		}
 
 		function initEvents() {
-			$albumArt.click(e => PartialManager.sharedInstance.loadPartial('/', '#searchBar'));
+			$albumArt.click(e => PartialManager.sharedInstance.loadPartial('/'));
 			$songName.click(e => PartialManager.sharedInstance.loadPartial(`/album/${MusicPlayer.sharedInstance.albumId()}`));
 			$prevButton.click(e => MusicPlayer.sharedInstance.previous());
 			$playButton.click(e => MusicPlayer.sharedInstance.togglePlay());
@@ -183,11 +183,6 @@
 				e.preventDefault();
 			}
 
-			// Ctrl + F
-			if (e.ctrlKey && e.keyCode === 70) {
-				e.preventDefault();
-			}
-
 			// Esc
 			if (e.keyCode === 27) {
 				e.preventDefault();
@@ -210,12 +205,6 @@
 					list: shuffle([<?= implode(", ", $songIds) ?>]),
 					i: 0
 				});
-			}
-
-			// Ctrl + F
-			if (e.ctrlKey && e.keyCode === 70) {
-				e.preventDefault();
-				PartialManager.sharedInstance.loadPartial('/', '#searchBar');
 			}
 
 			// Esc
