@@ -45,7 +45,7 @@ class PartialManager {
 				url,
 				{
 					data: { partial: true },
-					statusCode: { 404: () => location.reload() }
+					statusCode: { 404: () => window.location.href = "/" }
 				}
 			),
 			0
