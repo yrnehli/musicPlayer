@@ -305,7 +305,7 @@ input[type="text"]:focus  {
 	color: white;
 	border-width: 0px;
 	border-radius: 30px;
-	padding-left: 15px;
+	padding-left: 32px;
 	padding-right: 30px;
 	height: 30px;
 	line-height: 30px;
@@ -319,13 +319,23 @@ input[type="text"]:focus  {
 	color: hsla(0, 0% , 100%, .2);
 }
 
+#searchIcon {
+	color: hsla(0, 0% , 100%, .3);
+	z-index: 1;
+	top: 24px;
+	left: 26px;
+	position: absolute;
+	font-size: 10pt;
+	cursor: pointer;
+}
+
 #clearSearchBar {
 	color: hsla(0, 0% , 100%, .3);
-    z-index: 1;
-    top: 24px;
-    left: 197px;
-    position: absolute;
-    font-size: 10pt;
+	z-index: 1;
+	top: 24px;
+	left: 214px;
+	position: absolute;
+	font-size: 10pt;
 	cursor: pointer;
 }
 
@@ -377,14 +387,14 @@ input[type="text"]:focus  {
 
 #searchResults .result-row .details div:last-child {
 	color: #b3b3b3;
-    font-size: 14px;
+	font-size: 14px;
 }
 
 #searchResults .result-row .total-time {
 	justify-self: end;
-    font-variant-numeric: tabular-nums;
-    width: 4ch;
-    font-size: 14px;
+	font-variant-numeric: tabular-nums;
+	width: 4ch;
+	font-size: 14px;
 }
 
 h2 {
