@@ -24,7 +24,6 @@ class PartialManager {
 			return;
 		}
 
-		SearchHandler.sharedInstance.reset();
 		CustomContextMenu.sharedInstance.hide();
 		
 		if (!this.initiatedHistory) {
@@ -43,6 +42,8 @@ class PartialManager {
 			0,
 			selectorToFocus
 		);
+		
+		SearchHandler.sharedInstance.reset();
 		history.pushState(this.getCurrentState(), "", url);
 	}
 
