@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Helpers\MusicDatabase;
-use App\Helpers\Utilities;
 
 class RootController extends Controller {
 	public function index() {
