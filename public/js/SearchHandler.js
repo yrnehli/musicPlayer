@@ -18,7 +18,7 @@ class SearchHandler {
 		$(window).mousedown(function(e) {
 			$('.active').removeClass('active');
 
-			var $element = $(e.target).is('[data-clickable]') ? $(e.target) : $(e.target).parents('[data-clickable]').first();
+			var $element = $(e.target).is('[data-activable]') ? $(e.target) : $(e.target).parents('[data-activable]').first();
 
 			if ($element) {
 				$element.addClass('active');
@@ -68,7 +68,7 @@ class SearchHandler {
 	}
 
 	createResultRow(type, id, albumId, name, artist, duration, artFilepath) {
-		var $resultRow = $(`<div class="result-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="QUEUE,GO_TO_ALBUM" data-clickable></div>`);
+		var $resultRow = $(`<div class="result-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="QUEUE,GO_TO_ALBUM" data-activable></div>`);
 		var $img = $('<img>').prop('src', artFilepath);
 		var $artwork = $('<div class="artwork"></div>').append($img);
 		var $details = $('<div class="details"></div>').append([
@@ -99,10 +99,7 @@ class SearchHandler {
 	}
 
 	reset() {
-		this.$searchBar
-			.val(null)
-			.blur()
-		;
+		this.$searchBar.val(null);
 		this.search();
 	}
 }
