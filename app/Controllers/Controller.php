@@ -22,7 +22,7 @@ class Controller {
 		$songIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
 		
 		Flight::render($name, $data, 'partial');
-		Flight::render('musicControl', compact('songIds'), 'musicControl');
+		Flight::render('control', compact('songIds'), 'control');
 		Flight::render('shell');
 	}
 }

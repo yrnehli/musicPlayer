@@ -32,7 +32,7 @@
 		<div id="partial">
 			<?= $partial ?>
 		</div>
-		<?= $musicControl ?>
+		<?= $control ?>
 		<ul id="contextMenu"></ul>
 		<div id="toastNotification"></div>
 	</body>

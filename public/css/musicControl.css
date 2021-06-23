@@ -1,4 +1,4 @@
-#musicControl {
+#control {
 	height: 90px;
 	background-color: #181818;
 	border-top: 1px solid #282828;
@@ -6,15 +6,15 @@
 	padding-right: 16px;
 }
 
-#musicControl svg {
+#control svg {
 	fill: #b3b3b3;
 }
 
-#musicControl svg:hover {
+#control svg:hover {
 	fill: white;
 }
 
-#musicControl button {
+#control button {
 	position: relative;
 	width: 32px;
 	min-width: 32px;

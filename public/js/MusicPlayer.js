@@ -1,7 +1,7 @@
 class MusicPlayer extends Howl {
 	static sharedInstance;
 
-	constructor($musicControl) {
+	constructor($control) {
 		if (MusicPlayer.sharedInstance) {
 			return;
 		}
@@ -26,17 +26,17 @@ class MusicPlayer extends Howl {
 		this.__disabled = false;
 		this.__queue = state.queue || [];
 		this.__nextUp = state.nextUp || { list: [], i: 0 };
-		this.__$prevButton = $musicControl.find('#prevButton');
-		this.__$playButton = $musicControl.find('#playButton');
-		this.__$skipButton = $musicControl.find('#skipButton');
-		this.__$progressSlider = $musicControl.find('#progressSlider');
-		this.__$songName = $musicControl.find('#songName');
-		this.__$artistName = $musicControl.find('#artistName');
-		this.__$albumArt = $musicControl.find("#albumArt");
-		this.__$volumeSlider = $musicControl.find("#volumeSlider");
-		this.__$elapsedTime = $musicControl.find("#elapsedTime");
-		this.__$endTime = $musicControl.find("#endTime");
-		this.__$nowPlayingButton = $musicControl.find("#nowPlayingButton");
+		this.__$prevButton = $control.find('#prevButton');
+		this.__$playButton = $control.find('#playButton');
+		this.__$skipButton = $control.find('#skipButton');
+		this.__$progressSlider = $control.find('#progressSlider');
+		this.__$songName = $control.find('#songName');
+		this.__$artistName = $control.find('#artistName');
+		this.__$albumArt = $control.find("#albumArt");
+		this.__$volumeSlider = $control.find("#volumeSlider");
+		this.__$elapsedTime = $control.find("#elapsedTime");
+		this.__$endTime = $control.find("#endTime");
+		this.__$nowPlayingButton = $control.find("#nowPlayingButton");
 		this.__metadata = navigator.mediaSession.metadata;
 		this.on('end', e => this.skip(e));
 		this.on('load', () => this.__$endTime.text((this.__disabled) ? "0:00" : secondsToTimeString(this.duration())));
@@ -113,7 +113,7 @@ class MusicPlayer extends Howl {
 			this.pause();
 		}
 		
-		await this.updateMusicControl();
+		await this.updateControl();
 
 		if (!disableNowPlaying && !$('input:focus').length && this.__albumId && this.__$nowPlayingButton.hasClass('active')) {
 			clearTimeout(this.__timeout);
@@ -210,7 +210,7 @@ class MusicPlayer extends Howl {
 		this.changeSong(nextUp.list[nextUp.i], true);
 	}
 
-	async updateMusicControl() {
+	async updateControl() {
 		var res = await $.get(`/api/song/${this.__songId}`);
 		
 		this.__albumId = res.albumId;
