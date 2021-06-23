@@ -416,7 +416,7 @@ h2 {
 }
 
 .tracklist-row.active {
-	background-color: hsla(0 ,0%, 100%, .1);
+	background-color: hsla(0 ,0%, 100%, .2) !important;
 }
 
 .tracklist-row:hover {
