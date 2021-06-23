@@ -25,10 +25,6 @@ class Controller {
 		Flight::render('musicControl', compact('songIds'), 'musicControl');
 		Flight::render('shell');
 	}
-
-	protected function request() {
-		return Flight::request();
-	}
 }
 
 ?>

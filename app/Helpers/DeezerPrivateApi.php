@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use Exception;
+
 class DeezerPrivateApi {
 	private const API_BASE = "http://www.deezer.com/ajax/gw-light.php";
 	private $arl;

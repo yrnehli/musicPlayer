@@ -46,7 +46,7 @@ class MusicPlayer extends Howl {
 			return;
 		}
 
-		$.ajax(`/mp3/${state.songId}`, {
+		$.ajax(`/api/mp3/${state.songId}`, {
 			statusCode: { 500: () => this.disable() },
 			success: () => {
 				this.changeSong(state.songId, false, false, true);
@@ -103,7 +103,7 @@ class MusicPlayer extends Howl {
 		this.unload();
 		this._duration = 0;
 		this._sprite = {};
-		this._src = `/mp3/${songId}`;
+		this._src = `/api/mp3/${songId}`;
 		this.load();
 		
 		// Play even if we want don't want to so we get the media session metadata
@@ -119,9 +119,9 @@ class MusicPlayer extends Howl {
 			clearTimeout(this.__timeout);
 
 			if (delayNowPlaying) {
-				this.__timeout = setTimeout(() => PartialManager.sharedInstance.loadPartial('/album/' + this.__albumId, false), 1000);
+				this.__timeout = setTimeout(() => PartialManager.sharedInstance.loadPartial(`/album/${this.__albumId}`, false), 1000);
 			} else {
-				PartialManager.sharedInstance.loadPartial('/album/' + this.__albumId, false);
+				PartialManager.sharedInstance.loadPartial(`/album/${this.__albumId}`, false);
 			}
 		}
 	}
