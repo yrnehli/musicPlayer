@@ -8,14 +8,14 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
-		<script src="/assets/js/MusicPlayer.js"></script>
-		<script src="/assets/js/PartialManager.js"></script>
-		<script src="/assets/js/CustomContextMenu.js"></script>
-		<script src="/assets/js/SearchHandler.js"></script>
-		<script src="/assets/js/global.js"></script>
-		<script src="/assets/js/FontAwesome.js"></script>
+		<script src="/public/js/MusicPlayer.js"></script>
+		<script src="/public/js/PartialManager.js"></script>
+		<script src="/public/js/CustomContextMenu.js"></script>
+		<script src="/public/js/SearchHandler.js"></script>
+		<script src="/public/js/global.js"></script>
+		<script src="/public/js/FontAwesome.js"></script>
 		<link rel="stylesheet" href="https://code.jquery.com/git/ui/jquery-ui-git.css">
-		<link rel="stylesheet" href="/assets/css/global.css">
+		<link rel="stylesheet" href="/public/css/global.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.css">
 		<script src="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.waitforimages/1.5.0/jquery.waitforimages.min.js"></script>

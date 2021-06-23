@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/assets/css/musicControl.css">
+<link rel="stylesheet" href="/public/css/musicControl.css">
 
 <div id="musicControl" class="fixed-bottom d-flex">
 	<div id="playerDetails" class="h-100 d-flex">

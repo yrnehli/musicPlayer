@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Helpers;
+
 class DeezerPrivateApi {
 	private const API_BASE = "http://www.deezer.com/ajax/gw-light.php";
 	private $arl;

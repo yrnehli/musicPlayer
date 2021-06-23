@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/assets/css/album.css">
+<link rel="stylesheet" href="/public/css/album.css">
 
 <div id="root" class="px-4 pb-4" data-simplebar>
 	<?= $searchResults ?>
@@ -70,7 +70,7 @@
 		<?php foreach ($songs as $song): ?>
 			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>" data-context-menu-actions="QUEUE">
 				<div class="track-number">
-					<img class="equalizer" src="/assets/img/equalizer.gif">
+					<img class="equalizer" src="/public/img/equalizer.gif">
 					<svg class="play">
 						<path></path>
 					</svg>

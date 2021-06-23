@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Helpers;
+
 class DeezerApi {
 	public const DEEZER_ID_PREFIX = "DEEZER-";
 	private const API_BASE = "https://api.deezer.com";

@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/assets/css/home.css">
+<link rel="stylesheet" href="/public/css/home.css">
 
 <div id="root" class="pt-2 pb-4 px-2 d-flex" data-simplebar>
 	<div class="mx-4">

@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/assets/css/queue.css">
+<link rel="stylesheet" href="/public/css/queue.css">
 
 <?php
 
@@ -34,7 +34,7 @@ $songs = [
 		<?php foreach ($songs as $song): ?>
 			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>" draggable="true" data-context-menu-actions="QUEUE" data-drag-counter="0">
 				<div class="track-number">
-					<img class="equalizer" src="/assets/img/equalizer.gif">
+					<img class="equalizer" src="/public/img/equalizer.gif">
 					<svg class="play">
 						<path></path>
 					</svg>

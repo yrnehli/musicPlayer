@@ -90,10 +90,21 @@ function str_pad_left(string, pad, length) {
 }
 
 $.fn.scrollStopped = function(callback) {
-	var that = this, $this = $(that);
-	$this.scroll(function(ev) {
-		clearTimeout($this.data('scrollTimeout'));
-		$this.data('scrollTimeout', setTimeout(callback.bind(that), 250, ev));
+	var self = this;
+
+	$(self).scroll(function(e) {
+		clearTimeout(
+			$(self).data('scrollTimeout')
+		);
+		
+		$(self).data(
+			'scrollTimeout',
+			setTimeout(
+				callback.bind(self),
+				250,
+				e
+			)
+		);
 	});
 };
 
@@ -116,7 +127,7 @@ function shuffle(arr, options) {
   
 	while (len) {
 		random = Math.floor(rng() * len);
-		len -= 1;
+		len--;
 		temp = collection[len];
 		collection[len] = collection[random];
 		collection[random] = temp;
@@ -136,7 +147,7 @@ function showToastNotification(message, timeout = 3000) {
 function updateBodyColour(hex, gradient = true) {
 	$('body').css(
 		'background',
-		(gradient) ? `linear-gradient(${hex} 0%, ${hex} 5%, rgb(24, 24, 24) 75%)` : hex
+		(gradient) ? `linear-gradient(${hex} 0%, ${hex} 5%, #181818 75%)` : hex
 	);
 	$('meta[name="theme-color"]').attr('content', hex);
 }
