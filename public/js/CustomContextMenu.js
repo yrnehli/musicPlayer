@@ -40,14 +40,19 @@ class CustomContextMenu {
 				})
 			;
 
-			this
-				.$contextMenu
+			this.$contextMenu
 				.fadeIn(CustomContextMenu.FADE_DURATION)
 				.css({
 					top: `${e.pageY + 8}px`,
 					left: (e.pageX + this.$contextMenu.outerWidth() > $(window).width()) ? `${e.pageX - this.$contextMenu.outerWidth()}px` : `${e.pageX}px`
 				})
 			;
+
+			$('#root').on('scroll touchmove mousewheel', function(e){
+				e.preventDefault();
+				e.stopPropagation();
+				return false;
+			});
 		});
 	
 		$(document).on("mousedown", e => {
@@ -58,6 +63,7 @@ class CustomContextMenu {
 	}
 
 	hide() {
+		$('#root').off('scroll touchmove mousewheel');
 		this.$contextMenu.fadeOut(CustomContextMenu.FADE_DURATION);
 	}
 

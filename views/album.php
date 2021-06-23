@@ -68,7 +68,7 @@
 			</div>
 		</div>
 		<?php foreach ($songs as $song): ?>
-			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>" data-context-menu-actions="QUEUE">
+			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>" data-context-menu-actions="QUEUE" data-clickable>
 				<div class="track-number">
 					<img class="equalizer" src="/public/img/equalizer.gif">
 					<svg class="play">
@@ -113,16 +113,6 @@
 			if (MusicPlayer.sharedInstance.playing()) {
 				$(`.tracklist-row[data-song-id="${MusicPlayer.sharedInstance.songId()}"]`).addClass('playing');
 			}
-
-			$(window).mousedown(function(e) {
-				$('.tracklist-row.active').removeClass('active');
-
-				var $tracklistRow = $(e.target).is('.tracklist-row') ? $(e.target) : $(e.target).parents('.tracklist-row').first();
-
-				if ($tracklistRow) {
-					$tracklistRow.addClass('active');
-				}
-			});
 
 			$('.tracklist-row').dblclick(function() {
 				var $self = $(this);

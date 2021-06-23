@@ -16,8 +16,7 @@ class PartialManager {
 	}
 
 	initEvents() {
-		this
-			.$partial
+		this.$partial
 			.find('.simplebar-content-wrapper')
 			.scrollStopped(() => history.replaceState(this.getCurrentState(), "", document.URL))
 		;

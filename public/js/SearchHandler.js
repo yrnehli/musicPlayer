@@ -16,15 +16,15 @@ class SearchHandler {
 
 	initEvents() {
 		$(window).mousedown(function(e) {
-			$('.result-row.active').removeClass('active');
+			$('.active').removeClass('active');
 
-			var $resultRow = $(e.target).is('.result-row') ? $(e.target) : $(e.target).parents('.result-row').first();
+			var $element = $(e.target).is('[data-clickable]') ? $(e.target) : $(e.target).parents('[data-clickable]').first();
 
-			if ($resultRow) {
-				$resultRow.addClass('active');
+			if ($element) {
+				$element.addClass('active');
 			}
 		});
-		this.$searchBar.keyup(() => this.search());
+		this.$searchBar.keyup(e => this.search());
 		this.$clearSearchBar.click(e => this.reset());
 	}
 
@@ -68,7 +68,7 @@ class SearchHandler {
 	}
 
 	createResultRow(type, id, albumId, name, artist, duration, artFilepath) {
-		var $resultRow = $(`<div class="result-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="QUEUE,GO_TO_ALBUM"></div>`);
+		var $resultRow = $(`<div class="result-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="QUEUE,GO_TO_ALBUM" data-clickable></div>`);
 		var $img = $('<img>').prop('src', artFilepath);
 		var $artwork = $('<div class="artwork"></div>').append($img);
 		var $details = $('<div class="details"></div>').append([
