@@ -4,6 +4,21 @@ ini_set('memory_limit' ,'-1');
 
 require_once 'vendor/autoload.php';
 
+$directories = [
+	'userData',
+	'userData/albumArt',
+	'userData/deezer',
+	'userData/deezer/mp3',
+	'userData/deezer/metadata',
+	'userData/deezer/album'
+];
+
+foreach ($directories as $directory) {
+	if (!file_exists($directory)) {
+		mkdir($directory);
+	}
+}
+
 spl_autoload_register(function($className) {
 	$filepath = realpath('.') . "/" . str_replace("\\", "/", lcfirst($className)) . ".php";
 
@@ -28,7 +43,7 @@ foreach ($objects as $object) {
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-include "routes.php";
+include_once "routes.php";
 
 Flight::start();
 

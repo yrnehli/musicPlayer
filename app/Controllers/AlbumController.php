@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-use ColorThief\ColorThief;
 use App\Helpers\DeezerApi;
 use App\Helpers\MusicDatabase;
+use App\Helpers\Utilities;
 use Flight;
 
 class AlbumController extends Controller {
@@ -58,41 +58,16 @@ class AlbumController extends Controller {
 	
 			$albumArt = file_get_contents(substr($album['artFilepath'], 1));
 		}
-		
-		$rgb = ColorThief::getColor($albumArt);
-	
-		$darken = false;
-		$darknessFactor = 1;
-	
-		foreach ($rgb as $x) {
-			if ($x > 60) {
-				$darken = true;
-				if ($darknessFactor > 60 / $x) {
-					$darknessFactor = 60 / $x;
-				}
-			}
+
+		$album['englishTime'] = Utilities::secondsToEnglishTime($album['duration']);
+
+		foreach ($songs as &$song) {
+			$song['time'] = Utilities::secondsToTimeString($song['duration']);
 		}
 	
-		$colour = "#" . implode(
-			"",
-			array_map(
-				function($x) use ($darken, $darknessFactor) {
-					return str_pad(
-						dechex(
-							round(
-								($darken) ? $x * $darknessFactor : $x
-							)
-						),
-						2,
-						"0",
-						STR_PAD_LEFT
-					);
-				},
-				$rgb
-			)
-		);
+		$accentColour = Utilities::getAccentColour($albumArt);
 	
-		$this->view('album', compact('album', 'songs', 'colour'));
+		$this->view('album', compact('album', 'songs', 'accentColour'));
 	}
 }
 

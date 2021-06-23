@@ -51,7 +51,7 @@ $songs = [
 					</div>
 				</div>
 				<div class="total-time">
-					<?= secondsToTimeString($song['duration']) ?>
+					<?= $song['duration'] ?>
 				</div>
 			</div>
 		<?php endforeach; ?>

@@ -87,7 +87,7 @@
 					</div>
 				</div>
 				<div class="total-time">
-					<?= secondsToTimeString($song['duration']) ?>
+					<?= $song['time'] ?>
 				</div>
 			</div>
 		<?php endforeach; ?>
@@ -101,7 +101,7 @@
 		var $queueAlbumButton = $('#queueAlbumButton');
 
 		$(function() {
-			updateBodyColour('<?= $colour ?>');
+			updateBodyColour('<?= $accentColour ?>');
 			scaleAlbumNameText();
 			initTracklistRows();
 			initEvents();

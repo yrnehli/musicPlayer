@@ -7,23 +7,6 @@ use Flight;
 use PDO;
 
 class Controller {
-	public function __construct() {
-		$directories = [
-			'userData',
-			'userData/albumArt',
-			'userData/deezer',
-			'userData/deezer/mp3',
-			'userData/deezer/metadata',
-			'userData/deezer/album'
-		];
-
-		foreach ($directories as $directory) {
-			if (!file_exists($directory)) {
-				mkdir($directory);
-			}
-		}
-	}
-
 	protected function view($name, $data = []) {
 		Flight::render('searchResults', [], 'searchResults');
 
