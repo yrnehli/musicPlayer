@@ -13,7 +13,7 @@
 		<script src="/assets/js/CustomContextMenu.js"></script>
 		<script src="/assets/js/SearchHandler.js"></script>
 		<script src="/assets/js/global.js"></script>
-		<script src="/assets/js/fontawesome.js"></script>
+		<script src="/assets/js/FontAwesome.js"></script>
 		<link rel="stylesheet" href="https://code.jquery.com/git/ui/jquery-ui-git.css">
 		<link rel="stylesheet" href="/assets/css/global.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.css">
