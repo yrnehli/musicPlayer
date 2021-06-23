@@ -351,7 +351,7 @@ input[type="text"]:focus  {
 }
 
 #searchResults .result-row.active {
-	background-color: hsla(0 ,0%, 100%, .1);
+	background-color: hsla(0 ,0%, 100%, .2) !important;
 }
 
 #searchResults .result-row:hover {
