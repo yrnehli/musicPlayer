@@ -1,5 +1,7 @@
 <?php
 
+ini_set('memory_limit' ,'-1');
+
 require_once 'vendor/autoload.php';
 require_once 'php/global.php';
 require_once 'php/MusicManager.php';
