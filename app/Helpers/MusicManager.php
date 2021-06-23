@@ -50,7 +50,7 @@ class MusicManager {
 			}
 
 			$albumArt = $mp3Info['comments']['picture'][0]['data'];
-			$albumArtFilepath = realpath("userData/albumArt") . "/" . md5($albumArt) . ".jpg";
+			$albumArtFilepath = realpath("public/userData/albumArt") . "/" . md5($albumArt) . ".jpg";
 
 			file_put_contents($albumArtFilepath, $albumArt);
 

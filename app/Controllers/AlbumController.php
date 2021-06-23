@@ -28,7 +28,7 @@ class AlbumController extends Controller {
 
 	private function getDeezerAlbum($albumId) {
 		$albumId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $albumId);
-		$filepath = "userData/deezer/album/$albumId";
+		$filepath = "public/userData/deezer/album/$albumId";
 
 		if (!file_exists($filepath)) {
 			$deezerApi = new DeezerApi();

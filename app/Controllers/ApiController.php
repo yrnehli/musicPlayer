@@ -19,7 +19,7 @@ class ApiController extends Controller {
 	public function mp3($songId) {
 		if (str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)) {
 			$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
-			$filepath = "userData/deezer/mp3/$songId";
+			$filepath = "public/userData/deezer/mp3/$songId";
 			
 			if (!file_exists($filepath)) {
 				$deezerPrivateApi = new DeezerPrivateApi();
@@ -81,7 +81,7 @@ class ApiController extends Controller {
 
 	private function getDeezerSong($songId) {
 		$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
-		$filepath = "userData/deezer/metadata/$songId";
+		$filepath = "public/userData/deezer/metadata/$songId";
 
 		if (!file_exists($filepath)) {
 			$deezerPrivateApi = new DeezerPrivateApi();
@@ -125,7 +125,7 @@ class ApiController extends Controller {
 
 	private function getDeezerAlbum($albumId) {
 		$albumId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $albumId);
-		$filepath = "userData/deezer/album/$albumId";
+		$filepath = "public/userData/deezer/album/$albumId";
 
 		if (!file_exists($filepath)) {
 			$deezerApi = new DeezerApi();
