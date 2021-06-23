@@ -17,6 +17,7 @@ class Controller {
 	
 		$db = new MusicDatabase();
 		$conn = $db->getConn();
+		
 		$stmt = $conn->prepare("SELECT `id` FROM `songs`");
 		$stmt->execute();
 		$songIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
