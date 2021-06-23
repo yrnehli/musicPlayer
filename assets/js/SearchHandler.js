@@ -99,7 +99,10 @@ class SearchHandler {
 	}
 
 	reset() {
-		this.$searchBar.val(null);
+		this.$searchBar
+			.val(null)
+			.blur()
+		;
 		this.search();
 	}
 }
