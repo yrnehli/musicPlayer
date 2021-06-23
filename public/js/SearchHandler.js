@@ -16,9 +16,10 @@ class SearchHandler {
 
 	initEvents() {
 		$(window).mousedown(function(e) {
-			$('.active').removeClass('active');
+			var activable = '[data-activable]';
+			var $element = $(e.target).is(activable) ? $(e.target) : $(e.target).parents(activable).first();
 
-			var $element = $(e.target).is('[data-activable]') ? $(e.target) : $(e.target).parents('[data-activable]').first();
+			$(activable).removeClass('active');
 
 			if ($element) {
 				$element.addClass('active');
