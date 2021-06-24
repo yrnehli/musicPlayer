@@ -1,73 +1,96 @@
 class CustomContextMenu {
 	static sharedInstance;
 
-	constructor($contextMenu, actions) {		
-		if (CustomContextMenu.sharedInstance) {
-			return;
-		} else {
+	constructor($contextMenu, $scrollable, actions) {		
+		if (!CustomContextMenu.sharedInstance) {
 			CustomContextMenu.sharedInstance = this;
+		} else {
+			return;
 		}
 
-		this.$contextMenu = $contextMenu;
+		this._$contextMenu = $contextMenu;
+		this._$scrollable = $scrollable;
+		this._actions = actions;
 
-		this.initEvents(actions);
+		this._initEvents();
 	}
 
-	initEvents(actions) {
+	_initEvents() {
 		$(document).on("contextmenu", e => {
 			e.preventDefault();
 
-			var $target = $(e.target).is('[data-context-menu-actions]') ? $(e.target) : $(e.target).parents('[data-context-menu-actions]').first();
+			var $target = $(e.target).is(`[data-${CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX}]`)
+				? $(e.target)
+				: $(e.target).parents(`[data-${CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX}]`).first()
+			;
 
 			if (!$target.length) {
 				return;
 			}
 
-			this.$contextMenu.empty();
-
-			$target
-				.data('context-menu-actions')
-				.split(",")
-				.forEach(action => {
-					this.$contextMenu.append(
-						$('<li></li>')
-							.text(actions[action].text)
-							.click(() => {
-								actions[action].callback($target);
-								this.hide();
-							})
-					);
-				})
-			;
-
-			this.$contextMenu
-				.fadeIn(CustomContextMenu.FADE_DURATION)
-				.css({
-					top: `${e.pageY + 8}px`,
-					left: (e.pageX + this.$contextMenu.outerWidth() > $(window).width()) ? `${e.pageX - this.$contextMenu.outerWidth()}px` : `${e.pageX}px`
-				})
-			;
-
-			$('#root').on('scroll touchmove mousewheel', function(e){
-				e.preventDefault();
-				e.stopPropagation();
-				return false;
-			});
+			this._createActions($target);
+			this._suppressScroll();
+			this._show(
+				`${e.pageY + 8}px`,
+				(e.pageX + this._$contextMenu.outerWidth() > $(window).width()) ? `${e.pageX - this._$contextMenu.outerWidth()}px` : `${e.pageX}px`
+			);
 		});
 	
 		$(document).on("mousedown", e => {
-			if (!$(e.target).parents().get().some(parent => parent === this.$contextMenu.get(0))) {
+			if (!$(e.target).parents().get().some(parent => parent === this._$contextMenu.get(0))) {
 				this.hide();
 			}
 		});
 	}
 
+	_createActions($target) {
+		this._$contextMenu.empty();
+
+		$target
+			.data(CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX)
+			.split(",")
+			.forEach(action => {
+				this._$contextMenu.append(
+					$('<li></li>')
+						.text(this._actions[action].text)
+						.click(() => {
+							this._actions[action].callback($target);
+							this.hide();
+						})
+				);
+			})
+		;
+	}
+
+	_suppressScroll() {
+		this._$scrollable.on('scroll.suppress touchmove.suppress mousewheel.suppress', e => {
+			e.preventDefault();
+			e.stopPropagation();
+			return false;
+		});
+	}
+
+	_unsuppressScroll() {
+		this._$scrollable.off('scroll.suppress touchmove.suppress mousewheel.suppress');
+	}
+
+	_show(top, left) {
+		this._$contextMenu
+			.fadeIn(CustomContextMenu.FADE_DURATION)
+			.css({ top: top, left: left })
+		;
+	}
+
 	hide() {
-		$('#root').off('scroll touchmove mousewheel');
-		this.$contextMenu.fadeOut(CustomContextMenu.FADE_DURATION);
+		this._unsuppressScroll();
+		this._$contextMenu.fadeOut(CustomContextMenu.FADE_DURATION);
 	}
 
 	static get FADE_DURATION() {
 		return 100;
+	}
+
+	static get CONTEXT_MENU_ACTIONS_DATA_SUFFIX() {
+		return 'context-menu-actions';
 	}
 }

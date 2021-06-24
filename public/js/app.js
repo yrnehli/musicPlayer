@@ -3,6 +3,7 @@ if ('serviceWorker' in navigator) {
 }
 
 $(function() {
+	var $root = $('#root');
 	var $partial = $('#partial');
 	var $contextMenu = $('#contextMenu');
 	var $searchBar = $('#searchBar');
@@ -13,6 +14,7 @@ $(function() {
 	new PartialManager($partial, $nowPlayingButton);
 	new CustomContextMenu(
 		$contextMenu,
+		$root,
 		{
 			QUEUE: {
 				text: "Add to queue",
