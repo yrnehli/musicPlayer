@@ -1,50 +1,46 @@
-class PartialManager {
+class PartialManager extends EventEmitter {
 	static sharedInstance;
 
-	constructor($partial, $nowPlayingButton) {
-		if (PartialManager.sharedInstance) {
-			return;
+	constructor($partial, scrollableSelector) {
+		if (!PartialManager.sharedInstance) {
+			PartialManager.sharedInstance = super();
 		} else {
-			PartialManager.sharedInstance = this;
+			return;
 		}
 
-		this.$partial = $partial;
-		this.$nowPlayingButton = $nowPlayingButton;
-		this.initiatedHistory = false;
+		this._$partial = $partial;
+		this._scrollableSelector = scrollableSelector;
+		this._initiatedHistory = false;
 
-		this.initEvents();
+		this._initEvents();
 	}
 
-	initEvents() {
-		this.$partial
-			.find('.simplebar-content-wrapper')
-			.scrollStopped(() => history.replaceState(this.getCurrentState(), "", document.URL))
+	_initEvents() {
+		this._$partial
+			.find(this._scrollableSelector)
+			.scrollStopped(() => history.replaceState(this._getCurrentState(), "", document.URL))
 		;
 
 		$(window).on('popstate', e => {
 			if (e.originalEvent.state) {
-				this.updatePartial(e.originalEvent.state.html, e.originalEvent.state.scroll)
+				this._updatePartial(e.originalEvent.state.html, e.originalEvent.state.scroll)
 			}
 		});
 	}
 
-	async loadPartial(url, disableNowPlaying = true) {
+	async loadPartial(url) {
 		if (window.location.pathname === url) {
 			return;
 		}
 
 		CustomContextMenu.sharedInstance.hide();
 		
-		if (!this.initiatedHistory) {
-			history.pushState(this.getCurrentState(), "", document.URL);
-			this.initiatedHistory = true;
-		}
-
-		if (disableNowPlaying) {
-			this.$nowPlayingButton.removeClass('active');
+		if (!this._initiatedHistory) {
+			history.pushState(this._getCurrentState(), "", document.URL);
+			this._initiatedHistory = true;
 		}
 	
-		this.updatePartial(
+		this._updatePartial(
 			await $.ajax(
 				url,
 				{
@@ -55,18 +51,20 @@ class PartialManager {
 			0
 		);
 		
-		history.pushState(this.getCurrentState(), "", url);
+		history.pushState(this._getCurrentState(), "", url);
+
+		this._emit('partialloaded');
 	}
 
-	updatePartial(html, scroll) {
+	_updatePartial(html, scroll) {
 		SearchHandler.sharedInstance.reset();
-		this.$partial.removeClass('fade');
-		this.$partial.css('opacity', 0);
-		this.$partial.html(html);
-		this.$partial.waitForImages(() => {
-			this.$partial.addClass('fade');
-			this.$partial.css('opacity', 1);
-			this.$partial.find('.simplebar-content-wrapper')
+		this._$partial.removeClass('fade');
+		this._$partial.css('opacity', 0);
+		this._$partial.html(html);
+		this._$partial.waitForImages(() => {
+			this._$partial.addClass('fade');
+			this._$partial.css('opacity', 1);
+			this._$partial.find(this._scrollableSelector)
 				.scrollTop(scroll)
 				.off('scroll')
 				.scrollStopped(() => this.updateCurrentState())
@@ -75,10 +73,10 @@ class PartialManager {
 	}
 
 	updateCurrentState() {
-		history.replaceState(this.getCurrentState(), "", document.URL);
+		history.replaceState(this._getCurrentState(), "", document.URL);
 	}
 	
-	getCurrentState() {
-		return { html: this.$partial.html(), scroll: this.$partial.find('.simplebar-content-wrapper').scrollTop() };
+	_getCurrentState() {
+		return { html: this._$partial.html(), scroll: this._$partial.find(this._scrollableSelector).scrollTop() };
 	}
 }

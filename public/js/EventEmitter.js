@@ -21,7 +21,7 @@ class EventEmitter {
 		this._events[name] = this._events[name].filter(filterListeners);
 	}
 	
-	emit(name, data) {
+	_emit(name, data) {
 		if (!this._events[name]) {
 			throw new Error(`Can't emit an event. Event "${name}" doesn't exits.`);
 		}

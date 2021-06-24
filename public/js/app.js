@@ -8,10 +8,9 @@ $(function() {
 	var $contextMenu = $('#contextMenu');
 	var $searchBar = $('#searchBar');
 	var $clearSearchBarButton = $('#clearSearchBarButton');
-	var $nowPlayingButton = $("#nowPlayingButton");
 
 	new SearchHandler($searchBar, $clearSearchBarButton);
-	new PartialManager($partial, $nowPlayingButton);
+	new PartialManager($partial, '.simplebar-content-wrapper');
 	new CustomContextMenu(
 		$contextMenu,
 		$root,
@@ -24,7 +23,7 @@ $(function() {
 							$target.data('song-id')
 						);
 					} else if ($target.data('album-id')) {
-						var res = await $.get('/api/album/' + $target.data('album-id'));
+						var res = await $.get(`/api/album/${$target.data('album-id')}`);
 						res
 							.songIds
 							.forEach(songId => MusicControl.sharedInstance.music().queue().push(songId))
@@ -37,11 +36,17 @@ $(function() {
 			GO_TO_ALBUM: {
 				text: "Go to album",
 				callback: function($target) {
-					PartialManager.sharedInstance.loadPartial('/album/' + $target.data('album-id'));
+					PartialManager.sharedInstance.loadPartial(`/album/${$target.data('album-id')}`);
 				}
 			}
 		}
 	);
+
+	PartialManager.sharedInstance.on('partialloaded', e => {
+		if (window.location.pathname !== `/album/${MusicControl.sharedInstance.albumId()}`) {
+			MusicControl.sharedInstance.elements().$nowPlayingButton.removeClass('active');
+		}
+	});
 });
 
 function initSlider($slider, initialValue, events, disabled = false) {

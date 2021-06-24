@@ -84,13 +84,6 @@
 			state
 		);
 
-		MusicControl.sharedInstance.music().on('disable', e => localStorage.clear());
-		MusicControl.sharedInstance.on('update', e => {
-			if ($nowPlayingButton.hasClass('active')) {
-				PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`, false);
-			}
-		});
-
 		initStateInterval();
 		initSliders();
 		initEvents();
@@ -174,6 +167,12 @@
 		}
 
 		function initEvents() {
+			MusicControl.sharedInstance.music().on('disable', e => localStorage.clear());
+			MusicControl.sharedInstance.on('update', e => {
+				if ($nowPlayingButton.hasClass('active')) {
+					PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`);
+				}
+			});
 			$albumArt.click(e => PartialManager.sharedInstance.loadPartial('/'));
 			$songName.click(e => PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`));
 			$prevButton.click(e => MusicControl.sharedInstance.music().previous());
@@ -183,7 +182,7 @@
 				$nowPlayingButton.toggleClass('active');
 
 				if (MusicControl.sharedInstance.albumId()) {
-					PartialManager.sharedInstance.loadPartial("/album/" + MusicControl.sharedInstance.albumId(), false);
+					PartialManager.sharedInstance.loadPartial("/album/" + MusicControl.sharedInstance.albumId());
 				}
 			});
 			$volumeButton.click(e => updateVolumeButton());
