@@ -97,11 +97,9 @@ class Music extends Howl {
 			this.seek(0);
 			return;
 		}
-
-		var wasPlaying = this.playing();
 		
 		if (this.__nextUp.list.length > 0 && this.__nextUp.i - 1 >= 0) {
-			this.changeSong(this.__nextUp.list[--this.__nextUp.i], wasPlaying);
+			this.changeSong(this.__nextUp.list[--this.__nextUp.i], this.playing());
 		} else {
 			this.disable();
 		}
