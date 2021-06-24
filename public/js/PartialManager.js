@@ -57,7 +57,6 @@ class PartialManager extends EventEmitter {
 	}
 
 	_updatePartial(html, scroll) {
-		SearchHandler.sharedInstance.reset();
 		this._$partial.removeClass('fade');
 		this._$partial.css('opacity', 0);
 		this._$partial.html(html);

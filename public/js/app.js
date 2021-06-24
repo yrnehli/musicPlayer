@@ -43,6 +43,8 @@ $(function() {
 	);
 
 	PartialManager.sharedInstance.on('partialloaded', e => {
+		SearchHandler.sharedInstance.reset();
+
 		if (window.location.pathname !== `/album/${MusicControl.sharedInstance.albumId()}`) {
 			MusicControl.sharedInstance.elements().$nowPlayingButton.removeClass('active');
 		}
@@ -144,17 +146,18 @@ function shuffle(arr, options) {
 }
 
 function showToastNotification(message, timeout = 3000) {
-	var $toastNotification = $('#toastNotification');
+	var $toastNotification = $('#toastNotification')
+		.text(message)
+		.addClass('show')
+	;
 
-	$toastNotification.text(message);
-	$toastNotification.addClass('show');
 	setTimeout(() => $toastNotification.removeClass('show'), timeout);
 }
 
 function updateBodyColour(hex, gradient = true) {
+	$('meta[name="theme-color"]').attr('content', hex);
 	$('body').css(
 		'background',
 		(gradient) ? `linear-gradient(${hex} 0%, ${hex} 5%, #181818 75%)` : hex
 	);
-	$('meta[name="theme-color"]').attr('content', hex);
 }
