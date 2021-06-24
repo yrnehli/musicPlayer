@@ -6,10 +6,10 @@ $(function() {
 	var $partial = $('#partial');
 	var $contextMenu = $('#contextMenu');
 	var $searchBar = $('#searchBar');
-	var $clearSearchBar = $('#clearSearchBar');
+	var $clearSearchBarButton = $('#clearSearchBarButton');
 	var $nowPlayingButton = $("#nowPlayingButton");
 
-	new SearchHandler($searchBar, $clearSearchBar);
+	new SearchHandler($searchBar, $clearSearchBarButton);
 	new PartialManager($partial, $nowPlayingButton);
 	new CustomContextMenu(
 		$contextMenu,

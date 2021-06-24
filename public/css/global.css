@@ -329,7 +329,7 @@ input[type="text"]:focus  {
 	cursor: pointer;
 }
 
-#clearSearchBar {
+#clearSearchBarButton {
 	color: hsla(0, 0% , 100%, .3);
 	z-index: 1;
 	top: 24px;

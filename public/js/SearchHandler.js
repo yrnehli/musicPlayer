@@ -1,7 +1,7 @@
 class SearchHandler {
 	static sharedInstance;
 
-	constructor($searchBar, $clearSearchBar) {	
+	constructor($searchBar, $clearSearchBarButton) {	
 		if (SearchHandler.sharedInstance) {
 			return;
 		} else {
@@ -9,7 +9,7 @@ class SearchHandler {
 		}
 
 		this.$searchBar = $searchBar;
-		this.$clearSearchBar = $clearSearchBar;
+		this.$clearSearchBarButton = $clearSearchBarButton;
 		
 		this.initEvents();
 	}
@@ -26,7 +26,7 @@ class SearchHandler {
 			}
 		});
 		this.$searchBar.keyup(e => this.search());
-		this.$clearSearchBar.click(e => this.reset());
+		this.$clearSearchBarButton.click(e => this.reset());
 	}
 
 	search() {
@@ -44,14 +44,14 @@ class SearchHandler {
 				this.$searchBar.attr('value', term);
 	
 				if (term.trim() === "") {
-					this.$clearSearchBar.hide();
+					this.$clearSearchBarButton.hide();
 					$searchResults.hide();
 					$songs.hide();
 					$albums.hide();
 					return;
 				}
 	
-				this.$clearSearchBar.show();
+				this.$clearSearchBarButton.show();
 	
 				var res = await $.get('/api/search', { term: term });
 	
