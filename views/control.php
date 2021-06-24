@@ -145,7 +145,10 @@
 
 			initSlider(
 				$volumeSlider,
-				Math.pow(state.volume || MusicControl.sharedInstance.music().volume(), 1/4) * 100,
+				Math.pow(
+					(state.volume || state.volume === 0) ? state.volume : MusicControl.sharedInstance.music().volume(),
+					1/4
+				) * 100,
 				{
 					change: updateVolume,
 					slide: updateVolume
@@ -167,10 +170,22 @@
 		}
 
 		function initEvents() {
+			var timeout;
+
 			MusicControl.sharedInstance.music().on('disable', e => localStorage.clear());
-			MusicControl.sharedInstance.on('update', e => {
+			MusicControl.sharedInstance.on('updateauto', e => {
 				if ($nowPlayingButton.hasClass('active')) {
 					PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`);
+				}
+			});
+			MusicControl.sharedInstance.on('updatemanual', e => {
+				clearTimeout(timeout);
+
+				if ($nowPlayingButton.hasClass('active')) {
+					timeout = setTimeout(
+						() => PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`),
+						3000
+					);
 				}
 			});
 			$albumArt.click(e => PartialManager.sharedInstance.loadPartial('/'));

@@ -19,7 +19,7 @@ class MusicControl extends EventEmitter {
 
 		this._initEvents();
 
-		if (state.volume) {
+		if (state.volume || state.volume === 0) {
 			this._music.volume(state.volume);
 		}
 
@@ -49,7 +49,8 @@ class MusicControl extends EventEmitter {
 		this._music.on('enable', e => this._elements.$progressSlider.slider('enable'));
 		this._music.on('play', e => this._elements.$playButton.removeClass("paused"));
 		this._music.on('pause', e => this._elements.$playButton.addClass("paused"));
-		this._music.on('songchange', e => this._update());
+		this._music.on('songchangeauto', e => this._update(true));
+		this._music.on('songchangemanual', e => this._update(false));
 		this._music.on('load', e => {
 			this._elements.$endTime.text(
 				this._music.disabled() ? "0:00" : secondsToTimeString(this._music.duration())
@@ -69,7 +70,7 @@ class MusicControl extends EventEmitter {
 		});
 	}
 
-	async _update() {
+	async _update(auto) {
 		var res = await $.get(`/api/song/${this._music.songId()}`);
 		this._albumId = res.albumId;
 		this._elements.$songName.text(res.songName);
@@ -79,7 +80,9 @@ class MusicControl extends EventEmitter {
 		this._metadata.artist = res.songArtist;
 		this._metadata.album = res.albumName;
 		this._metadata.artwork = [{ src: res.albumArtUrl, sizes: '512x512', type: 'image/png' }];
-		this._emit('update');
+		this._emit(
+			(auto) ? 'updateauto' : 'updatemanual'
+		);
 	}
 
 	music() {
