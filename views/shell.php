@@ -10,7 +10,9 @@
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.waitforimages/1.5.0/jquery.waitforimages.min.js"></script>
-		<script src="/public/js/MusicPlayer.js"></script>
+		<script src="/public/js/EventEmitter.js"></script>
+		<script src="/public/js/Music.js"></script>
+		<script src="/public/js/MusicControl.js"></script>
 		<script src="/public/js/PartialManager.js"></script>
 		<script src="/public/js/CustomContextMenu.js"></script>
 		<script src="/public/js/SearchHandler.js"></script>

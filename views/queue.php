@@ -142,7 +142,7 @@ $songs = [
 			self.innerHTML = e.dataTransfer.getData('text/html');
 		}
 
-		// update MusicPlayer.sharedInstance.queue
+		// update MusicControl.sharedInstance.music().queue
 
 		return false;
 	}

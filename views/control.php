@@ -54,6 +54,7 @@
 	(function() {
 		var $albumArt = $('#albumArt');
 		var $songName = $('#songName');
+		var $artistName = $('#artistName');
 		var $prevButton = $('#prevButton');
 		var $playButton = $('#playButton');
 		var $skipButton = $('#skipButton');
@@ -64,8 +65,31 @@
 		var $progressSlider = $('#progressSlider');
 		var $elapsedTime = $('#elapsedTime');
 		var $endTime = $('#endTime');
+		var state = JSON.parse(localStorage.getItem("state")) || {};
 		
-		new MusicPlayer($control);
+		new MusicControl(
+			{
+				$prevButton: $prevButton,
+				$playButton: $playButton,
+				$skipButton: $skipButton,
+				$progressSlider: $progressSlider,
+				$songName: $songName,
+				$artistName: $artistName,
+				$albumArt: $albumArt,
+				$volumeSlider: $volumeSlider,
+				$elapsedTime: $elapsedTime,
+				$endTime: $endTime,
+				$nowPlayingButton: $nowPlayingButton
+			},
+			state
+		);
+
+		MusicControl.sharedInstance.music().on('disable', e => localStorage.clear());
+		MusicControl.sharedInstance.on('update', e => {
+			if ($nowPlayingButton.hasClass('active')) {
+				PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`, false);
+			}
+		});
 
 		initStateInterval();
 		initSliders();
@@ -73,18 +97,18 @@
 
 		function initStateInterval() {
 			setInterval(() => {
-				if (!MusicPlayer.sharedInstance.loaded() || MusicPlayer.sharedInstance.disabled()) {
+				if (!MusicControl.sharedInstance.music().loaded() || MusicControl.sharedInstance.music().disabled()) {
 					return;
 				}
 
 				localStorage.setItem(
 					"state",
 					JSON.stringify({
-						volume: MusicPlayer.sharedInstance.volume(),
-						queue: MusicPlayer.sharedInstance.queue(),
-						nextUp: MusicPlayer.sharedInstance.nextUp(),
-						seek: MusicPlayer.sharedInstance.seek(),
-						songId: MusicPlayer.sharedInstance.songId()
+						volume: MusicControl.sharedInstance.music().volume(),
+						queue: MusicControl.sharedInstance.music().queue(),
+						nextUp: MusicControl.sharedInstance.music().nextUp(),
+						seek: MusicControl.sharedInstance.music().seek(),
+						songId: MusicControl.sharedInstance.music().songId()
 					})
 				);
 			}, 1000);
@@ -108,16 +132,16 @@
 					$volumeButton.addClass('high-volume');
 				}
 
-				MusicPlayer.sharedInstance.volume(volume);
+				MusicControl.sharedInstance.music().volume(volume);
 			}
 
 			var progressIntervalCallback = function() {
-				if (!MusicPlayer.sharedInstance.loaded() || MusicPlayer.sharedInstance.disabled()) {
+				if (!MusicControl.sharedInstance.music().loaded() || MusicControl.sharedInstance.music().disabled()) {
 					return;
 				}
 
-				var duration = MusicPlayer.sharedInstance.duration();
-				var progress = MusicPlayer.sharedInstance.seek() / duration;
+				var duration = MusicControl.sharedInstance.music().duration();
+				var progress = MusicControl.sharedInstance.music().seek() / duration;
 				var elapsedSeconds = progress * duration;
 
 				$elapsedTime.text(secondsToTimeString(elapsedSeconds));
@@ -126,33 +150,40 @@
 
 			var progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 
-			initSlider($volumeSlider, Math.pow(MusicPlayer.sharedInstance.volume(), 1/4) * 100, { change: updateVolume, slide: updateVolume });
+			initSlider(
+				$volumeSlider,
+				Math.pow(state.volume || MusicControl.sharedInstance.music().volume(), 1/4) * 100,
+				{
+					change: updateVolume,
+					slide: updateVolume
+				}
+			);
 			initSlider(
 				$progressSlider,
 				0,
 				{
-					slide: (e, ui) => $elapsedTime.text(secondsToTimeString(ui.value / 100 * MusicPlayer.sharedInstance.duration())),
+					slide: (e, ui) => $elapsedTime.text(secondsToTimeString(ui.value / 100 * MusicControl.sharedInstance.music().duration())),
 					start: e => clearInterval(progressInterval),
 					stop: (e, ui) => {
-						MusicPlayer.sharedInstance.seek(ui.value / 100 * MusicPlayer.sharedInstance.duration());
+						MusicControl.sharedInstance.music().seek(ui.value / 100 * MusicControl.sharedInstance.music().duration());
 						progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 					}
 				},
-				MusicPlayer.sharedInstance.disabled()
+				MusicControl.sharedInstance.music().disabled()
 			);
 		}
 
 		function initEvents() {
 			$albumArt.click(e => PartialManager.sharedInstance.loadPartial('/'));
-			$songName.click(e => PartialManager.sharedInstance.loadPartial(`/album/${MusicPlayer.sharedInstance.albumId()}`));
-			$prevButton.click(e => MusicPlayer.sharedInstance.previous());
-			$playButton.click(e => MusicPlayer.sharedInstance.togglePlay());
-			$skipButton.click(e => MusicPlayer.sharedInstance.skip());
+			$songName.click(e => PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`));
+			$prevButton.click(e => MusicControl.sharedInstance.music().previous());
+			$playButton.click(e => MusicControl.sharedInstance.music().togglePlay());	
+			$skipButton.click(e => MusicControl.sharedInstance.music().skip());
 			$nowPlayingButton.click(e => {
 				$nowPlayingButton.toggleClass('active');
 
-				if (MusicPlayer.sharedInstance.albumId()) {
-					PartialManager.sharedInstance.loadPartial("/album/" + MusicPlayer.sharedInstance.albumId(), false);
+				if (MusicControl.sharedInstance.albumId()) {
+					PartialManager.sharedInstance.loadPartial("/album/" + MusicControl.sharedInstance.albumId(), false);
 				}
 			});
 			$volumeButton.click(e => updateVolumeButton());
@@ -197,7 +228,7 @@
 			if (e.keyCode === 32) {
 				if ($(':focus').length === 0) {
 					e.preventDefault();
-					MusicPlayer.sharedInstance.togglePlay();
+					MusicControl.sharedInstance.music().togglePlay();
 				}
 			}
 		}
@@ -206,7 +237,7 @@
 			// Ctrl + S
 			if (e.ctrlKey && e.keyCode === 83) {
 				e.preventDefault();
-				MusicPlayer.sharedInstance.playNextUp({
+				MusicControl.sharedInstance.music().playNextUp({
 					list: shuffle([<?= implode(", ", $songIds) ?>]),
 					i: 0
 				});

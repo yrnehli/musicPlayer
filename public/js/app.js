@@ -18,14 +18,14 @@ $(function() {
 				text: "Add to queue",
 				callback: async function($target) {
 					if ($target.data('song-id')) {
-						MusicPlayer.sharedInstance.queue().push(
+						MusicControl.sharedInstance.music().queue().push(
 							$target.data('song-id')
 						);
 					} else if ($target.data('album-id')) {
 						var res = await $.get('/api/album/' + $target.data('album-id'));
 						res
 							.songIds
-							.forEach(songId => MusicPlayer.sharedInstance.queue().push(songId))
+							.forEach(songId => MusicControl.sharedInstance.music().queue().push(songId))
 						;
 					}
 					
