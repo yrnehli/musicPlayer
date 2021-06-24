@@ -1,5 +1,18 @@
-.over {
+.over-above {
+	border-top: 1px solid hsla(0, 0%, 100%, .75);
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+}
+
+.over-below {
 	border-bottom: 1px solid hsla(0, 0%, 100%, .75);
 	border-bottom-left-radius: 0px;
 	border-bottom-right-radius: 0px;
+}
+
+#dragGhost {
+	max-width: 300px;
+	background-color: #181818;
+	border-radius: 5px;
+	padding: 5px 10px;
 }

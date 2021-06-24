@@ -38,6 +38,23 @@ $(function() {
 				callback: function($target) {
 					PartialManager.sharedInstance.loadPartial(`/album/${$target.data('album-id')}`);
 				}
+			},
+			REMOVE_FROM_QUEUE: {
+				text: "Remove from queue",
+				callback: function($target) {
+					var index;
+
+					$target.parent().children().each(function(i) {
+						if ($(this).is($target)) {
+							index = i;
+						}
+					});
+
+					if (index >= 0) {
+						MusicControl.sharedInstance.music().queue().splice(index, 1);
+						$target.remove();
+					}
+				}
 			}
 		}
 	);

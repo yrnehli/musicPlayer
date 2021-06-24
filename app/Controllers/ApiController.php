@@ -102,6 +102,7 @@ class ApiController extends Controller {
 			"SELECT
 				`songs`.`name` AS 'songName',
 				`songs`.`artist` AS 'songArtist',
+				`songs`.`duration` AS 'songDuration',
 				`albums`.`artFilepath` AS 'albumArtUrl',
 				`albums`.`name` AS 'albumName',
 				`albums`.`id` AS 'albumId'

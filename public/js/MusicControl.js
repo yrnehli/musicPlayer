@@ -19,7 +19,7 @@ class MusicControl extends EventEmitter {
 
 		this._initEvents();
 
-		if (state.volume || state.volume === 0) {
+		if (state.volume >= 0) {
 			this._music.volume(state.volume);
 		}
 

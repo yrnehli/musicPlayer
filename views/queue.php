@@ -1,75 +1,71 @@
 <link rel="stylesheet" href="/public/css/queue.css">
 
-<?php
-
-$songs = [
-	[
-		'id' => 'A',
-		'trackNumber' => 'A',
-		'name' => 'A',
-		'artist' => 'A',
-		'duration' => 1
-	],
-	[
-		'id' => 'B',
-		'trackNumber' => 'B',
-		'name' => 'B',
-		'artist' => 'B',
-		'duration' => 2
-	],
-	[
-		'id' => 'C',
-		'trackNumber' => 'C',
-		'name' => 'C',
-		'artist' => 'C',
-		'duration' => 3
-	]
-];
-
-?>
-
 <div id="root" class="px-4 pb-4" data-simplebar>
 	<?= $searchResults ?>
-	<div>
-		<?php foreach ($songs as $song): ?>
-			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>" draggable="true" data-context-menu-actions="QUEUE" data-drag-counter="0">
-				<div class="track-number">
-					<img class="equalizer" src="/public/img/equalizer.gif">
-					<svg class="play">
-						<path></path>
-					</svg>
-					<div class="text-center">
-						<?= $song['trackNumber'] ?>
-					</div>
-				</div>
-				<div class="track-name">
-					<div>
-						<?= $song['name'] ?>
-					</div>
-					<div>
-						<?= $song['artist'] ?>
-					</div>
-				</div>
-				<div class="total-time">
-					<?= $song['duration'] ?>
-				</div>
-			</div>
-		<?php endforeach; ?>
-	</div>
+	<h2>Queue</h2>
+	<div id="queueRowsContainer"></div>
 </div>
 <script>
-	var tracklistRows = $('.tracklist-row').get();
+	var $queueRowsContainer = $('#queueRowsContainer');
+	var queueRows;
+
+	$(async function() {
+		queueRows = $queueRowsContainer
+			.append(
+				await Promise.all(
+					MusicControl.sharedInstance.music().queue().map(songId => createQueueRow(songId))
+				)
+			)
+			.children()
+			.get()
+		;
+
+		queueRows.forEach(queueRow => {
+			queueRow.addEventListener('dragstart', handleDragStart, false);
+			queueRow.addEventListener('dragend', handleDragEnd, false);
+			queueRow.addEventListener('dragover', handleDragOver, false);
+			queueRow.addEventListener('dragenter', handleDragEnter, false);
+			queueRow.addEventListener('dragleave', handleDragLeave, false);
+			queueRow.addEventListener('drop', handleDrop, false);
+		});
+	});
 
 	function handleDragStart(e) {
-		this.classList.add('active');
 		dragSource = this;
+
+		this.classList.add('active');
+
+		const DRAG_GHOST_ID = 'dragGhost';
+		var songName = $(this).find('.details').children().eq(0).text();
+		var artistName = $(this).find('.details').children().eq(1).text();
+		
+		document.getElementById(DRAG_GHOST_ID)?.remove();
+
+		var dragGhost = $('<div></div>')
+			.attr('id', DRAG_GHOST_ID)
+			.html(`${songName} · ${artistName}`)
+			.css({
+				position: 'absolute',
+				top: '-1000px'
+			})
+			.get(0)
+		;
+
+		document.body.appendChild(dragGhost);
+		e.dataTransfer.setDragImage(dragGhost, -10, 0);
 		e.dataTransfer.effectAllowed = 'move';
-		e.dataTransfer.setData('text/html', this.innerHTML);
+		e.dataTransfer.setData(
+			'text/plain',
+			JSON.stringify({
+				html: this.innerHTML,
+				songId: this.getAttribute('data-song-id')
+			})
+		);
 	}
 
 	function handleDragEnd(e) {
 		this.classList.remove('active');
-		tracklistRows.forEach(tracklistRow => tracklistRow.classList.remove('over'));
+		queueRows.forEach(tracklistRow => tracklistRow.classList.remove('over-above', 'over-below'));
 	}
 	
 	function handleDragOver(e) {
@@ -81,78 +77,94 @@ $songs = [
 	}
 
 	function handleDragEnter(e) {
-		var $tracklistRow = $(this).is('.tracklist-row') ? $(this) : $(this).parents('.tracklist-row').get(0);
-		
-		$tracklistRow
-			.addClass('over')
-			.data(
-				'drag-counter', 
-				$tracklistRow.data('drag-counter') + 1
-			)
-		;
+		var thisIndex, dragSourceIndex;
+
+		queueRows.forEach((tracklistRow, i) => {
+			if (tracklistRow === this) {
+				thisIndex = i;
+			} else if (tracklistRow === dragSource) {
+				dragSourceIndex = i;
+			}
+		});
+
+		(thisIndex > dragSourceIndex) ? this.classList.add('over-below') : this.classList.add('over-above');
 	}
 
 	function handleDragLeave(e) {
-		var $tracklistRow = $(this).is('.tracklist-row') ? $(this) : $(this).parents('.tracklist-row').get(0);
-
-		$tracklistRow.data(
-			'drag-counter', 
-			$tracklistRow.data('drag-counter') - 1
-		);
-
-        if ($tracklistRow.data('drag-counter') === 0) { 
-			$tracklistRow.removeClass('over');
-        }
+		this.classList.remove('over-above', 'over-below');
 	}
 
 	function handleDrop(e) {
 		e.stopPropagation();
 
-		var self = this;
-		var tracklistRowsToShiftHtml = [];
-		var selfIndex, dragSourceIndex;
+		var queueRowsToShift = [];
+		var thisIndex, dragSourceIndex;
 
 		if (dragSource !== self) {
-			tracklistRows.forEach((tracklistRow, i) => {
-				if (tracklistRow === self) {
-					selfIndex = i;
+			queueRows.forEach((tracklistRow, i) => {
+				if (tracklistRow === this) {
+					thisIndex = i;
 				} else if (tracklistRow === dragSource) {
 					dragSourceIndex = i;
 				}
 			});
 
-			if (selfIndex > dragSourceIndex) {
-				for (var i = dragSourceIndex + 1; i <= selfIndex; i++) {
-					tracklistRowsToShiftHtml.push(tracklistRows[i].innerHTML);
+			if (thisIndex > dragSourceIndex) {
+				for (var i = dragSourceIndex + 1; i <= thisIndex; i++) {
+					queueRowsToShift.push({
+						html: queueRows[i].innerHTML,
+						songId: queueRows[i].getAttribute('data-song-id')
+					});
 				}
 				
-				for (var i = dragSourceIndex, j = 0; i < selfIndex; i++, j++) {
-					tracklistRows[i].innerHTML = tracklistRowsToShiftHtml[j];
+				for (var i = dragSourceIndex, j = 0; i < thisIndex; i++, j++) {
+					queueRows[i].innerHTML = queueRowsToShift[j].html;
+					queueRows[i].setAttribute('data-song-id', queueRowsToShift[j].songId);
 				}
 			} else {
-				for (var i = selfIndex; i < dragSourceIndex; i++) {
-					tracklistRowsToShiftHtml.push(tracklistRows[i].innerHTML);
+				for (var i = thisIndex; i < dragSourceIndex; i++) {
+					queueRowsToShift.push({
+						html: queueRows[i].innerHTML,
+						songId: queueRows[i].getAttribute('data-song-id')
+					});
 				}
 				
-				for (var i = selfIndex + 1, j = 0; i <= dragSourceIndex; i++, j++) {
-					tracklistRows[i].innerHTML = tracklistRowsToShiftHtml[j];
+				for (var i = thisIndex + 1, j = 0; i <= dragSourceIndex; i++, j++) {
+					queueRows[i].innerHTML = queueRowsToShift[j].html;
+					queueRows[i].setAttribute('data-song-id', queueRowsToShift[j].songId);
 				}
 			}
 			
-			self.innerHTML = e.dataTransfer.getData('text/html');
+			var data = JSON.parse(e.dataTransfer.getData('text/plain'));
+			this.setAttribute('data-song-id', data.songId);
+			this.innerHTML = data.html;
 		}
 
-		// update MusicControl.sharedInstance.music().queue
+		queueRows = $queueRowsContainer.children().get();
+
+		MusicControl.sharedInstance.music().queue(
+			queueRows.map(queueRow => queueRow.getAttribute('data-song-id'))
+		);
 
 		return false;
 	}
 
-	tracklistRows.forEach(tracklistRow => {
-		tracklistRow.addEventListener('dragstart', handleDragStart, false);
-		tracklistRow.addEventListener('dragend', handleDragEnd, false);
-		tracklistRow.addEventListener('drop', handleDrop, false);
-		tracklistRow.addEventListener('dragover', handleDragOver, false);
-		tracklistRow.addEventListener('dragenter', handleDragEnter, false);
-		tracklistRow.addEventListener('dragleave', handleDragLeave, false);
-	});
+	async function createQueueRow(songId) {
+		var res = await $.get(`/api/song/${songId}`);
+		var $queueRow = $(`<div class="music-row" draggable="true" data-song-id=${songId} data-album-id=${res.albumId} data-context-menu-actions="REMOVE_FROM_QUEUE" data-activable></div>`);
+		var $img = $('<img>').prop('src', res.albumArtUrl);
+		var $artwork = $('<div class="artwork"></div>').append($img);
+		var $totalTime = $('<div class="total-time"></div>').text(secondsToTimeString(res.songDuration));
+		var $details = $('<div class="details"></div>').append([
+			$('<div></div>').text(res.songName),
+			$('<div></div>').text(res.songArtist),
+		]);
+
+		$queueRow.append([
+			$('<div></div>').append([$artwork, $details]),
+			$totalTime
+		]);
+
+		return $queueRow;
+	}
 </script>

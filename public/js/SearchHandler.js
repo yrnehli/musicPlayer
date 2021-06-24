@@ -71,7 +71,7 @@ class SearchHandler {
 	}
 
 	_createResultRow(type, id, albumId, name, artist, duration, artFilepath) {
-		var $resultRow = $(`<div class="result-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="QUEUE,GO_TO_ALBUM" data-activable></div>`);
+		var $resultRow = $(`<div class="music-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="QUEUE,GO_TO_ALBUM" data-activable></div>`);
 		var $img = $('<img>').prop('src', artFilepath);
 		var $artwork = $('<div class="artwork"></div>').append($img);
 		var $details = $('<div class="details"></div>').append([

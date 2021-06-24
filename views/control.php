@@ -146,7 +146,7 @@
 			initSlider(
 				$volumeSlider,
 				Math.pow(
-					(state.volume || state.volume === 0) ? state.volume : MusicControl.sharedInstance.music().volume(),
+					(state.volume >= 0) ? state.volume : MusicControl.sharedInstance.music().volume(),
 					1/4
 				) * 100,
 				{

@@ -339,7 +339,7 @@ input[type="text"]:focus  {
 	cursor: pointer;
 }
 
-#searchResults .result-row {
+.music-row {
 	grid-template-columns: [first] 4fr [last] minmax(120px,1fr);
 	height: 56px;
 	border: 1px solid transparent;
@@ -350,47 +350,47 @@ input[type="text"]:focus  {
 	grid-gap: 16px;
 }
 
-#searchResults .result-row.active {
+.music-row.active {
 	background-color: hsla(0 ,0%, 100%, .2) !important;
 }
 
-#searchResults .result-row:hover {
+.music-row:hover {
 	background-color: hsla(0 ,0%, 100%, .1);
 }
 
-#searchResults .result-row div {
+.music-row div {
 	margin-top: auto;
 	margin-bottom: auto;
 }
 
-#searchResults .result-row div:first-child {
+.music-row div:first-child {
 	display: flex;
 }
 
-#searchResults .result-row .artwork {
+.music-row .artwork {
 	margin-left: -8px;
 	margin-right: 16px;
 }
 
-#searchResults .result-row .artwork img {
+.music-row .artwork img {
 	height: 40px;
 	width: 40px;
 }
 
-#searchResults .result-row .details {
+.music-row .details {
 	line-height: 18px;
 }
 
-#searchResults .result-row .details div:first-child {
+.music-row .details div:first-child {
 	color: white;
 }
 
-#searchResults .result-row .details div:last-child {
+.music-row .details div:last-child {
 	color: #b3b3b3;
 	font-size: 14px;
 }
 
-#searchResults .result-row .total-time {
+.music-row .total-time {
 	justify-self: end;
 	font-variant-numeric: tabular-nums;
 	width: 4ch;
@@ -406,86 +406,11 @@ h2 {
 	color: white;
 }
 
-.tracklist-row {
-	display: grid;
-	padding: 0 16px;
-	grid-gap: 16px;
-	grid-template-columns: [index] 16px [first] 4fr [last] minmax(120px,1fr);
-	height: 56px;
-	border-radius: 4px;
+[draggable="true"] * {
+	pointer-events: none;
 }
 
-.tracklist-row.active {
-	background-color: hsla(0 ,0%, 100%, .2) !important;
-}
-
-.tracklist-row:hover {
-	background-color: hsla(0 ,0%, 100%, .1);
-}
-
-.tracklist-row div {
-	margin-top: auto;
-	margin-bottom: auto;
-}
-
-.tracklist-row .track-number .equalizer {
-	display: none;
-	width: 14px;
-	height: 14px;
-}
-
-.tracklist-row.playing .track-number .equalizer {
-	display: block !important;
-}
-
-.tracklist-row.playing .track-number div {
-	display: none;
-}
-
-.tracklist-row .track-number .play {
-	display: none;
-	width: 16px;
-	height: 16px;
-}
-
-.tracklist-row .track-number .play path {
-	d: path("M4.018 14L14.41 8 4.018 2z");
-	fill: white;
-}
-
-.tracklist-row.active .track-number div {
-	display: none;
-}
-
-.tracklist-row:hover .track-number div {
-	display: none;
-}
-
-.tracklist-row.active:not(.playing) .track-number .play {
-	display: block !important;
-}
-
-.tracklist-row:not(.playing):hover .track-number .play {
-	display: block !important;
-}
-
-.track-number {
-	font-variant: tabular-nums;
-}
-
-.tracklist-row .total-time {
-	justify-self: end;
-	margin-right: 32px;
-	font-variant-numeric: tabular-nums;
-    width: 4ch;
-	font-size: 14px;
-}
-
-.tracklist-row .track-name :first-child {
-	color: white;
-}
-
-.tracklist-row .track-name :last-child {
-	color: #b3b3b3;
-	font-size: 14px;
+.dot::before {
+	content: "•";
+	margin: 0px 4px;
 }
