@@ -8,7 +8,7 @@ use App\Helpers\Utilities;
 use Flight;
 
 class AlbumController extends Controller {
-	public function index($albumId) {
+	public function album($albumId) {
 		$data = str_starts_with($albumId, DeezerApi::DEEZER_ID_PREFIX) ? $this->getDeezerAlbum($albumId) : $this->getLocalAlbum($albumId);
 
 		if ($data === false) {
