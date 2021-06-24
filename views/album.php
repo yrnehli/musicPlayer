@@ -134,15 +134,17 @@
 		}
 
 		function initEvents() {
-			$(window).resize(() => scaleAlbumNameText());
-
+			MusicControl.sharedInstance.music().on('pause', e => $('.tracklist-row.playing').removeClass('playing'));
+			MusicControl.sharedInstance.music().on('play', e => {
+				$('.tracklist-row.playing').removeClass('playing');
+				$(`.tracklist-row[data-song-id="${MusicControl.sharedInstance.music().songId()}"]`).addClass('playing');
+			});
 			$playAlbumButton.click(() => {
 				MusicControl.sharedInstance.music().playNextUp({
 					list: $('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id')),
 					i: 0
 				});
 			});
-
 			$shuffleAlbumButton.click(() => {
 				MusicControl.sharedInstance.music().playNextUp({
 					list: shuffle(
@@ -151,7 +153,6 @@
 					i: 0
 				});
 			});
-
 			$queueAlbumButton.click(() => {
 				$('.tracklist-row').each(function() {
 					MusicControl.sharedInstance.music().queue().push(
@@ -160,6 +161,8 @@
 					showToastNotification("Added to queue");
 				});
 			});
+			$(window).resize(() => scaleAlbumNameText());
+	
 		}
 		
 		function scaleAlbumNameText() {
