@@ -86,6 +86,11 @@
 						<?= $song['artist'] ?>
 					</div>
 				</div>
+				<?php if ($song['isDeezer']): ?>
+					<svg class="heart-button my-auto mx-2 <?= ($song['isSaved']) ? 'active' : '' ?>" height="16" width="16">
+						<path></path>
+					</svg>
+				<?php endif; ?>
 				<div class="total-time">
 					<?= $song['time'] ?>
 				</div>
@@ -131,6 +136,24 @@
 
 				$tracklistRows.removeClass('active');
 				$self.addClass('active');
+			});
+
+			$tracklistRows.find('.heart-button').click(async function() {
+				var res = await $.ajax({
+					url: `/api/spotify/tracks/${$(this).parents('[data-song-id]').data('song-id')}`,
+					type: $(this).hasClass('active') ? 'DELETE' : 'PUT'
+				});
+
+				if (!res.success) {
+					alert(res.message);
+					return
+				}
+				
+				$(this).toggleClass('active');
+				
+				showToastNotification(
+					$(this).hasClass('active') ? "Saved to liked songs" : "Removed from liked songs"
+				);
 			});
 		}
 

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Helpers\DeezerApi;
 use App\Helpers\MusicDatabase;
+use App\Helpers\SpotifyApi;
 use App\Helpers\Utilities;
 use Flight;
 
@@ -16,7 +17,25 @@ class AlbumController extends Controller {
 			return;
 		}
 
+		$spotifyApi = new SpotifyApi();
+
+		$deezerSavedSongIds = array_map(
+			function($res) {
+				return DeezerApi::DEEZER_ID_PREFIX . json_decode($res)->id;
+			},
+			$this->curlMulti(
+				array_map(
+					function($item) {
+						return "https://api.deezer.com/2.0/track/isrc:" . $item->track->external_ids->isrc;
+					},
+					$spotifyApi->getSavedTracks()->items
+				)
+			)
+		);
+
 		foreach ($data['songs'] as &$song) {
+			$song['isDeezer'] = str_starts_with($song['id'], DeezerApi::DEEZER_ID_PREFIX);
+			$song['isSaved'] = in_array($song['id'], $deezerSavedSongIds);
 			$song['time'] = Utilities::secondsToTimeString($song['duration']);
 		}
 
@@ -77,6 +96,42 @@ class AlbumController extends Controller {
 		$art = file_get_contents(substr($album['artFilepath'], 1));
 
 		return compact('album', 'songs', 'art');
+	}
+
+	private function curlMulti($urls) {
+		$mh = curl_multi_init();
+		$res = [];
+
+		foreach($urls as $i => $url) {
+			$ch[$i] = curl_init($url);
+			curl_setopt($ch[$i], CURLOPT_RETURNTRANSFER, 1);
+			curl_multi_add_handle($mh, $ch[$i]);
+		}
+
+		do {
+			$execReturnValue = curl_multi_exec($mh, $runningHandles);
+		} while ($execReturnValue == CURLM_CALL_MULTI_PERFORM);
+
+		while ($runningHandles && $execReturnValue == CURLM_OK) {
+			$numberReady = curl_multi_select($mh);
+
+			if ($numberReady != -1) {
+				do {
+					$execReturnValue = curl_multi_exec($mh, $runningHandles);
+				} while ($execReturnValue == CURLM_CALL_MULTI_PERFORM);
+			}
+		}
+
+		foreach($urls as $i => $url) {
+			$res[$i] = curl_multi_getcontent($ch[$i]);
+
+			curl_multi_remove_handle($mh, $ch[$i]);
+			curl_close($ch[$i]);
+		}
+		
+		curl_multi_close($mh);
+		
+		return $res;
 	}
 }
 

@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Exception;
+use stdClass;
 
 class SpotifyApi {
 	private $spDc;
@@ -17,24 +18,47 @@ class SpotifyApi {
 		$this->getAccessToken();
 	}
 
-	public function search($q) {
+	public function getSpotifyId($isrc) {
+		$res = $this->search("isrc:$isrc");
+		return (!empty($res->tracks->items)) ? $res->tracks->items[0]->id : null;
+	}
+	
+	private function search($q) {
 		return $this->request(
 			"GET",
 			self::API_BASE . "/search?" . http_build_query([
 				'q' => $q,
-				'type' => 'album,track'
-			])
+				'type' => 'track'
+				])
 		);
 	}
+		
+	public function getSavedTracks() {
+		$items = [];
+		$offset = 0;
 
-	public function save($id) {
+		for ($offset = 0; ($offset === 0 || !empty($res->items)); $offset += 100) {
+			$res = $this->request(
+				"GET",
+				self::API_BASE . "/me/tracks?limit=50&offset=$offset"
+			);
+			$items = array_merge($items, $res->items);
+		}
+
+		$res = new stdClass();
+		$res->items = $items;
+
+		return $res;
+	}
+
+	public function saveTrack($id) {
 		return $this->request(
 			"PUT",
 			self::API_BASE . "/me/tracks?" . http_build_query(['ids' => $id])
 		);
 	}
 
-	public function unsave($id) {
+	public function unsaveTrack($id) {
 		return $this->request(
 			"DELETE",
 			self::API_BASE . "/me/tracks?" . http_build_query(['ids' => $id])

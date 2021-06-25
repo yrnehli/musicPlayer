@@ -74,6 +74,7 @@ class MusicControl extends EventEmitter {
 
 	async _update(auto) {
 		var res = await $.get(`/api/song/${this._music.songId()}`);
+
 		this._albumId = res.data.albumId;
 		this._elements.$songName.text(res.data.songName);
 		this._elements.$artistName.text(res.data.songArtist);
@@ -82,6 +83,14 @@ class MusicControl extends EventEmitter {
 		this._metadata.artist = res.data.songArtist;
 		this._metadata.album = res.data.albumName;
 		this._metadata.artwork = [{ src: res.data.albumArtUrl, sizes: '512x512', type: 'image/png' }];
+
+		if (res.data.isDeezer) {
+			this._elements.$saveButton.show();
+			(res.data.isSaved) ? this._elements.$saveButton.addClass('active') : this._elements.$saveButton.removeClass('active')
+		} else {
+			this._elements.$saveButton.hide();
+		}
+
 		this._emit(
 			(auto) ? 'updateauto' : 'updatemanual'
 		);

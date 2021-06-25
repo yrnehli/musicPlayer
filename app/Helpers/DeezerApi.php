@@ -2,9 +2,6 @@
 
 namespace App\Helpers;
 
-use App\Helpers\SpotifyApi;
-use Flight;
-
 class DeezerApi {
 	public const DEEZER_ID_PREFIX = "DEEZER-";
 	private const API_BASE = "https://api.deezer.com";
@@ -53,26 +50,21 @@ class DeezerApi {
 	}
 
 	public function getSong($id) {
-		$spotifyApi = new SpotifyApi();
-
-		$deezerRes = json_decode(
+		$res = json_decode(
 			$this->curlRequest(
 				"GET",
 				self::API_BASE . "/track/$id"
 			)
 		);
 
-		$spotifyRes = $spotifyApi->search("isrc:$deezerRes->isrc");
-
 		$song = [
-			'songName' => $deezerRes->title,
-			'songArtist' => $deezerRes->artist->name,
-			'songDuration' => $deezerRes->duration,
-			'albumArtUrl' => $deezerRes->album->cover,
-			'albumName' => $deezerRes->album->title,
-			'albumId' => $deezerRes->album->id,
-			'isrc' => $deezerRes->isrc,
-			'spotifyId' => !empty($spotifyRes->tracks->items) ? $spotifyRes->tracks->items[0]->id : null,
+			'songName' => $res->title,
+			'songArtist' => $res->artist->name,
+			'songDuration' => $res->duration,
+			'albumArtUrl' => $res->album->cover,
+			'albumName' => $res->album->title,
+			'albumId' => DeezerApi::DEEZER_ID_PREFIX . $res->album->id,
+			'isrc' => $res->isrc
 		];
 
 		return $song;
@@ -99,10 +91,10 @@ class DeezerApi {
 				function($song, $i) {
 					return [
 						"id" => self::DEEZER_ID_PREFIX . $song->id,
-						"trackNumber" => ++$i,
+						"trackNumber" => $i + 1,
 						"name" => $song->title,
 						"artist" => $song->artist->name,
-						"duration" => $song->duration,
+						"duration" => $song->duration
 					];
 				},
 				$res->tracks->data,

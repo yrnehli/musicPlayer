@@ -6,7 +6,6 @@ use App\Helpers\MusicDatabase;
 use App\Helpers\MusicManager;
 use App\Helpers\SpotifyApi;
 use App\Helpers\DeezerApi;
-use Exception;
 use Flight;
 use PDO;
 
@@ -37,6 +36,19 @@ class ApiController extends Controller {
 			$song = unserialize(file_get_contents($filepath));
 		}
 
+		$spotifyApi = new SpotifyApi();
+
+		$song['isDeezer'] = true;
+		$song['isSaved'] = in_array(
+			$spotifyApi->getSpotifyId($song['isrc']),
+			array_map(
+				function($item) {
+					return $item->track->id;
+				},
+				$spotifyApi->getSavedTracks()->items
+			)
+		);
+
 		return $song;
 	}
 
@@ -60,6 +72,9 @@ class ApiController extends Controller {
 		$stmt->bindParam(":id", $songId);
 		$stmt->execute();
 		$song = $stmt->fetch();
+
+		$song['isDeezer'] = false;
+		$song['isSaved'] = false;
 
 		return $song;
 	}
@@ -162,21 +177,24 @@ class ApiController extends Controller {
 		if (!str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)) {
 			return;
 		}
-				
+		
+		$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
+
 		$spotifyApi = new SpotifyApi();
 		$deezerApi = new DeezerApi();
 
-		$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
-		$spotifyId = $deezerApi->getSong($songId)['spotifyId'];
+		$spotifyId = $spotifyApi->getSpotifyId(
+			$deezerApi->getSong($songId)['isrc']
+		);
 
-		if (empty($songId)) {
+		if (empty($spotifyId)) {
 			$this->responseHandler(false, "Could not find track on Spotify.");
 		}
 
 		if (Flight::request()->method === "PUT") {
-			$spotifyApi->save($spotifyId);
+			$spotifyApi->saveTrack($spotifyId);
 		} else if (Flight::request()->method === "DELETE") {
-			$spotifyApi->unsave($spotifyId);
+			$spotifyApi->unsaveTrack($spotifyId);
 		}
 
 		$this->responseHandler(true);

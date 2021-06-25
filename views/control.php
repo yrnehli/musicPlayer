@@ -37,6 +37,9 @@
 		</div>
 	</div>
 	<div class="h-100 d-flex ml-auto">
+		<svg id="saveButton" class="heart-button my-auto mx-2" height="16" width="16" style="display: none;">
+			<path></path>
+		</svg>
 		<svg id="nowPlayingButton" class="my-auto mx-2" height="16" width="16">
 			<path></path>
 			<path></path>
@@ -61,6 +64,7 @@
 		var $prevButton = $('#prevButton');
 		var $playButton = $('#playButton');
 		var $skipButton = $('#skipButton');
+		var $saveButton = $('#saveButton');
 		var $queueButton = $('#queueButton');
 		var $nowPlayingButton = $('#nowPlayingButton');
 		var $volumeSlider = $('#volumeSlider');
@@ -83,6 +87,7 @@
 				$volumeSlider: $volumeSlider,
 				$elapsedTime: $elapsedTime,
 				$endTime: $endTime,
+				$saveButton: $saveButton,
 				$nowPlayingButton: $nowPlayingButton
 			},
 			state
@@ -201,11 +206,35 @@
 				(window.location.pathname === '/queue') ? $queueButton.addClass('active') : $queueButton.removeClass('active');
 			});
 
-			$queueButton.click(e => {
-				if (!$queueButton.hasClass('active')) {
-					PartialManager.sharedInstance.loadPartial("/queue");
+			$saveButton.click(async () => {
+				var res = await $.ajax({
+					url: `/api/spotify/tracks/${Music.sharedInstance.songId()}`,
+					type: $saveButton.hasClass('active') ? 'DELETE' : 'PUT'
+				});
+
+				if (!res.success) {
+					alert(res.message);
+					return;
+				}
+
+				var $tracklistRowHeartButton = $(`.tracklist-row[data-song-id="${Music.sharedInstance.songId()}"]`).find('.heart-button');
+				
+				$saveButton.toggleClass('active');
+
+				if ($saveButton.hasClass('active')) {
+					showToastNotification("Saved to liked songs");
+					$tracklistRowHeartButton.addClass('active');
 				} else {
+					showToastNotification("Removed from liked songs");
+					$tracklistRowHeartButton.removeClass('active');
+				}
+			});
+
+			$queueButton.click(e => {
+				if ($queueButton.hasClass('active')) {
 					window.history.back();
+				} else {
+					PartialManager.sharedInstance.loadPartial("/queue");
 				}
 			});
 

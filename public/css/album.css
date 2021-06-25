@@ -133,7 +133,7 @@
 	justify-self: end;
 	margin-right: 32px;
 	font-variant-numeric: tabular-nums;
-    width: 4ch;
+	width: 4ch;
 	font-size: 14px;
 }
 
@@ -144,4 +144,20 @@
 .tracklist-row .track-name :last-child {
 	color: #b3b3b3;
 	font-size: 14px;
+}
+
+.tracklist-row .heart-button {
+	position: absolute;
+	right: 130px;
+	color: white;
+	fill: white;
+	margin-top: 20px !important;
+}
+
+.tracklist-row .heart-button:not(.active) {
+	display: none;
+}
+
+.tracklist-row:hover .heart-button {
+	display: block !important;
 }

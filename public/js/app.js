@@ -163,13 +163,29 @@ function shuffle(arr, options) {
 	return collection;
 }
 
-function showToastNotification(message, timeout = 3000) {
-	var $toastNotification = $('#toastNotification')
+function showToastNotification(message, timeoutDuration = 3000) {
+	var $toastNotification = $('#toastNotification');
+	var now = new Date();
+	var epoch = Math.round(now.getTime() / 1000);
+
+	$toastNotification
 		.text(message)
+		.css(
+			'margin-left',
+			$toastNotification.outerWidth() / 2 * -1
+		)
 		.addClass('show')
+		.data('fadeTime', epoch + 3)
 	;
 
-	setTimeout(() => $toastNotification.removeClass('show'), timeout);
+	setTimeout(() => {
+		var now = new Date();
+		var epoch = Math.round(now.getTime() / 1000);	
+
+		if (epoch >= $toastNotification.data('fadeTime')) {
+			$toastNotification.removeClass('show');
+		}
+	}, timeoutDuration);
 }
 
 function updateBodyColour(hex, gradient = true) {
