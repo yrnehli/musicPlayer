@@ -30,6 +30,7 @@
 
 	$(async function() {
 		$queueRowsContainer.empty();
+		updateNowPlaying();
 		createQueueRows(MusicControl.sharedInstance.music().queue());
 		initEvents();
 	});
@@ -78,8 +79,15 @@
 			eventReferences.queue.onsongchange = () => updateNowPlaying();
 		}
 
+		if (eventReferences.queue.ondisable) {
+			MusicControl.sharedInstance.music().off('disable', eventReferences.queue.ondisable);
+		} else {
+			eventReferences.queue.ondisable = () => updateNowPlaying();
+		}
+
 		MusicControl.sharedInstance.music().on('skip', eventReferences.queue.onskip);
 		MusicControl.sharedInstance.music().on('songchange', eventReferences.queue.onsongchange);
+		MusicControl.sharedInstance.music().on('disable', eventReferences.queue.ondisable);
 
 		setInterval(() => {
 			var $queueRows = $queueRowsContainer.children();
