@@ -64,6 +64,7 @@ class MusicControl extends EventEmitter {
 			this._elements.$artistName.text('');
 			this._elements.$elapsedTime.text('0:00');
 			this._elements.$endTime.text('0:00');
+			this._elements.$saveButton.hide();
 
 			if (this._elements.$progressSlider.hasClass('ui-slider')) {
 				this._elements.$progressSlider.slider("value", 0);
