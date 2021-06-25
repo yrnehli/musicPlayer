@@ -23,7 +23,7 @@ class Music extends Howl {
 		this.__songId = null;
 		this.__disabled = true;
 		this.__queue = [];
-		this.__nextUp =  { list: [], i: 0 };
+		this.__nextUp =	{ list: [], i: 0 };
 		
 		this.on('end', e => this.skip(e));
 	}
@@ -152,5 +152,62 @@ class Music extends Howl {
 		this.__queue = [];
 		this.__nextUp = nextUp;
 		this.changeSong(nextUp.list[nextUp.i], true);
+	}
+
+	on(event, fn) {
+		var self = this;
+		var namespace;
+
+		if (event.includes(".")) {
+			var parts = event.split(".");
+			event = parts[0];
+			namespace = parts[1];
+		}
+
+		var events = self['_on' + event];
+
+		if (typeof fn === 'function') {
+			events.push({ namespace: namespace, fn: fn, id: undefined });
+		}
+
+		return self;
+	}
+
+	off(event, fn) {
+		var self = this;
+		var namespace;
+
+		if (event.includes(".")) {
+			var parts = event.split(".");
+			event = parts[0];
+			namespace = parts[1];
+		}
+
+		var events = self['_on' + event];
+	
+		if (fn || namespace) {
+			// Loop through event store and remove the passed function.
+			for (var i = 0; i < events.length; i++) {
+				var isNamespace = (namespace === events[i].namespace);
+
+				if (fn === events[i].fn && isNamespace || !fn && isNamespace) {
+					events.splice(i, 1);
+					break;
+				}
+			}
+		} else if (event) {
+			// Clear out all events of this type.
+			self['_on' + event] = [];
+		} else {
+			// Clear out all events of every type.
+			var keys = Object.keys(self);
+				for (i = 0; i < keys.length; i++) {
+				if ((keys[i].indexOf('_on') === 0) && Array.isArray(self[keys[i]])) {
+					self[keys[i]] = [];
+				}
+			}
+		}
+	
+		return self;
 	}
 }

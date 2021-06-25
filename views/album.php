@@ -135,22 +135,11 @@
 		}
 
 		function initEvents() {
-			if (eventReferences.album.onpause) {
-				Music.sharedInstance.off('pause', eventReferences.album.onpause);
-			}
-
-			if (eventReferences.album.onplay) {
-				Music.sharedInstance.off('play', eventReferences.album.onplay);
-			}
-
-			eventReferences.album.onpause = () => $tracklistRows.removeClass('playing');
-			eventReferences.album.onplay = () => {
+			Music.sharedInstance.off('pause.album').on('pause.album', () => $tracklistRows.removeClass('playing'));
+			Music.sharedInstance.off('play.album').on('play.album', () => {
 				$tracklistRows.removeClass('playing');
 				$tracklistRows.filter(`[data-song-id="${Music.sharedInstance.songId()}"]`).addClass('playing');
-			};
-
-			Music.sharedInstance.on('pause', eventReferences.album.onpause);
-			Music.sharedInstance.on('play', eventReferences.album.onplay);
+			});
 
 			$playAlbumButton.click(() => {
 				Music.sharedInstance.playNextUp({

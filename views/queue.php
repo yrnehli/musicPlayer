@@ -59,21 +59,9 @@
 	}
 
 	function initEvents() {
-		if (eventReferences.queue.onskip) {
-			Music.sharedInstance.off('skip', eventReferences.queue.onskip);
-		}
-
-		if (eventReferences.queue.onsongchange) {
-			Music.sharedInstance.off('songchange', eventReferences.queue.onsongchange);
-		}
-
-		if (eventReferences.queue.ondisable) {
-			Music.sharedInstance.off('disable', eventReferences.queue.ondisable);
-		}
-
-		eventReferences.queue.onsongchange = () => updateNowPlaying();
-		eventReferences.queue.ondisable = () => updateNowPlaying();
-		eventReferences.queue.onskip = () => {
+		Music.sharedInstance.off('songchange.queue').on('songchange.queue', () => updateNowPlaying());
+		Music.sharedInstance.off('disable.queue').on('disable.queue', () => updateNowPlaying());
+		Music.sharedInstance.off('skip.queue').on('skip.queue', () => {
 			var $queueRows = $queueRowsContainer.children();
 
 			$queueRows.first().remove();
@@ -81,11 +69,7 @@
 			if ($queueRowsContainer.children().length === 0) {
 				$nextUp.hide();
 			}
-		};
-
-		Music.sharedInstance.on('skip', eventReferences.queue.onskip);
-		Music.sharedInstance.on('songchange', eventReferences.queue.onsongchange);
-		Music.sharedInstance.on('disable', eventReferences.queue.ondisable);
+		});
 
 		setInterval(() => {
 			var $queueRows = $queueRowsContainer.children();
