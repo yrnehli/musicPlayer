@@ -31,7 +31,7 @@
 	$(async function() {
 		$queueRowsContainer.empty();
 		updateNowPlaying();
-		createQueueRows(MusicControl.sharedInstance.music().queue());
+		createQueueRows(Music.sharedInstance.queue());
 		initEvents();
 	});
 
@@ -60,7 +60,7 @@
 
 	function initEvents() {
 		if (eventReferences.queue.onskip) {
-			MusicControl.sharedInstance.music().off('skip', eventReferences.queue.onskip);
+			Music.sharedInstance.off('skip', eventReferences.queue.onskip);
 		} else {
 			eventReferences.queue.onskip = () => {
 				var $queueRows = $queueRowsContainer.children();
@@ -74,29 +74,29 @@
 		}
 
 		if (eventReferences.queue.onsongchange) {
-			MusicControl.sharedInstance.music().off('songchange', eventReferences.queue.onsongchange);
+			Music.sharedInstance.off('songchange', eventReferences.queue.onsongchange);
 		} else {
 			eventReferences.queue.onsongchange = () => updateNowPlaying();
 		}
 
 		if (eventReferences.queue.ondisable) {
-			MusicControl.sharedInstance.music().off('disable', eventReferences.queue.ondisable);
+			Music.sharedInstance.off('disable', eventReferences.queue.ondisable);
 		} else {
 			eventReferences.queue.ondisable = () => updateNowPlaying();
 		}
 
-		MusicControl.sharedInstance.music().on('skip', eventReferences.queue.onskip);
-		MusicControl.sharedInstance.music().on('songchange', eventReferences.queue.onsongchange);
-		MusicControl.sharedInstance.music().on('disable', eventReferences.queue.ondisable);
+		Music.sharedInstance.on('skip', eventReferences.queue.onskip);
+		Music.sharedInstance.on('songchange', eventReferences.queue.onsongchange);
+		Music.sharedInstance.on('disable', eventReferences.queue.ondisable);
 
 		setInterval(() => {
 			var $queueRows = $queueRowsContainer.children();
 
-			if ($queueRows.length < MusicControl.sharedInstance.music().queue().length) {
+			if ($queueRows.length < Music.sharedInstance.queue().length) {
 				var songIds = [];
 
-				for (var i = $queueRows.length; i < MusicControl.sharedInstance.music().queue().length; i++) {
-					songIds.push(MusicControl.sharedInstance.music().queue()[i]);
+				for (var i = $queueRows.length; i < Music.sharedInstance.queue().length; i++) {
+					songIds.push(Music.sharedInstance.queue()[i]);
 				}
 
 				createQueueRows(songIds);
@@ -105,12 +105,12 @@
 	}
 
 	async function updateNowPlaying() {
-		if (!MusicControl.sharedInstance.music().songId()) {
+		if (!Music.sharedInstance.songId()) {
 			$nowPlaying.hide();
 			return;
 		}
 
-		var res = await $.get(`/api/song/${MusicControl.sharedInstance.music().songId()}`);
+		var res = await $.get(`/api/song/${Music.sharedInstance.songId()}`);
 		var $musicRow = $nowPlaying.find('.music-row');
 
 		$musicRow.find('.artwork img').attr('src', res.albumArtUrl);
@@ -235,7 +235,7 @@
 
 		queueRows = $queueRowsContainer.children().get();
 
-		MusicControl.sharedInstance.music().queue(
+		Music.sharedInstance.queue(
 			queueRows.map(queueRow => queueRow.getAttribute('data-song-id'))
 		);
 

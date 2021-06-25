@@ -90,18 +90,18 @@
 
 		function initStateInterval() {
 			setInterval(() => {
-				if (!MusicControl.sharedInstance.music().loaded() || MusicControl.sharedInstance.music().disabled()) {
+				if (!Music.sharedInstance.loaded() || Music.sharedInstance.disabled()) {
 					return;
 				}
 
 				localStorage.setItem(
 					"state",
 					JSON.stringify({
-						volume: MusicControl.sharedInstance.music().volume(),
-						queue: MusicControl.sharedInstance.music().queue(),
-						nextUp: MusicControl.sharedInstance.music().nextUp(),
-						seek: MusicControl.sharedInstance.music().seek(),
-						songId: MusicControl.sharedInstance.music().songId()
+						volume: Music.sharedInstance.volume(),
+						queue: Music.sharedInstance.queue(),
+						nextUp: Music.sharedInstance.nextUp(),
+						seek: Music.sharedInstance.seek(),
+						songId: Music.sharedInstance.songId()
 					})
 				);
 			}, 1000);
@@ -125,16 +125,16 @@
 					$volumeButton.addClass('high-volume');
 				}
 
-				MusicControl.sharedInstance.music().volume(volume);
+				Music.sharedInstance.volume(volume);
 			}
 
 			var progressIntervalCallback = function() {
-				if (!MusicControl.sharedInstance.music().loaded() || MusicControl.sharedInstance.music().disabled()) {
+				if (!Music.sharedInstance.loaded() || Music.sharedInstance.disabled()) {
 					return;
 				}
 
-				var duration = MusicControl.sharedInstance.music().duration();
-				var progress = MusicControl.sharedInstance.music().seek() / duration;
+				var duration = Music.sharedInstance.duration();
+				var progress = Music.sharedInstance.seek() / duration;
 				var elapsedSeconds = progress * duration;
 
 				$elapsedTime.text(secondsToTimeString(elapsedSeconds));
@@ -146,7 +146,7 @@
 			initSlider(
 				$volumeSlider,
 				Math.pow(
-					(state.volume >= 0) ? state.volume : MusicControl.sharedInstance.music().volume(),
+					(state.volume >= 0) ? state.volume : Music.sharedInstance.volume(),
 					1/4
 				) * 100,
 				{
@@ -158,14 +158,14 @@
 				$progressSlider,
 				0,
 				{
-					slide: (e, ui) => $elapsedTime.text(secondsToTimeString(ui.value / 100 * MusicControl.sharedInstance.music().duration())),
+					slide: (e, ui) => $elapsedTime.text(secondsToTimeString(ui.value / 100 * Music.sharedInstance.duration())),
 					start: e => clearInterval(progressInterval),
 					stop: (e, ui) => {
-						MusicControl.sharedInstance.music().seek(ui.value / 100 * MusicControl.sharedInstance.music().duration());
+						Music.sharedInstance.seek(ui.value / 100 * Music.sharedInstance.duration());
 						progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 					}
 				},
-				MusicControl.sharedInstance.music().disabled()
+				Music.sharedInstance.disabled()
 			);
 		}
 
@@ -197,9 +197,9 @@
 
 			$albumArt.click(e => PartialManager.sharedInstance.loadPartial('/'));
 			$songName.click(e => PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`));
-			$prevButton.click(e => MusicControl.sharedInstance.music().previous());
-			$playButton.click(e => MusicControl.sharedInstance.music().togglePlay());	
-			$skipButton.click(e => MusicControl.sharedInstance.music().skip());
+			$prevButton.click(e => Music.sharedInstance.previous());
+			$playButton.click(e => Music.sharedInstance.togglePlay());	
+			$skipButton.click(e => Music.sharedInstance.skip());
 			$volumeButton.click(e => updateVolumeButton());
 			$volumeSlider.parent().on('mousewheel', e => adjustVolume(e));
 			$(window).keydown(e => assignKeydown(e));
@@ -242,7 +242,7 @@
 			if (e.keyCode === 32) {
 				if ($(':focus').length === 0) {
 					e.preventDefault();
-					MusicControl.sharedInstance.music().togglePlay();
+					Music.sharedInstance.togglePlay();
 				}
 			}
 		}
@@ -251,7 +251,7 @@
 			// Ctrl + S
 			if (e.ctrlKey && e.keyCode === 83) {
 				e.preventDefault();
-				MusicControl.sharedInstance.music().playNextUp({
+				Music.sharedInstance.playNextUp({
 					list: shuffle([<?= implode(", ", $songIds) ?>]),
 					i: 0
 				});

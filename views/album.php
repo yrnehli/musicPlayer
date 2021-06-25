@@ -111,8 +111,8 @@
 		function initTracklistRows() {
 			$tracklistRows.removeClass('playing');
 
-			if (MusicControl.sharedInstance.music().playing()) {
-				$tracklistRows.find(`[data-song-id="${MusicControl.sharedInstance.music().songId()}"]`).addClass('playing');
+			if (Music.sharedInstance.playing()) {
+				$tracklistRows.find(`[data-song-id="${Music.sharedInstance.songId()}"]`).addClass('playing');
 			}
 
 			$tracklistRows.dblclick(function() {
@@ -127,7 +127,7 @@
 					}
 				});
 				
-				MusicControl.sharedInstance.music().playNextUp(nextUp);
+				Music.sharedInstance.playNextUp(nextUp);
 
 				$tracklistRows.removeClass('active');
 				$self.addClass('active');
@@ -136,32 +136,32 @@
 
 		function initEvents() {
 			if (eventReferences.album.onpause) {
-				MusicControl.sharedInstance.music().off('pause', eventReferences.album.onpause);
+				Music.sharedInstance.off('pause', eventReferences.album.onpause);
 			} else {
 				eventReferences.album.onpause = () => $tracklistRows.removeClass('playing');
 			}
 
 			if (eventReferences.album.onplay) {
-				MusicControl.sharedInstance.music().off('play', eventReferences.album.onplay);
+				Music.sharedInstance.off('play', eventReferences.album.onplay);
 			} else {
 				eventReferences.album.onplay = () => {
 					$tracklistRows.removeClass('playing');
-					$tracklistRows.find(`[data-song-id="${MusicControl.sharedInstance.music().songId()}"]`).addClass('playing');
+					$tracklistRows.find(`[data-song-id="${Music.sharedInstance.songId()}"]`).addClass('playing');
 				};
 			}
 
-			MusicControl.sharedInstance.music().on('pause', eventReferences.album.onpause);
-			MusicControl.sharedInstance.music().on('play', eventReferences.album.onplay);
+			Music.sharedInstance.on('pause', eventReferences.album.onpause);
+			Music.sharedInstance.on('play', eventReferences.album.onplay);
 
 			$playAlbumButton.click(() => {
-				MusicControl.sharedInstance.music().playNextUp({
+				Music.sharedInstance.playNextUp({
 					list: $('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id')),
 					i: 0
 				});
 			});
 
 			$shuffleAlbumButton.click(() => {
-				MusicControl.sharedInstance.music().playNextUp({
+				Music.sharedInstance.playNextUp({
 					list: shuffle(
 						$('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id'))
 					),
@@ -171,7 +171,7 @@
 
 			$queueAlbumButton.click(() => {
 				$('.tracklist-row').each(function() {
-					MusicControl.sharedInstance.music().queue().push(
+					Music.sharedInstance.queue().push(
 						$(this).data('song-id')
 					);
 					showToastNotification("Added to queue");

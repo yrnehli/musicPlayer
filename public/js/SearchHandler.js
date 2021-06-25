@@ -91,12 +91,12 @@ class SearchHandler {
 	}
 
 	_playSong($resultRow) {
-		MusicControl.sharedInstance.music().changeSong($resultRow.data('song-id'), true);
+		Music.sharedInstance.changeSong($resultRow.data('song-id'), true);
 	}
 
 	async _playAlbum($resultRow) {
 		var res = await $.get(`/api/album/${$resultRow.data('album-id')}`);
-		MusicControl.sharedInstance.music().playNextUp({
+		Music.sharedInstance.playNextUp({
 			list: res.songIds,
 			i: 0
 		});

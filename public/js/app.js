@@ -24,14 +24,14 @@ $(function() {
 				text: "Add to queue",
 				callback: async function($target) {
 					if ($target.data('song-id')) {
-						MusicControl.sharedInstance.music().queue().push(
+						Music.sharedInstance.queue().push(
 							$target.data('song-id')
 						);
 					} else if ($target.data('album-id')) {
 						var res = await $.get(`/api/album/${$target.data('album-id')}`);
 						res
 							.songIds
-							.forEach(songId => MusicControl.sharedInstance.music().queue().push(songId))
+							.forEach(songId => Music.sharedInstance.queue().push(songId))
 						;
 					}
 					
@@ -56,7 +56,7 @@ $(function() {
 					});
 
 					if (index >= 0) {
-						MusicControl.sharedInstance.music().queue().splice(index, 1);
+						Music.sharedInstance.queue().splice(index, 1);
 						$target.remove();
 					}
 				}
