@@ -61,29 +61,27 @@
 	function initEvents() {
 		if (eventReferences.queue.onskip) {
 			Music.sharedInstance.off('skip', eventReferences.queue.onskip);
-		} else {
-			eventReferences.queue.onskip = () => {
-				var $queueRows = $queueRowsContainer.children();
-
-				$queueRows.first().remove();
-				
-				if ($queueRowsContainer.children().length === 0) {
-					$nextUp.hide();
-				}
-			};
 		}
 
 		if (eventReferences.queue.onsongchange) {
 			Music.sharedInstance.off('songchange', eventReferences.queue.onsongchange);
-		} else {
-			eventReferences.queue.onsongchange = () => updateNowPlaying();
 		}
 
 		if (eventReferences.queue.ondisable) {
 			Music.sharedInstance.off('disable', eventReferences.queue.ondisable);
-		} else {
-			eventReferences.queue.ondisable = () => updateNowPlaying();
 		}
+
+		eventReferences.queue.onsongchange = () => updateNowPlaying();
+		eventReferences.queue.ondisable = () => updateNowPlaying();
+		eventReferences.queue.onskip = () => {
+			var $queueRows = $queueRowsContainer.children();
+
+			$queueRows.first().remove();
+			
+			if ($queueRowsContainer.children().length === 0) {
+				$nextUp.hide();
+			}
+		};
 
 		Music.sharedInstance.on('skip', eventReferences.queue.onskip);
 		Music.sharedInstance.on('songchange', eventReferences.queue.onsongchange);
