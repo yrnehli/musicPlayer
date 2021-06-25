@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Helpers\MusicDatabase;
 use App\Helpers\MusicManager;
-use App\Helpers\SpotifyApi;
 use App\Helpers\DeezerApi;
 use Flight;
 use PDO;

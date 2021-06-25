@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Helpers\MusicDatabase;
 use App\Helpers\DeezerPrivateApi;
-use App\Helpers\SpotifyApi;
 use Exception;
 
 class RootController extends Controller {
@@ -27,11 +26,9 @@ class RootController extends Controller {
 
 	private function authTest() {
 		$deezerPrivateApi = new DeezerPrivateApi();
-		$spotifyApi = new SpotifyApi();
-
+		
 		try {
 			$deezerPrivateApi->authTest();
-			$spotifyApi->authTest();
 		} catch (Exception $e) {
 			die($e->getMessage());
 		}
