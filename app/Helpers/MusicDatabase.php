@@ -59,6 +59,52 @@ class MusicDatabase {
 		$this->conn->prepare("DELETE FROM `albums`")->execute();
 	}
 
+	public function insertDeezerSavedSong($songId, $flagged = false) {
+		$stmt = $this->conn->prepare(
+			"INSERT INTO `deezerSavedSongs` (`songId`, `flagged`)
+			VALUES (:songId, :flagged)
+			ON DUPLICATE KEY UPDATE `flagged` = :flagged"
+		);
+		$stmt->bindParam(":songId", $songId);
+		$stmt->bindParam(":flagged", $flagged, PDO::PARAM_INT);
+		$stmt->execute();
+	}
+
+	public function deleteDeezerSavedSong($songId) {
+		$stmt = $this->conn->prepare(
+			"DELETE FROM `deezerSavedSongs`
+			WHERE `songId` = :songId"
+		);
+		$stmt->bindParam(":songId", $songId);
+		$stmt->execute();
+	}
+
+	public function isDeezerSongSaved($songId) {
+		$stmt = $this->conn->prepare(
+			"SELECT *
+			FROM `deezerSavedSongs`
+			WHERE `songId` = :songId"
+		);
+		$stmt->bindParam(":songId", $songId);
+		$stmt->execute();
+		$res = $stmt->fetch();
+
+		return ($res !== false);
+	}
+
+	public function isDeezerSongFlagged($songId) {
+		$stmt = $this->conn->prepare(
+			"SELECT `flagged`
+			FROM `deezerSavedSongs`
+			WHERE `songId` = :songId"
+		);
+		$stmt->bindParam(":songId", $songId);
+		$stmt->execute();
+		$res = $stmt->fetch(PDO::FETCH_COLUMN);
+
+		return ($res === "1");
+	}
+
 	public function getConn() {
 		return $this->conn;
 	}

@@ -36,18 +36,10 @@ class ApiController extends Controller {
 			$song = unserialize(file_get_contents($filepath));
 		}
 
-		$spotifyApi = new SpotifyApi();
+		$db = new MusicDatabase();
 
 		$song['isDeezer'] = true;
-		$song['isSaved'] = in_array(
-			$spotifyApi->getSpotifyId($song['isrc']),
-			array_map(
-				function($item) {
-					return $item->track->id;
-				},
-				$spotifyApi->getSavedTracks()->items
-			)
-		);
+		$song['isSaved'] = $db->isDeezerSongSaved(DeezerApi::DEEZER_ID_PREFIX . $songId);
 
 		return $song;
 	}
@@ -173,32 +165,24 @@ class ApiController extends Controller {
 		return compact('albums', 'songs');
 	}
 
-	public function spotifyTracks($songId) {
+	public function deezerSavedSongs($songId) {
 		if (!str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)) {
 			return;
 		}
+
+		$db = new MusicDatabase();
 		
-		$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
-
-		$spotifyApi = new SpotifyApi();
-		$deezerApi = new DeezerApi();
-
-		$spotifyId = $spotifyApi->getSpotifyId(
-			$deezerApi->getSong($songId)['isrc']
-		);
-
-		if (empty($spotifyId)) {
-			$this->responseHandler(false, "Could not find track on Spotify.");
-		}
-
 		if (Flight::request()->method === "PUT") {
-			$spotifyApi->saveTrack($spotifyId);
+			$db->insertDeezerSavedSong(
+				$songId,
+				filter_var(Flight::request()->query->flagged, FILTER_VALIDATE_BOOL)
+			);
 		} else if (Flight::request()->method === "DELETE") {
-			$spotifyApi->unsaveTrack($spotifyId);
+			$db->deleteDeezerSavedSong($songId);
 		}
 
 		$this->responseHandler(true);
-	}
+	} 
 }
 
 ?>

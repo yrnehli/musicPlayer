@@ -56,6 +56,51 @@ $(function() {
 						$target.remove();
 					}
 				}
+			},
+			FLAG: {
+				text: "Flag",
+				callback: async function($target) {
+					var songId = $target.data('song-id');
+					
+					await $.ajax({
+						type: 'PUT',
+						url: `/api/deezerSavedSongs/${songId}?flagged=true`
+					});
+	
+					$target.find('.heart-button').addClass('active');
+					$target.find('.flag-icon').addClass('active');
+					
+					if (songId.toString() === Music.sharedInstance.songId().toString()) {
+						MusicControl.sharedInstance.elements().$saveButton.addClass('active');
+					}
+
+					showToastNotification("Marked as flagged");
+
+					$target.data(
+						CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
+						$target.data(CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX).replace("FLAG", "UNFLAG")
+					);
+				}
+			},
+			UNFLAG: {
+				text: "Unflag",
+				callback: async function($target) {
+					var songId = $target.data('song-id');
+					
+					await $.ajax({
+						type: 'PUT',
+						url: `/api/deezerSavedSongs/${songId}?flagged=false`
+					});
+
+					$target.find('.flag-icon').removeClass('active');
+
+					showToastNotification("Unmarked as flagged");
+
+					$target.data(
+						CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
+						$target.data(CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX).replace("UNFLAG", "FLAG")
+					);
+				}
 			}
 		}
 	);

@@ -208,25 +208,27 @@
 
 			$saveButton.click(async () => {
 				var res = await $.ajax({
-					url: `/api/spotify/tracks/${Music.sharedInstance.songId()}`,
-					type: $saveButton.hasClass('active') ? 'DELETE' : 'PUT'
+					type: $saveButton.hasClass('active') ? 'DELETE' : 'PUT',
+					url: `/api/deezerSavedSongs/${Music.sharedInstance.songId()}`
 				});
 
-				if (!res.success) {
-					alert(res.message);
-					return;
-				}
+				var $tracklistRow = $(`.tracklist-row[data-song-id="${Music.sharedInstance.songId()}"]`);
+				var $heartButton = $tracklistRow.find('.heart-button');
 
-				var $tracklistRowHeartButton = $(`.tracklist-row[data-song-id="${Music.sharedInstance.songId()}"]`).find('.heart-button');
-				
+				$tracklistRow.data(
+					CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
+					$tracklistRow.data(CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX).replace('UNFLAG', 'FLAG')
+				);
+
 				$saveButton.toggleClass('active');
+				$tracklistRow.find('.flag-icon').removeClass('active');
 
 				if ($saveButton.hasClass('active')) {
-					showToastNotification("Saved to liked songs");
-					$tracklistRowHeartButton.addClass('active');
+					showToastNotification("Added to saved songs");
+					$heartButton.addClass('active');
 				} else {
-					showToastNotification("Removed from liked songs");
-					$tracklistRowHeartButton.removeClass('active');
+					showToastNotification("Removed from saved songs");
+					$heartButton.removeClass('active');
 				}
 			});
 

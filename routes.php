@@ -13,7 +13,7 @@ Route::map("GET", "/api/update", "ApiController@update");
 Route::map("GET", "/api/search", "ApiController@search");
 Route::map("GET", "/api/song/@songId", "ApiController@song");
 Route::map("GET", "/api/album/@albumId", "ApiController@album");
-Route::map("PUT", "/api/spotify/tracks/@songId", "ApiController@spotifyTracks");
-Route::map("DELETE", "/api/spotify/tracks/@songId", "ApiController@spotifyTracks");
+Route::map("PUT", "/api/deezerSavedSongs/@songId", "ApiController@deezerSavedSongs");
+Route::map("DELETE", "/api/deezerSavedSongs/@songId", "ApiController@deezerSavedSongs");
 
 ?>

@@ -68,7 +68,7 @@
 			</div>
 		</div>
 		<?php foreach ($songs as $song): ?>
-			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>" data-context-menu-actions="QUEUE" data-activable>
+			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>" data-context-menu-actions="<?= ($song['isDeezer']) ? (($song['isFlagged']) ? 'QUEUE,UNFLAG' : 'QUEUE,FLAG') : 'QUEUE' ?>" data-activable>
 				<div class="track-number">
 					<img class="equalizer" src="/public/img/equalizer.gif">
 					<svg class="play">
@@ -87,7 +87,8 @@
 					</div>
 				</div>
 				<?php if ($song['isDeezer']): ?>
-					<svg class="heart-button my-auto mx-2 <?= ($song['isSaved']) ? 'active' : '' ?>" height="16" width="16">
+					<i class="<?= ($song['isFlagged']) ? 'flag-icon active' : 'flag-icon' ?> fal fa-asterisk fa-xs"></i>
+					<svg class="<?= ($song['isSaved']) ? 'heart-button active' : 'heart-button' ?>" height="16" width="16">
 						<path></path>
 					</svg>
 				<?php endif; ?>
@@ -140,25 +141,30 @@
 
 			$tracklistRows.find('.heart-button').click(async function() {
 				var songId = $(this).parents('[data-song-id]').data('song-id');
+				var action = $(this).hasClass('active') ? 'DELETE' : 'PUT';
+
 				var res = await $.ajax({
-					url: `/api/spotify/tracks/${songId}`,
-					type: $(this).hasClass('active') ? 'DELETE' : 'PUT'
+					type: action,
+					url: `/api/deezerSavedSongs/${songId}`
 				});
 
-				if (!res.success) {
-					alert(res.message);
-					return
-				}
-				
-				$(this).toggleClass('active');
+				var $parent = $(this).parents(`[data-${CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX}]`);
 
-				if ($(this).hasClass('active')) {
-					showToastNotification("Saved to liked songs")
+				$parent.data(
+					CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
+					$parent.data(CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX).replace('UNFLAG', 'FLAG')
+				);
+
+				$(this).toggleClass('active');
+				$(this).siblings('.flag-icon').removeClass('active');
+					
+				if (action === 'PUT') {
+					showToastNotification("Added to saved songs");
 					if (songId.toString() === Music.sharedInstance.songId().toString()) {
 						MusicControl.sharedInstance.elements().$saveButton.addClass('active');
 					}
-				} else {
-					showToastNotification("Removed from liked songs")
+				} else if (action === 'DELETE') {
+					showToastNotification("Removed from saved songs")
 					if (songId.toString() === Music.sharedInstance.songId().toString()) {
 						MusicControl.sharedInstance.elements().$saveButton.removeClass('active');
 					}

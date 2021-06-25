@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Helpers\DeezerApi;
 use App\Helpers\MusicDatabase;
-use App\Helpers\SpotifyApi;
 use App\Helpers\Utilities;
 use Flight;
 
@@ -17,34 +16,13 @@ class AlbumController extends Controller {
 			return;
 		}
 
-		$deezerApi = new DeezerApi();
-		$spotifyApi = new SpotifyApi();
-
-		$spotifyIds = $spotifyApi->getSpotifyIds(
-			$deezerApi->getIsrcs(
-				array_map(
-					function($songId) {
-						return str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
-					},
-					array_column($data['songs'], 'id')
-				)
-			)
-		);
-		
-		$spotifySavedTrackIds = array_map(
-			function($item) {
-				return $item->track->id;
-			},
-			$spotifyApi->getSavedTracks()->items
-		);
+		$db = new MusicDatabase();
 
 		foreach ($data['songs'] as &$song) {
 			$song['time'] = Utilities::secondsToTimeString($song['duration']);
 			$song['isDeezer'] = str_starts_with($song['id'], DeezerApi::DEEZER_ID_PREFIX);
-			$song['isSaved'] = ($song['isDeezer']) ? in_array(
-				$spotifyIds[str_replace(DeezerApi::DEEZER_ID_PREFIX, '', $song['id'])],
-				$spotifySavedTrackIds
-			) : false;
+			$song['isFlagged'] = ($song['isDeezer']) ? $db->isDeezerSongFlagged($song['id']) : false;
+			$song['isSaved'] = ($song['isDeezer']) ? $db->isDeezerSongSaved($song['id']) : false;
 		}
 
 		$data['album']['englishTime'] = Utilities::secondsToEnglishTime($data['album']['duration']);

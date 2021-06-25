@@ -146,10 +146,21 @@
 	font-size: 14px;
 }
 
+.tracklist-row .flag-icon {
+	display: none;
+	position: absolute;
+	right: 170px;
+	fill: white;
+	margin-top: 23px !important;
+}
+
+.tracklist-row .flag-icon.active {
+	display: block;
+}
+
 .tracklist-row .heart-button {
 	position: absolute;
 	right: 130px;
-	color: white;
 	fill: white;
 	margin-top: 20px !important;
 }
