@@ -134,6 +134,13 @@
 	font-display: swap
 }
 
+@font-face {
+	font-family: glue1-spoticon;
+	font-style: normal;
+	font-weight: 400;
+	src: url(https://open.scdn.co/cdn/fonts/spoticon_regular_2.d319d911.woff2) format("woff2"), url(https://open.scdn.co/cdn/fonts/spoticon_regular_2.ff4c6091.woff) format("woff"), url(https://open.scdn.co/cdn/fonts/spoticon_regular_2.127670b5.ttf) format("truetype")
+}
+
 body {
 	font-family: spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
 	-webkit-font-smoothing: antialiased;

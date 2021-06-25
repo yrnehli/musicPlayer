@@ -37,13 +37,13 @@
 		</div>
 	</div>
 	<div class="h-100 d-flex ml-auto">
-		<span id="queueButton" class="my-auto mx-2">
-			<i class="fal fa-list-ul"></i>
-		</span>
 		<svg id="nowPlayingButton" class="my-auto mx-2" height="16" width="16">
 			<path></path>
 			<path></path>
 		</svg>
+		<span class="my-auto mx-2">
+			<button id="queueButton"></button>
+		</span>
 		<svg id="volumeButton" class="my-auto mx-2 mute" height="16" width="16">
 			<path></path>
 		</svg>
