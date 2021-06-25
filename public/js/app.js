@@ -3,7 +3,8 @@ if ('serviceWorker' in navigator) {
 }
 
 var eventReferences = {
-	album: {}
+	album: {},
+	queue: {}
 };
 
 $(function() {
