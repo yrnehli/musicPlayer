@@ -64,9 +64,9 @@ $(function() {
 		}
 	);
 
-	PartialManager.sharedInstance.on('partialloaded', e => {
-		SearchHandler.sharedInstance.reset();
-
+		
+	PartialManager.sharedInstance.on('preupdate', e =>  SearchHandler.sharedInstance.reset());
+	PartialManager.sharedInstance.on('pathchange', e => {
 		if (window.location.pathname !== `/album/${MusicControl.sharedInstance.albumId()}`) {
 			MusicControl.sharedInstance.elements().$nowPlayingButton.removeClass('active');
 		}

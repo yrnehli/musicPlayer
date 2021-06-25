@@ -24,6 +24,7 @@ class PartialManager extends EventEmitter {
 		$(window).on('popstate', e => {
 			if (e.originalEvent.state) {
 				this._updatePartial(e.originalEvent.state.html, e.originalEvent.state.scroll)
+				this._emit('pathchange');
 			}
 		});
 	}
@@ -52,11 +53,11 @@ class PartialManager extends EventEmitter {
 		);
 		
 		history.pushState(this._getCurrentState(), "", url);
-
-		this._emit('partialloaded');
+		this._emit('pathchange');
 	}
 
 	_updatePartial(html, scroll) {
+		this._emit('preupdate');
 		this._$partial.removeClass('fade');
 		this._$partial.css('opacity', 0);
 		this._$partial.html(html);
