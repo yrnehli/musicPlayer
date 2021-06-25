@@ -2,6 +2,9 @@
 
 namespace App\Helpers;
 
+use App\Helpers\SpotifyApi;
+use Flight;
+
 class DeezerApi {
 	public const DEEZER_ID_PREFIX = "DEEZER-";
 	private const API_BASE = "https://api.deezer.com";
@@ -50,24 +53,31 @@ class DeezerApi {
 	}
 
 	public function getSong($id) {
-		$res = json_decode(
+		$spotifyApi = new SpotifyApi();
+
+		$deezerRes = json_decode(
 			$this->curlRequest(
 				"GET",
 				self::API_BASE . "/track/$id"
 			)
 		);
 
-		$res = [
-			'songName' => $res->title,
-			'songArtist' => $res->artist->name,
-			'songDuration' => $res->duration,
-			'albumArtUrl' => $res->album->cover,
-			'albumName' => $res->album->title,
-			'albumId' => $res->album->id,
-			'isrc' => $res->isrc
+		$spotifyRes = json_decode(
+			$spotifyApi->search("isrc:$deezerRes->isrc")['data']
+		);
+
+		$song = [
+			'songName' => $deezerRes->title,
+			'songArtist' => $deezerRes->artist->name,
+			'songDuration' => $deezerRes->duration,
+			'albumArtUrl' => $deezerRes->album->cover,
+			'albumName' => $deezerRes->album->title,
+			'albumId' => $deezerRes->album->id,
+			'isrc' => $deezerRes->isrc,
+			'spotifyId' => !empty($spotifyRes->tracks->items) ? $spotifyRes->tracks->items[0]->id : null,
 		];
 
-		return $res;
+		return $song;
 	}
 
 	public function getAlbum($id) {

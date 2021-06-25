@@ -163,33 +163,23 @@ class ApiController extends Controller {
 			return;
 		}
 				
+		$spotifyApi = new SpotifyApi();
+		$deezerApi = new DeezerApi();
+
 		$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
+		$spotifyId = $deezerApi->getSong($songId)['spotifyId'];
 
-		try {
-			$spotifyApi = new SpotifyApi();
-			$deezerApi = new DeezerApi();
-
-			$isrc = $deezerApi->getSong($songId)['isrc'];
-			$res = json_decode(
-				$spotifyApi->search("isrc:$isrc")['data']
-			);
-
-			if (empty($res->tracks->items)) {
-				$this->responseHandler(false, "Could not find track on Spotify.");
-			}
-	
-			$spotifyId = $res->tracks->items[0]->id;
-
-			if (Flight::request()->method === "PUT") {
-				$spotifyApi->save($spotifyId);
-			} else if (Flight::request()->method === "DELETE") {
-				$spotifyApi->unsave($spotifyId);
-			}
-
-			$this->responseHandler(true);
-		} catch (Exception $e) {
-			$this->responseHandler(false, $e->getMessage());
+		if (empty($songId)) {
+			$this->responseHandler(false, "Could not find track on Spotify.");
 		}
+
+		if (Flight::request()->method === "PUT") {
+			$spotifyApi->save($spotifyId);
+		} else if (Flight::request()->method === "DELETE") {
+			$spotifyApi->unsave($spotifyId);
+		}
+
+		$this->responseHandler(true);
 	}
 }
 
