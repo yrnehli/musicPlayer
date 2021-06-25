@@ -112,7 +112,7 @@
 			$tracklistRows.removeClass('playing');
 
 			if (Music.sharedInstance.playing()) {
-				$tracklistRows.find(`[data-song-id="${Music.sharedInstance.songId()}"]`).addClass('playing');
+				$tracklistRows.filter(`[data-song-id="${Music.sharedInstance.songId()}"]`).addClass('playing');
 			}
 
 			$tracklistRows.dblclick(function() {
@@ -146,7 +146,7 @@
 			} else {
 				eventReferences.album.onplay = () => {
 					$tracklistRows.removeClass('playing');
-					$tracklistRows.find(`[data-song-id="${Music.sharedInstance.songId()}"]`).addClass('playing');
+					$tracklistRows.filter(`[data-song-id="${Music.sharedInstance.songId()}"]`).addClass('playing');
 				};
 			}
 
