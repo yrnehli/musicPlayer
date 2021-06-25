@@ -10,6 +10,10 @@
 	fill: #b3b3b3;
 }
 
+#control svg:active {
+	fill: #b3b3b3 !important;
+}
+
 #control svg:hover {
 	fill: white;
 }
@@ -140,4 +144,16 @@
 	margin-top: -6px;
 	min-width: 40px;
 	text-align: center;
+}
+
+#queueButton:hover {
+	color: white;
+}
+
+#queueButton:active {
+	color: #b3b3b3 !important;
+}
+
+#queueButton.active {
+	color: white;
 }

@@ -102,6 +102,10 @@ class SearchHandler {
 		});
 	}
 
+	focus() {
+		this._$searchBar.focus();
+	}
+
 	reset() {
 		this._$searchBar.val(null);
 		this._search();

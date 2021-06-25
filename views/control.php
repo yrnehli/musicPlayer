@@ -37,6 +37,9 @@
 		</div>
 	</div>
 	<div class="h-100 d-flex ml-auto">
+		<span id="queueButton" class="my-auto mx-2">
+			<i class="fal fa-list-ul"></i>
+		</span>
 		<svg id="nowPlayingButton" class="my-auto mx-2" height="16" width="16">
 			<path></path>
 			<path></path>
@@ -58,6 +61,7 @@
 		var $prevButton = $('#prevButton');
 		var $playButton = $('#playButton');
 		var $skipButton = $('#skipButton');
+		var $queueButton = $('#queueButton');
 		var $nowPlayingButton = $('#nowPlayingButton');
 		var $volumeSlider = $('#volumeSlider');
 		var $volumeButton = $('#volumeButton');
@@ -84,9 +88,15 @@
 			state
 		);
 
-		initStateInterval();
-		initSliders();
-		initEvents();
+		$(function() {
+			if (window.location.pathname === '/queue') {
+				$queueButton.addClass('active');
+			}
+
+			initStateInterval();
+			initSliders();
+			initEvents();
+		});
 
 		function initStateInterval() {
 			setInterval(() => {
@@ -181,17 +191,29 @@
 
 				if ($nowPlayingButton.hasClass('active')) {
 					timeout = setTimeout(
-						() => PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`),
+					() => PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`),
 						3000
 					);
 				}
 			}).on('disable', e => localStorage.clear());
 
+			PartialManager.sharedInstance.on('pathchange', e => {
+				(window.location.pathname === '/queue') ? $queueButton.addClass('active') : $queueButton.removeClass('active');
+			});
+
+			$queueButton.click(e => {
+				if (!$queueButton.hasClass('active')) {
+					PartialManager.sharedInstance.loadPartial("/queue");
+				} else {
+					window.history.back();
+				}
+			});
+
 			$nowPlayingButton.click(e => {
 				$nowPlayingButton.toggleClass('active');
 
 				if (MusicControl.sharedInstance.albumId()) {
-					PartialManager.sharedInstance.loadPartial("/album/" + MusicControl.sharedInstance.albumId());
+					PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`);
 				}
 			});
 
@@ -228,11 +250,6 @@
 		}
 
 		function assignKeydown(e) {
-			// Ctrl + S
-			if (e.ctrlKey && e.keyCode === 83) {
-				e.preventDefault();
-			}
-
 			// Esc
 			if (e.keyCode === 27) {
 				e.preventDefault();
@@ -240,14 +257,30 @@
 
 			// Space
 			if (e.keyCode === 32) {
-				if ($(':focus').length === 0) {
+				if ($('input:focus').length === 0) {
 					e.preventDefault();
 					Music.sharedInstance.togglePlay();
 				}
 			}
+
+			// Ctrl + S
+			if (e.ctrlKey && e.keyCode === 83) {
+				e.preventDefault();
+			}
+
+			// Ctrl + F
+			if (e.ctrlKey && e.keyCode === 70) {
+				e.preventDefault();
+			}
 		}
 
 		function assignKeyup(e) {
+			// Esc
+			if (e.keyCode === 27) {
+				e.preventDefault();
+				PartialManager.sharedInstance.loadPartial('/');
+			}
+			
 			// Ctrl + S
 			if (e.ctrlKey && e.keyCode === 83) {
 				e.preventDefault();
@@ -257,10 +290,9 @@
 				});
 			}
 
-			// Esc
-			if (e.keyCode === 27) {
-				e.preventDefault();
-				PartialManager.sharedInstance.loadPartial('/');
+			// Ctrl + F
+			if (e.ctrlKey && e.keyCode === 70) {
+				SearchHandler.sharedInstance.focus();
 			}
 		}
 	})();

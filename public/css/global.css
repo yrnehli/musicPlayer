@@ -126,6 +126,14 @@
 	font-display: swap
 }
 
+@font-face {
+	font-family: spotify-circular-cyrillic;
+	src: url(https://open.scdn.co/cdn/fonts/CircularSpUICyrOnly-Book.6a858994.woff2) format("woff2"), url(https://open.scdn.co/cdn/fonts/CircularSpUICyrOnly-Book.918c53b8.woff) format("woff"), url(https://open.scdn.co/cdn/fonts/CircularSpUICyrOnly-Book.15af6ebe.otf) format("opentype");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap
+}
+
 body {
 	font-family: spotify-circular, spotify-circular-cyrillic, spotify-circular-arabic, spotify-circular-hebrew, Helvetica Neue, helvetica, arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic, sans-serif;
 	-webkit-font-smoothing: antialiased;
@@ -174,10 +182,10 @@ button:focus {
 }
 
 .simplebar-scrollbar::before {
-	background-color: hsla(0, 0% , 100%, .3) !important;
+	background-color: hsla(0, 0%, 100%, .3) !important;
 	opacity: 1 !important;
 	border-radius: 0px !important;
-	transition: background-color .2s !important; 
+	transition: background-color .2s !important;
 }
 
 .simplebar-track.simplebar-vertical {
@@ -186,7 +194,7 @@ button:focus {
 }
 
 .simplebar-scrollbar.simplebar-hover::before {
-	background-color: hsla(0, 0% , 100%, .5) !important;
+	background-color: hsla(0, 0%, 100%, .5) !important;
 }
 
 #partial #root {
@@ -209,7 +217,7 @@ button:focus {
 }
 
 .btn-spotify:hover {
-	background: hsla(0 ,0%, 100%, .2);
+	background: hsla(0, 0%, 100%, .2);
 }
 
 .btn-spotify svg {
@@ -261,7 +269,7 @@ svg.skip path {
 	d: path("M11 3v4.119L3 2.5v11l8-4.619V13h2V3z");
 }
 
-input[type="text"]:focus  {
+input[type="text"]:focus {
 	outline: none;
 }
 
@@ -301,7 +309,7 @@ input[type="text"]:focus  {
 
 #searchBar {
 	z-index: 1;
-	background-color: hsla(0, 0% , 100%, .1);
+	background-color: hsla(0, 0%, 100%, .1);
 	color: white;
 	border-width: 0px;
 	border-radius: 30px;
@@ -316,11 +324,11 @@ input[type="text"]:focus  {
 }
 
 #searchBar::placeholder {
-	color: hsla(0, 0% , 100%, .2);
+	color: hsla(0, 0%, 100%, .2);
 }
 
 #searchIcon {
-	color: hsla(0, 0% , 100%, .3);
+	color: hsla(0, 0%, 100%, .3);
 	z-index: 1;
 	top: 24px;
 	left: 26px;
@@ -330,7 +338,7 @@ input[type="text"]:focus  {
 }
 
 #clearSearchBarButton {
-	color: hsla(0, 0% , 100%, .3);
+	color: hsla(0, 0%, 100%, .3);
 	z-index: 1;
 	top: 24px;
 	left: 214px;
@@ -340,7 +348,7 @@ input[type="text"]:focus  {
 }
 
 .music-row {
-	grid-template-columns: [first] 4fr [last] minmax(120px,1fr);
+	grid-template-columns: [first] 4fr [last] minmax(120px, 1fr);
 	height: 56px;
 	border: 1px solid transparent;
 	border-radius: 4px;
@@ -351,11 +359,11 @@ input[type="text"]:focus  {
 }
 
 .music-row.active {
-	background-color: hsla(0 ,0%, 100%, .2) !important;
+	background-color: hsla(0, 0%, 100%, .2) !important;
 }
 
 .music-row:hover {
-	background-color: hsla(0 ,0%, 100%, .1);
+	background-color: hsla(0, 0%, 100%, .1);
 }
 
 .music-row div {
@@ -408,10 +416,10 @@ h2 {
 
 h3 {
 	font-size: 16px;
-    font-weight: 700;
-    letter-spacing: normal;
-    line-height: 24px;
-    text-transform: none;
+	font-weight: 700;
+	letter-spacing: normal;
+	line-height: 24px;
+	text-transform: none;
 	color: rgb(179, 179, 179);
 }
 
