@@ -51,11 +51,13 @@ class MusicControl extends EventEmitter {
 		this._music.on('pause', e => this._elements.$playButton.addClass("paused"));
 		this._music.on('songchangeauto', e => this._update(true));
 		this._music.on('songchangemanual', e => this._update(false));
+		
 		this._music.on('load', e => {
 			this._elements.$endTime.text(
 				this._music.disabled() ? "0:00" : secondsToTimeString(this._music.duration())
 			)	
 		});
+
 		this._music.on('disable', e => {
 			this._elements.$albumArt.removeAttr('src');
 			this._elements.$songName.text('');

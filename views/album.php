@@ -99,6 +99,7 @@
 		var $playAlbumButton = $('#playAlbumButton');
 		var $shuffleAlbumButton = $('#shuffleAlbumButton');
 		var $queueAlbumButton = $('#queueAlbumButton');
+		var $tracklistRows = $('.tracklist-row');
 
 		$(function() {
 			updateBodyColour('<?= $accentColour ?>');
@@ -108,43 +109,57 @@
 		});
 
 		function initTracklistRows() {
-			$('.tracklist-row.playing').removeClass('playing');
+			$tracklistRows.removeClass('playing');
 
 			if (MusicControl.sharedInstance.music().playing()) {
-				$(`.tracklist-row[data-song-id="${MusicControl.sharedInstance.music().songId()}"]`).addClass('playing');
+				$tracklistRows.find(`[data-song-id="${MusicControl.sharedInstance.music().songId()}"]`).addClass('playing');
 			}
 
-			$('.tracklist-row').dblclick(function() {
+			$tracklistRows.dblclick(function() {
 				var $self = $(this);
 				var nextUp = { list: [], i: 0 };
 
-				$('.tracklist-row').each(function(i) {
+				$tracklistRows.each(function(i) {
 					nextUp.list.push($(this).data('song-id'));
 
-					if ($(this).get(0) === $self.get(0)) {
+					if ($(this).is($self)) {
 						nextUp.i = i;
 					}
 				});
 				
 				MusicControl.sharedInstance.music().playNextUp(nextUp);
 
-				$('.tracklist-row.active').removeClass('active');
+				$tracklistRows.removeClass('active');
 				$self.addClass('active');
 			});
 		}
 
 		function initEvents() {
-			MusicControl.sharedInstance.music().on('pause', e => $('.tracklist-row.playing').removeClass('playing'));
-			MusicControl.sharedInstance.music().on('play', e => {
-				$('.tracklist-row.playing').removeClass('playing');
-				$(`.tracklist-row[data-song-id="${MusicControl.sharedInstance.music().songId()}"]`).addClass('playing');
-			});
+			if (eventReferences.album.onpause) {
+				MusicControl.sharedInstance.music().off('pause', eventReferences.album.onpause);
+			} else {
+				eventReferences.album.onpause = () => $tracklistRows.removeClass('playing');
+			}
+
+			if (eventReferences.album.onplay) {
+				MusicControl.sharedInstance.music().off('play', eventReferences.album.onplay);
+			} else {
+				eventReferences.album.onplay = () => {
+					$tracklistRows.removeClass('playing');
+					$tracklistRows.find(`[data-song-id="${MusicControl.sharedInstance.music().songId()}"]`).addClass('playing');
+				};
+			}
+
+			MusicControl.sharedInstance.music().on('pause', eventReferences.album.onpause);
+			MusicControl.sharedInstance.music().on('play', eventReferences.album.onplay);
+
 			$playAlbumButton.click(() => {
 				MusicControl.sharedInstance.music().playNextUp({
 					list: $('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id')),
 					i: 0
 				});
 			});
+
 			$shuffleAlbumButton.click(() => {
 				MusicControl.sharedInstance.music().playNextUp({
 					list: shuffle(
@@ -153,6 +168,7 @@
 					i: 0
 				});
 			});
+
 			$queueAlbumButton.click(() => {
 				$('.tracklist-row').each(function() {
 					MusicControl.sharedInstance.music().queue().push(
@@ -161,8 +177,8 @@
 					showToastNotification("Added to queue");
 				});
 			});
+
 			$(window).resize(() => scaleAlbumNameText());
-	
 		}
 		
 		function scaleAlbumNameText() {

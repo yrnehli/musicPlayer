@@ -2,6 +2,10 @@ if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('/service-worker.js');
 }
 
+var eventReferences = {
+	album: {}
+};
+
 $(function() {
 	var $root = $('#root');
 	var $partial = $('#partial');

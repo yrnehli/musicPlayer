@@ -172,13 +172,11 @@
 		function initEvents() {
 			var timeout;
 
-			MusicControl.sharedInstance.music().on('disable', e => localStorage.clear());
 			MusicControl.sharedInstance.on('updateauto', e => {
 				if ($nowPlayingButton.hasClass('active')) {
 					PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`);
 				}
-			});
-			MusicControl.sharedInstance.on('updatemanual', e => {
+			}).on('updatemanual', e => {
 				clearTimeout(timeout);
 
 				if ($nowPlayingButton.hasClass('active')) {
@@ -187,12 +185,8 @@
 						3000
 					);
 				}
-			});
-			$albumArt.click(e => PartialManager.sharedInstance.loadPartial('/'));
-			$songName.click(e => PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`));
-			$prevButton.click(e => MusicControl.sharedInstance.music().previous());
-			$playButton.click(e => MusicControl.sharedInstance.music().togglePlay());	
-			$skipButton.click(e => MusicControl.sharedInstance.music().skip());
+			}).on('disable', e => localStorage.clear());
+
 			$nowPlayingButton.click(e => {
 				$nowPlayingButton.toggleClass('active');
 
@@ -200,6 +194,12 @@
 					PartialManager.sharedInstance.loadPartial("/album/" + MusicControl.sharedInstance.albumId());
 				}
 			});
+
+			$albumArt.click(e => PartialManager.sharedInstance.loadPartial('/'));
+			$songName.click(e => PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`));
+			$prevButton.click(e => MusicControl.sharedInstance.music().previous());
+			$playButton.click(e => MusicControl.sharedInstance.music().togglePlay());	
+			$skipButton.click(e => MusicControl.sharedInstance.music().skip());
 			$volumeButton.click(e => updateVolumeButton());
 			$volumeSlider.parent().on('mousewheel', e => adjustVolume(e));
 			$(window).keydown(e => assignKeydown(e));

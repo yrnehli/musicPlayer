@@ -9,9 +9,11 @@ class EventEmitter {
 		}
 	
 		this._events[name].push(listener);
+
+		return this;
 	}
 	
-	removeListener(name, listenerToRemove) {
+	off(name, listenerToRemove) {
 		if (!this._events[name]) {
 			throw new Error(`Can't remove a listener. Event "${name}" doesn't exits.`);
 		}
@@ -19,6 +21,8 @@ class EventEmitter {
 		const filterListeners = (listener) => listener !== listenerToRemove;
 	
 		this._events[name] = this._events[name].filter(filterListeners);
+
+		return this;
 	}
 	
 	_emit(name, data) {
@@ -31,5 +35,7 @@ class EventEmitter {
 		};
 	
 		this._events[name].forEach(fireCallbacks);
+
+		return this;
 	}
 }

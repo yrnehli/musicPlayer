@@ -10,10 +10,16 @@
 	var queueRows;
 
 	$(async function() {
+		$queueRowsContainer.empty();
+		createQueueRows(MusicControl.sharedInstance.music().queue());
+		initEvents();
+	});
+
+	async function createQueueRows(songIds) {
 		queueRows = $queueRowsContainer
 			.append(
 				await Promise.all(
-					MusicControl.sharedInstance.music().queue().map(songId => createQueueRow(songId))
+					songIds.map(songId => createQueueRow(songId))
 				)
 			)
 			.children()
@@ -28,7 +34,23 @@
 			queueRow.addEventListener('dragleave', handleDragLeave, false);
 			queueRow.addEventListener('drop', handleDrop, false);
 		});
-	});
+	}
+	
+	function initEvents() {
+		setInterval(() => {
+			queueRows = $queueRowsContainer.children().get();
+
+			if (queueRows.length < MusicControl.sharedInstance.music().queue().length) {
+				var songIds = [];
+
+				for (var i = queueRows.length; i < MusicControl.sharedInstance.music().queue().length; i++){
+					songIds.push(MusicControl.sharedInstance.music().queue()[i]);
+				}
+				
+				createQueueRows(songIds);
+			}
+		}, 500);
+	}
 
 	function handleDragStart(e) {
 		dragSource = this;

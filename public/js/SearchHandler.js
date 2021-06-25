@@ -27,6 +27,7 @@ class SearchHandler {
 				$element.addClass('active');
 			}
 		});
+		
 		this._$searchBar.keyup(e => this._search());
 		this._$clearSearchBarButton.click(e => this.reset());
 	}
