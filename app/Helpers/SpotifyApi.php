@@ -49,7 +49,9 @@ class SpotifyApi {
 			"Authorization: Bearer " . $this->getAccessToken()
 		];
 
-		return $this->curlRequest($requestType, $endpoint, $headers, $payload);
+		return json_decode(
+			$this->curlRequest($requestType, $endpoint, $headers, $payload)['data']
+		);
 	}
 
 	private function getAccessToken() {

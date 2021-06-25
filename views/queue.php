@@ -95,10 +95,10 @@
 		var res = await $.get(`/api/song/${Music.sharedInstance.songId()}`);
 		var $musicRow = $nowPlaying.find('.music-row');
 
-		$musicRow.find('.artwork img').attr('src', res.albumArtUrl);
-		$musicRow.find('.details').children().eq(0).text(res.songName);
-		$musicRow.find('.details').children().eq(1).text(res.songArtist);
-		$musicRow.find('.total-time').text(secondsToTimeString(res.songDuration));
+		$musicRow.find('.artwork img').attr('src', res.data.albumArtUrl);
+		$musicRow.find('.details').children().eq(0).text(res.data.songName);
+		$musicRow.find('.details').children().eq(1).text(res.data.songArtist);
+		$musicRow.find('.total-time').text(secondsToTimeString(res.data.songDuration));
 		$nowPlaying.show();
 	}
 
@@ -226,13 +226,13 @@
 
 	async function createQueueRow(songId) {
 		var res = await $.get(`/api/song/${songId}`);
-		var $queueRow = $(`<div class="music-row" draggable="true" data-song-id=${songId} data-album-id=${res.albumId} data-context-menu-actions="REMOVE_FROM_QUEUE" data-activable></div>`);
-		var $img = $('<img>').prop('src', res.albumArtUrl);
+		var $queueRow = $(`<div class="music-row" draggable="true" data-song-id=${songId} data-album-id=${res.data.albumId} data-context-menu-actions="REMOVE_FROM_QUEUE" data-activable></div>`);
+		var $img = $('<img>').prop('src', res.data.albumArtUrl);
 		var $artwork = $('<div class="artwork"></div>').append($img);
-		var $totalTime = $('<div class="total-time"></div>').text(secondsToTimeString(res.songDuration));
+		var $totalTime = $('<div class="total-time"></div>').text(secondsToTimeString(res.data.songDuration));
 		var $details = $('<div class="details"></div>').append([
-			$('<div></div>').text(res.songName),
-			$('<div></div>').text(res.songArtist),
+			$('<div></div>').text(res.data.songName),
+			$('<div></div>').text(res.data.songArtist),
 		]);
 
 		$queueRow.append([

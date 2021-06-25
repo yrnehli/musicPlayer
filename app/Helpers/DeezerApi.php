@@ -62,9 +62,7 @@ class DeezerApi {
 			)
 		);
 
-		$spotifyRes = json_decode(
-			$spotifyApi->search("isrc:$deezerRes->isrc")['data']
-		);
+		$spotifyRes = $spotifyApi->search("isrc:$deezerRes->isrc");
 
 		$song = [
 			'songName' => $deezerRes->title,

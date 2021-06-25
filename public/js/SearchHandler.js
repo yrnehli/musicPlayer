@@ -61,7 +61,7 @@ class SearchHandler {
 				$songsContainer.empty().append(res.data.songs.map(song => this._createResultRow('song', song.id, song.albumId, song.name, song.artist, song.duration, song.artFilepath)));
 				$albumsContainer.empty().append(res.data.albums.map(album => this._createResultRow('album', album.id, album.id, album.name, album.artist, album.duration, album.artFilepath)));
 	
-				(res.data.songs.length > 0 || res.albums.length > 0) ? $searchResults.show() : $searchResults.hide();
+				(res.data.songs.length > 0 || res.data.albums.length > 0) ? $searchResults.show() : $searchResults.hide();
 				(res.data.songs.length > 0) ? $songs.show(): $songs.hide();
 				(res.data.albums.length > 0) ? $albums.show(): $albums.hide();
 
