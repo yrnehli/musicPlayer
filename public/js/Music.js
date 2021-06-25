@@ -61,7 +61,7 @@ class Music extends Howl {
 		this.unload();
 		this._duration = 0;
 		this._sprite = {};
-		this._src = `/api/mp3/${songId}`;
+		this._src = `/mp3/${songId}`;
 		this.load();
 		
 		// Play even if we want don't want to so we get the media session metadata

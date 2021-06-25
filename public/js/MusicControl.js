@@ -36,7 +36,7 @@ class MusicControl extends EventEmitter {
 			return;
 		}
 
-		$.ajax(`/api/mp3/${state.songId}`, {
+		$.ajax(`/mp3/${state.songId}`, {
 			statusCode: { 500: () => this._music.disable() },
 			success: () => {
 				this._music.changeSong(state.songId, false);

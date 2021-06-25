@@ -13,50 +13,33 @@ class DeezerPrivateApi {
 		$this->arl = $_ENV['DEEZER_ARL'];
 	}
 
+	public function authTest() {
+		$this->getApiToken();
+	}
+
 	public function getSong($songId) {
-		try {
-			$songData = $this->getSongData($songId);
-			$encryptedSong = @file_get_contents(
-				$this->getSongUrl(
-					$songId,
-					$songData['md5'],
-					$songData['mediaVersion']
-				)
-			);
+		$songData = $this->getSongData($songId);
+		$encryptedSong = @file_get_contents(
+			$this->getSongUrl(
+				$songId,
+				$songData['md5'],
+				$songData['mediaVersion']
+			)
+		);
 
-			if ($encryptedSong === false) {
-				return false;
-			}
-
-			return $this->decryptSong($songId, $encryptedSong);
-		} catch (Exception $e) {
+		if ($encryptedSong === false) {
 			return false;
 		}
+
+		return $this->decryptSong($songId, $encryptedSong);
 	}
 
 	public function getSongData($songId) {
-		$regex = "/\(?feat\.? .*|\(?ft\.? .*|\(with .*|\(Deluxe.*|- Bonus.*/i";
 		$res = json_decode($this->request("deezer.pageTrack", json_encode(['sng_id' => $songId])));
-		$data = $res->results->DATA;
 
 		return [
-			'md5' => $data->MD5_ORIGIN,
-			'mediaVersion' => $data->MEDIA_VERSION,
-			'songName' => trim(preg_replace($regex, '', $data->SNG_TITLE)),
-			'songArtist' => implode(
-				", ",
-				array_map(
-					function($artist) {
-						return $artist['ART_NAME'];
-					},
-					json_decode(json_encode($data->ARTISTS), true)
-				)
-			),
-			'songDuration' => $data->DURATION,
-			'albumArtUrl' => "https://cdns-images.dzcdn.net/images/cover/$data->ALB_PICTURE/500x500.jpg",
-			'albumName' => trim(preg_replace($regex, '', $data->ALB_TITLE)),
-			'albumId' => DeezerApi::DEEZER_ID_PREFIX . $data->ALB_ID,
-			'isrc' => $data->ISRC
+			'md5' => $res->results->DATA->MD5_ORIGIN,
+			'mediaVersion' => $res->results->DATA->MEDIA_VERSION,
 		];
 	}
 
@@ -183,7 +166,7 @@ class DeezerPrivateApi {
 		$res = json_decode($this->request("deezer.getUserData"));
 		
 		if ($res->results->USER->USER_ID === 0) {
-			throw new Exception();
+			throw new Exception("Deezer Private API: Unauthorised");
 		}
 		
 		return $res->results->checkForm;

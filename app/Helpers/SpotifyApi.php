@@ -13,6 +13,10 @@ class SpotifyApi {
 		$this->spDc = $_ENV['SPOTIFY_SP_DC'];
 	}
 
+	public function authTest() {
+		$this->getAccessToken();
+	}
+
 	public function search($q) {
 		return $this->request(
 			"GET",

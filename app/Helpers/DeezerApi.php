@@ -49,6 +49,27 @@ class DeezerApi {
 		return compact('songs', 'albums');
 	}
 
+	public function getSong($id) {
+		$res = json_decode(
+			$this->curlRequest(
+				"GET",
+				self::API_BASE . "/track/$id"
+			)
+		);
+
+		$res = [
+			'songName' => $res->title,
+			'songArtist' => $res->artist->name,
+			'songDuration' => $res->duration,
+			'albumArtUrl' => $res->album->cover,
+			'albumName' => $res->album->title,
+			'albumId' => $res->album->id,
+			'isrc' => $res->isrc
+		];
+
+		return $res;
+	}
+
 	public function getAlbum($id) {
 		$res = json_decode(
 			$this->curlRequest(
