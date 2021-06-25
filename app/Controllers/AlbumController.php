@@ -17,26 +17,34 @@ class AlbumController extends Controller {
 			return;
 		}
 
+		$deezerApi = new DeezerApi();
 		$spotifyApi = new SpotifyApi();
 
-		$deezerSavedSongIds = array_map(
-			function($res) {
-				return DeezerApi::DEEZER_ID_PREFIX . json_decode($res)->id;
-			},
-			$this->curlMulti(
+		$spotifyIds = $spotifyApi->getSpotifyIds(
+			$deezerApi->getIsrcs(
 				array_map(
-					function($item) {
-						return "https://api.deezer.com/2.0/track/isrc:" . $item->track->external_ids->isrc;
+					function($songId) {
+						return str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
 					},
-					$spotifyApi->getSavedTracks()->items
+					array_column($data['songs'], 'id')
 				)
 			)
 		);
+		
+		$spotifySavedTrackIds = array_map(
+			function($item) {
+				return $item->track->id;
+			},
+			$spotifyApi->getSavedTracks()->items
+		);
 
 		foreach ($data['songs'] as &$song) {
-			$song['isDeezer'] = str_starts_with($song['id'], DeezerApi::DEEZER_ID_PREFIX);
-			$song['isSaved'] = in_array($song['id'], $deezerSavedSongIds);
 			$song['time'] = Utilities::secondsToTimeString($song['duration']);
+			$song['isDeezer'] = str_starts_with($song['id'], DeezerApi::DEEZER_ID_PREFIX);
+			$song['isSaved'] = ($song['isDeezer']) ? in_array(
+				$spotifyIds[str_replace(DeezerApi::DEEZER_ID_PREFIX, '', $song['id'])],
+				$spotifySavedTrackIds
+			) : false;
 		}
 
 		$data['album']['englishTime'] = Utilities::secondsToEnglishTime($data['album']['duration']);
@@ -96,42 +104,6 @@ class AlbumController extends Controller {
 		$art = file_get_contents(substr($album['artFilepath'], 1));
 
 		return compact('album', 'songs', 'art');
-	}
-
-	private function curlMulti($urls) {
-		$mh = curl_multi_init();
-		$res = [];
-
-		foreach($urls as $i => $url) {
-			$ch[$i] = curl_init($url);
-			curl_setopt($ch[$i], CURLOPT_RETURNTRANSFER, 1);
-			curl_multi_add_handle($mh, $ch[$i]);
-		}
-
-		do {
-			$execReturnValue = curl_multi_exec($mh, $runningHandles);
-		} while ($execReturnValue == CURLM_CALL_MULTI_PERFORM);
-
-		while ($runningHandles && $execReturnValue == CURLM_OK) {
-			$numberReady = curl_multi_select($mh);
-
-			if ($numberReady != -1) {
-				do {
-					$execReturnValue = curl_multi_exec($mh, $runningHandles);
-				} while ($execReturnValue == CURLM_CALL_MULTI_PERFORM);
-			}
-		}
-
-		foreach($urls as $i => $url) {
-			$res[$i] = curl_multi_getcontent($ch[$i]);
-
-			curl_multi_remove_handle($mh, $ch[$i]);
-			curl_close($ch[$i]);
-		}
-		
-		curl_multi_close($mh);
-		
-		return $res;
 	}
 }
 

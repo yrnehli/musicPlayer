@@ -139,8 +139,9 @@
 			});
 
 			$tracklistRows.find('.heart-button').click(async function() {
+				var songId = $(this).parents('[data-song-id]').data('song-id');
 				var res = await $.ajax({
-					url: `/api/spotify/tracks/${$(this).parents('[data-song-id]').data('song-id')}`,
+					url: `/api/spotify/tracks/${songId}`,
 					type: $(this).hasClass('active') ? 'DELETE' : 'PUT'
 				});
 
@@ -150,10 +151,18 @@
 				}
 				
 				$(this).toggleClass('active');
-				
-				showToastNotification(
-					$(this).hasClass('active') ? "Saved to liked songs" : "Removed from liked songs"
-				);
+
+				if ($(this).hasClass('active')) {
+					showToastNotification("Saved to liked songs")
+					if (songId.toString() === Music.sharedInstance.songId().toString()) {
+						MusicControl.sharedInstance.elements().$saveButton.addClass('active');
+					}
+				} else {
+					showToastNotification("Removed from liked songs")
+					if (songId.toString() === Music.sharedInstance.songId().toString()) {
+						MusicControl.sharedInstance.elements().$saveButton.removeClass('active');
+					}
+				}
 			});
 		}
 

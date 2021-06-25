@@ -19,18 +19,45 @@ class SpotifyApi {
 	}
 
 	public function getSpotifyId($isrc) {
-		$res = $this->search("isrc:$isrc");
-		return (!empty($res->tracks->items)) ? $res->tracks->items[0]->id : null;
-	}
-	
-	private function search($q) {
-		return $this->request(
+		$res = 	$this->request(
 			"GET",
 			self::API_BASE . "/search?" . http_build_query([
-				'q' => $q,
+				'q' => "isrc:$isrc",
 				'type' => 'track'
-				])
+			])
 		);
+
+		return (!empty($res->tracks->items)) ? $res->tracks->items[0]->id : null;
+	}
+
+	public function getSpotifyIds($isrcs) {
+		$urls = array_map(
+			function($isrc) {
+				return self::API_BASE . "/search?" . http_build_query([
+					'q' => "isrc:$isrc",
+					'type' => 'track'
+				]);
+			},
+			$isrcs
+		);
+
+		$res = $this->curlMulti(
+			"GET",
+			$urls,
+			[
+				'Accept: application/json',
+				'Content-Type: application/json',
+				"Content-Length: 0",
+				"Authorization: Bearer " . $this->getAccessToken()
+			]
+		);
+
+		foreach ($res as $isrc => $data) {
+			$data = json_decode($data);
+			$spotifyIds[$isrc] = (!empty($data->tracks->items)) ? $data->tracks->items[0]->id : null;
+		}
+
+		return $spotifyIds;
 	}
 		
 	public function getSavedTracks() {
@@ -117,6 +144,56 @@ class SpotifyApi {
 		curl_close($curl);
 	
 		return compact('data', 'httpCode');
+	}
+
+	private function curlMulti($requestType, $urls, $headers = [], $payload = "") {
+		$mh = curl_multi_init();
+		$res = [];
+
+		foreach ($urls as $i => $url) {
+			$ch[$i] = curl_init($url);
+
+			curl_setopt_array($ch[$i], [
+				CURLOPT_URL => $url,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_CUSTOMREQUEST => $requestType,
+				CURLOPT_HTTPHEADER => $headers,
+				CURLOPT_RETURNTRANSFER => 1,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1
+			]);
+
+			if ($requestType === 'POST') {
+				curl_setopt($ch[$i], CURLOPT_POSTFIELDS, $payload);
+			}
+
+			curl_multi_add_handle($mh, $ch[$i]);
+		}
+
+		do {
+			$execReturnValue = curl_multi_exec($mh, $runningHandles);
+		} while ($execReturnValue == CURLM_CALL_MULTI_PERFORM);
+
+		while ($runningHandles && $execReturnValue == CURLM_OK) {
+			$numberReady = curl_multi_select($mh);
+
+			if ($numberReady != -1) {
+				do {
+					$execReturnValue = curl_multi_exec($mh, $runningHandles);
+				} while ($execReturnValue == CURLM_CALL_MULTI_PERFORM);
+			}
+		}
+
+		foreach($urls as $i => $url) {
+			$res[$i] = curl_multi_getcontent($ch[$i]);
+
+			curl_multi_remove_handle($mh, $ch[$i]);
+			curl_close($ch[$i]);
+		}
+		
+		curl_multi_close($mh);
+		
+		return $res;
 	}
 }
 
