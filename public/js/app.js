@@ -25,6 +25,7 @@ $(function() {
 					} else if ($target.data('album-id')) {
 						var res = await $.get(`/api/album/${$target.data('album-id')}`);
 						res
+							.data
 							.songIds
 							.forEach(songId => Music.sharedInstance.queue().push(songId))
 						;

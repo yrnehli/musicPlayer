@@ -18,7 +18,9 @@ class ApiController extends Controller {
 	}
 
 	public function song($songId) {
-		Flight::json(
+		$this->responseHandler(
+			true,
+			"",
 			str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX) ? $this->getDeezerSong($songId) : $this->getLocalSong($songId)
 		);
 	}
@@ -63,7 +65,9 @@ class ApiController extends Controller {
 	}
 
 	public function album($albumId) {	
-		Flight::json(
+		$this->responseHandler(
+			true,
+			"",
 			str_starts_with($albumId, DeezerApi::DEEZER_ID_PREFIX) ? $this->getDeezerAlbum($albumId) : $this->getLocalAlbum($albumId)
 		);
 	}
@@ -103,7 +107,9 @@ class ApiController extends Controller {
 	public function search() {
 		$term = Flight::request()->query->term;
 	
-		Flight::json(
+		$this->responseHandler(
+			true,
+			"",
 			str_starts_with($term, self::DEEZER_SEARCH_PREFIX) ? $this->searchDeezer($term) : $this->searchLocal($term)
 		);
 	}

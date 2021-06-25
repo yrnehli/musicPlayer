@@ -58,12 +58,12 @@ class SearchHandler {
 	
 				var res = await $.get('/api/search', { term: term });
 	
-				$songsContainer.empty().append(res.songs.map(song => this._createResultRow('song', song.id, song.albumId, song.name, song.artist, song.duration, song.artFilepath)));
-				$albumsContainer.empty().append(res.albums.map(album => this._createResultRow('album', album.id, album.id, album.name, album.artist, album.duration, album.artFilepath)));
+				$songsContainer.empty().append(res.data.songs.map(song => this._createResultRow('song', song.id, song.albumId, song.name, song.artist, song.duration, song.artFilepath)));
+				$albumsContainer.empty().append(res.data.albums.map(album => this._createResultRow('album', album.id, album.id, album.name, album.artist, album.duration, album.artFilepath)));
 	
-				(res.songs.length > 0 || res.albums.length > 0) ? $searchResults.show() : $searchResults.hide();
-				(res.songs.length > 0) ? $songs.show(): $songs.hide();
-				(res.albums.length > 0) ? $albums.show(): $albums.hide();
+				(res.data.songs.length > 0 || res.albums.length > 0) ? $searchResults.show() : $searchResults.hide();
+				(res.data.songs.length > 0) ? $songs.show(): $songs.hide();
+				(res.data.albums.length > 0) ? $albums.show(): $albums.hide();
 
 				PartialManager.sharedInstance.updateCurrentState();
 			},
@@ -97,7 +97,7 @@ class SearchHandler {
 	async _playAlbum($resultRow) {
 		var res = await $.get(`/api/album/${$resultRow.data('album-id')}`);
 		Music.sharedInstance.playNextUp({
-			list: res.songIds,
+			list: res.data.songIds,
 			i: 0
 		});
 	}
