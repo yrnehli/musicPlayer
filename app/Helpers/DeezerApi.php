@@ -64,7 +64,7 @@ class DeezerApi {
 				"artist" => $res->artist->name,
 				"year" => substr($res->release_date, 0, 4),
 				"length" => count($res->tracks->data),
-				"duration" => $res->duration,
+				"duration" => $res->duration
 			],
 			"songs" => array_map(
 				function($song, $i) {

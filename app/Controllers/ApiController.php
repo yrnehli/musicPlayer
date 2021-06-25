@@ -4,8 +4,10 @@ namespace App\Controllers;
 
 use App\Helpers\MusicDatabase;
 use App\Helpers\MusicManager;
+use App\Helpers\SpotifyApi;
 use App\Helpers\DeezerApi;
 use App\Helpers\DeezerPrivateApi;
+use Exception;
 use Flight;
 use PDO;
 
@@ -206,6 +208,41 @@ class ApiController extends Controller {
 		$songs = $stmt->fetchAll();
 
 		return compact('albums', 'songs');
+	}
+
+	public function spotifyTracks($songId) {
+		if (!str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)) {
+			return;
+		}
+
+		$spotifyApi = new SpotifyApi();
+		$deezerPrivateApi = new DeezerPrivateApi();
+
+		$isrc = $deezerPrivateApi->getSongData(
+			str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId)
+		)['isrc'];
+
+		try {
+			$res = json_decode(
+				$spotifyApi->search("isrc:$isrc")['data']
+			);
+
+			if (empty($res->tracks->items)) {
+				$this->responseHandler(false, "Could not find track on Spotify.");
+			}
+	
+			$spotifyId = $res->tracks->items[0]->id;
+
+			if (Flight::request()->method === "PUT") {
+				$spotifyApi->save($spotifyId);
+			} else if (Flight::request()->method === "DELETE") {
+				$spotifyApi->unsave($spotifyId);
+			}
+
+			$this->responseHandler(true);
+		} catch (Exception $e) {
+			$this->responseHandler(false, $e->getMessage());
+		}
 	}
 }
 

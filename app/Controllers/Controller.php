@@ -26,6 +26,13 @@ class Controller {
 		Flight::render('control', compact('songIds'), 'control');
 		Flight::render('shell');
 	}
+
+	protected function responseHandler($success, $message = "", $data = []) {
+		Flight::json(
+			compact('success', 'message', 'data')
+		);
+		die();
+	}
 }
 
 ?>

@@ -55,7 +55,8 @@ class DeezerPrivateApi {
 			'songDuration' => $data->DURATION,
 			'albumArtUrl' => "https://cdns-images.dzcdn.net/images/cover/$data->ALB_PICTURE/500x500.jpg",
 			'albumName' => trim(preg_replace($regex, '', $data->ALB_TITLE)),
-			'albumId' => DeezerApi::DEEZER_ID_PREFIX . $data->ALB_ID
+			'albumId' => DeezerApi::DEEZER_ID_PREFIX . $data->ALB_ID,
+			'isrc' => $data->ISRC
 		];
 	}
 
