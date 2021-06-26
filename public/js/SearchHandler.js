@@ -36,10 +36,11 @@ class SearchHandler {
 	_search() {
 		clearTimeout(this._timeout);
 
+		var $searchResults = $('#searchResults');
+
 		this._timeout = setTimeout(
 			async() => {
 				var term = this._$searchBar.val();
-				var $searchResults = $('#searchResults');
 				var $songs = $('#songs');
 				var $albums = $('#albums');
 				var $songsContainer = $('#songsContainer');
@@ -71,7 +72,12 @@ class SearchHandler {
 			100
 		);
 
-		SimpleBar.instances.get(document.querySelector('[data-simplebar]')).getScrollElement().scrollTop = 0;
+		SimpleBar
+			.instances
+			.get($searchResults.parents('[data-simplebar]').get(0))
+			.getScrollElement()
+			.scrollTop = 0
+		;
 	}
 
 	_createResultRow(type, id, albumId, name, artist, duration, artFilepath) {
