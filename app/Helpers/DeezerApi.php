@@ -59,7 +59,15 @@ class DeezerApi {
 
 		$song = [
 			'songName' => $res->title,
-			'songArtist' => $res->artist->name,
+			'songArtist' => implode(
+				", ",
+				array_map(
+					function($contributor) {
+						return $contributor->name;
+					},
+					$res->contributors
+				)
+			),
 			'songDuration' => $res->duration,
 			'albumArtUrl' => $res->album->cover,
 			'albumName' => $res->album->title,
