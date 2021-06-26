@@ -15,7 +15,7 @@ class Mp3Controller extends Controller {
 			
 			if (!file_exists($filepath)) {
 				$deezerPrivateApi = new DeezerPrivateApi();
-				$song = $deezerPrivateApi->getSong($songId);
+				$song = $deezerPrivateApi->getSongData($songId);
 				file_put_contents(
 					$filepath,
 					($song !== false) ? $song : ""

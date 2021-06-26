@@ -17,13 +17,13 @@ class DeezerPrivateApi {
 		$this->getApiToken();
 	}
 
-	public function getSong($songId) {
-		$songData = $this->getSongData($songId);
+	public function getSongData($songId) {
+		$song = $this->getSong($songId);
 		$encryptedSong = @file_get_contents(
 			$this->getSongUrl(
 				$songId,
-				$songData['md5'],
-				$songData['mediaVersion']
+				$song->results->DATA->MD5_ORIGIN,
+				$song->results->DATA->MEDIA_VERSION
 			)
 		);
 
@@ -34,13 +34,12 @@ class DeezerPrivateApi {
 		return $this->decryptSong($songId, $encryptedSong);
 	}
 
-	public function getSongData($songId) {
-		$res = json_decode($this->request("deezer.pageTrack", json_encode(['sng_id' => $songId])));
+	private function getSong($songId) {
+		return $this->request("deezer.pageTrack", json_encode(['sng_id' => $songId]));
+	}
 
-		return [
-			'md5' => $res->results->DATA->MD5_ORIGIN,
-			'mediaVersion' => $res->results->DATA->MEDIA_VERSION,
-		];
+	public function getAlbum($albumId) {
+		return $this->request("deezer.pageAlbum", json_encode(['alb_id' => $albumId, 'LANG' => 'en']));
 	}
 
 	private function getSongUrl($songId, $md5, $mediaVersion) {
@@ -144,7 +143,7 @@ class DeezerPrivateApi {
 			$payload
 		);
 
-		return $res;
+		return json_decode($res);
 	}
 
 	private function buildCookies() {
@@ -163,7 +162,7 @@ class DeezerPrivateApi {
 	}
 
 	private function getApiToken() {
-		$res = json_decode($this->request("deezer.getUserData"));
+		$res = $this->request("deezer.getUserData");
 		
 		if ($res->results->USER->USER_ID === 0) {
 			throw new Exception("Deezer Private API: Unauthorised");

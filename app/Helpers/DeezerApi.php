@@ -49,11 +49,11 @@ class DeezerApi {
 		return compact('songs', 'albums');
 	}
 
-	public function getSong($id) {
+	public function getSong($songId) {
 		$res = json_decode(
 			$this->curlRequest(
 				"GET",
-				self::API_BASE . "/track/$id"
+				self::API_BASE . "/track/$songId"
 			)
 		);
 
@@ -70,35 +70,53 @@ class DeezerApi {
 		return $song;
 	}
 	
-	public function getAlbum($id) {
-		$res = json_decode(
-			$this->curlRequest(
-				"GET",
-				self::API_BASE . "/album/$id"
-			)
-		);
+	public function getAlbum($albumId) {
+		$deezerPrivateApi = new DeezerPrivateApi();
+		$res = $deezerPrivateApi->getAlbum($albumId);
 
 		$res = [
 			"album" => [
-				"artUrl" => $res->cover_big,
-				"name" => $res->title,
-				"artist" => $res->artist->name,
-				"year" => substr($res->release_date, 0, 4),
-				"length" => count($res->tracks->data),
-				"duration" => $res->duration
+				"artUrl" => "https://cdns-images.dzcdn.net/images/cover/" . $res->results->DATA->ALB_PICTURE . "/500x500.jpg",
+				"name" => $res->results->DATA->ALB_TITLE,
+				"artist" => implode(
+					", ",
+					array_map(
+						function($artist) {
+							return $artist->ART_NAME;
+						},
+						$res->results->DATA->ARTISTS
+					)
+				),
+				"year" => substr($res->results->DATA->DIGITAL_RELEASE_DATE, 0, 4),
+				"length" => count($res->results->SONGS->data),
+				"duration" => array_sum(
+					array_map(
+						function($song) {
+							return $song->DURATION;
+						},
+						$res->results->SONGS->data
+					)
+				)
 			],
 			"songs" => array_map(
-				function($song, $i) {
+				function($song) {
 					return [
-						"id" => self::DEEZER_ID_PREFIX . $song->id,
-						"trackNumber" => $i + 1,
-						"name" => $song->title,
-						"artist" => $song->artist->name,
-						"duration" => $song->duration
+						"id" => self::DEEZER_ID_PREFIX . $song->SNG_ID,
+						"trackNumber" => $song->TRACK_NUMBER,
+						"name" => $song->SNG_TITLE,
+						"artist" => implode(
+							", ",
+							array_map(
+								function($artist) {
+									return $artist->ART_NAME;
+								},
+								$song->ARTISTS
+							)
+						),
+						"duration" => $song->DURATION
 					];
 				},
-				$res->tracks->data,
-				array_keys($res->tracks->data)
+				$res->results->SONGS->data
 			)
 		];
 
