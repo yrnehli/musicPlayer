@@ -70,6 +70,8 @@ class SearchHandler {
 			},
 			100
 		);
+
+		SimpleBar.instances.get(document.querySelector('[data-simplebar]')).getScrollElement().scrollTop = 0;
 	}
 
 	_createResultRow(type, id, albumId, name, artist, duration, artFilepath) {
