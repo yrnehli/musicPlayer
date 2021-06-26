@@ -18,19 +18,7 @@ class MusicControl extends EventEmitter {
 		navigator.mediaSession.setActionHandler('nexttrack', e => this._music.skip());
 
 		this._initEvents();
-
-		if (state.volume >= 0) {
-			this._music.volume(state.volume);
-		}
-
-		if (state.queue) {
-			this._music.queue(state.queue);
-		}
-
-		if (state.nextUp) {
-			this._music.nextUp(state.nextUp);
-		}
-
+		
 		if (!state.songId) {
 			this._music.disable();
 			return;
@@ -40,8 +28,23 @@ class MusicControl extends EventEmitter {
 			statusCode: { 500: () => this._music.disable() },
 			success: () => {
 				this._music.changeSong(state.songId, false);
-				this._music.seek(state.seek || 0);
-			},
+
+				if (state.seek) {
+					this._music.seek(state.seek);
+				}
+
+				if (state.volume) {
+					this._music.volume(state.volume);
+				}
+
+				if (state.queue) {
+					this._music.queue(state.queue);
+				}
+		
+				if (state.nextUp) {
+					this._music.nextUp(state.nextUp);
+				}
+			}
 		});
 	}
 
