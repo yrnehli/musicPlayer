@@ -27,7 +27,7 @@ class MusicManager {
 			$song['albumName'] = $tags['album'][0];
 			$song['albumArtist'] = $tags['band'][0];
 			$song['trackNumber'] = (array_key_exists('track_number', $tags)) ? $tags['track_number'][0] : null;
-			$song['discNumber'] = (array_key_exists('part_of_a_set', $tags)) ? intval($tags['part_of_a_set'][0]) : null;
+			$song['discNumber'] = (array_key_exists('part_of_a_set', $tags)) ? intval($tags['part_of_a_set'][0]) : 1;
 			$song['year'] = $tags['year'][0];
 			$song['genre'] = implode("/", $tags['genre']);
 			$song['duration'] = $mp3Info['playtime_seconds'];
