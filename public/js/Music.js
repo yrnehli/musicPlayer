@@ -57,8 +57,14 @@ class Music extends Howl {
 	async changeSong(songId, play, auto) {
 		this.__songId = songId;
 		this.enable();
+
+		if (this._queue.some(item => item.event === "play") && !this._queue.some(item => item.event === "pause")) {
+			play = true;
+		}
 		
 		this.unload();
+		this._queue = [];
+		this._sounds = [];
 		this._duration = 0;
 		this._sprite = {};
 		this._src = `/mp3/${songId}`;
