@@ -57,10 +57,6 @@ class Music extends Howl {
 	async changeSong(songId, play, auto) {
 		this.__songId = songId;
 		this.enable();
-
-		if (this._queue.some(item => item.event === "play") && !this._queue.some(item => item.event === "pause")) {
-			play = true;
-		}
 		
 		this.unload();
 		this._queue = [];
@@ -125,7 +121,7 @@ class Music extends Howl {
 			return;
 		}
 
-		var wasPlaying = (e || this.playing());
+		var wasPlaying = (e || this.playing() || (this._queue.some(item => item.event === "play") && !this._queue.some(item => item.event === "pause")));
 
 		if (this.__queue.length > 0) {
 			this.changeSong(this.__queue.shift(), wasPlaying, e);
