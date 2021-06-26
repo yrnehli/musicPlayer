@@ -28,6 +28,7 @@ class Mp3Controller extends Controller {
 			$stmt = $conn->prepare("SELECT `filepath` FROM `songs` WHERE `id` = :id");
 			$stmt->bindParam(":id", $songId);
 			$stmt->execute();
+			
 			$filepath = $stmt->fetchColumn();
 		}
 
@@ -51,12 +52,12 @@ class Mp3Controller extends Controller {
 			->header('Content-Type', 'audio/mpeg')
 			->header('Content-Range', "bytes $startOffset-" . ($endOffset - 1) . "/$filesize")
 			->status(206)
-			->write($this->getPartialMp3Data($filepath, $startOffset, $endOffset))
+			->write($this->getPartialData($filepath, $startOffset, $endOffset))
 			->send()
 		;
 	}
 
-	private function getPartialMp3Data($filepath, $startOffset, $endOffset) {	
+	private function getPartialData($filepath, $startOffset, $endOffset) {	
 		$file = fopen($filepath, 'r');
 		fseek($file, $startOffset);
 		$data = fread($file, $endOffset - $startOffset);
