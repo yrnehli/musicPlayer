@@ -243,8 +243,11 @@
 			$nowPlayingButton.click(e => {
 				$nowPlayingButton.toggleClass('active');
 
-				if (MusicControl.sharedInstance.albumId()) {
-					PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`);
+				if ($nowPlayingButton.hasClass('active')) {
+					SearchHandler.sharedInstance.reset();
+					if (MusicControl.sharedInstance.albumId()) {
+						PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`);
+					}
 				}
 			});
 
