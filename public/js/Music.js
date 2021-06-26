@@ -17,8 +17,8 @@ class Music extends Howl {
 		this._ondisable = [];
 		this._onskip = [];
 		this._onsongchange = [];
-		this._onsongchangeauto = [];
-		this._onsongchangemanual = [];
+		this._onautosongchange = [];
+		this._onmanualsongchange = [];
 
 		this.__songId = null;
 		this.__disabled = true;
@@ -79,7 +79,7 @@ class Music extends Howl {
 
 		this._emit('songchange');
 		this._emit(
-			(auto) ? 'songchangeauto' : 'songchangemanual'
+			(auto) ? 'autosongchange' : 'manualsongchange'
 		);
 	}
 
