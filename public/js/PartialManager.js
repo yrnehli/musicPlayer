@@ -61,15 +61,17 @@ class PartialManager extends EventEmitter {
 		this._$partial.removeClass('fade');
 		this._$partial.css('opacity', 0);
 		this._$partial.html(html);
-		this._$partial.waitForImages(() => {
-			this._$partial.addClass('fade');
-			this._$partial.css('opacity', 1);
-			this._$partial.find(this._scrollableSelector)
-				.scrollTop(scroll)
-				.off('scroll')
-				.scrollStopped(() => this.updateCurrentState())
-			;
-		});
+		setTimeout(() => {
+			this._$partial.waitForImages(() => {
+				this._$partial.addClass('fade');
+				this._$partial.css('opacity', 1);
+				this._$partial.find(this._scrollableSelector)
+					.scrollTop(scroll)
+					.off('scroll')
+					.scrollStopped(() => this.updateCurrentState())
+				;
+			});
+		}, 0);
 	}
 
 	updateCurrentState() {
