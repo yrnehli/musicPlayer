@@ -32,7 +32,7 @@
 			</div>
 		</div>
 		<?php foreach ($savedSongs as $savedSong): ?>
-			<div class="tracklist-row" data-song-id="<?= $savedSong['id'] ?>" data-context-menu-actions="<?= ($savedSong['isFlagged']) ? 'QUEUE,UNFLAG' : 'QUEUE,FLAG' ?>" data-activable>
+			<div class="tracklist-row" data-song-id="<?= $savedSong['id'] ?>" data-album-id="<?= $savedSong['albumId'] ?>" data-context-menu-actions="<?= ($savedSong['isFlagged']) ? 'QUEUE,GO_TO_ALBUM,UNFLAG' : 'QUEUE,GO_TO_ALBUM,FLAG' ?>" data-activable>
 				<div class="track-number">
 					<img class="equalizer" src="/public/img/equalizer.gif">
 					<svg class="play">
