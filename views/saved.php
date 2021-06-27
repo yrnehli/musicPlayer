@@ -3,13 +3,9 @@
 <div id="root" class="px-4 pb-4" data-simplebar>
 	<?= $searchResults ?>
 	<div class="d-flex pt-3">
-		<div class="d-flex mx-2">
-			<div class="mt-auto">
-				<h1 id="saved">
-					SAVED
-				</h1>
-			</div>
-		</div>
+		<h1 class="mx-3" id="saved">
+			SAVED
+		</h1>
 	</div>
 	<div class="d-flex my-3 mx-3">
 		<button id="spotifyImportButton" class="btn-spotify mr-1">
