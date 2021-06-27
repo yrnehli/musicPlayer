@@ -223,7 +223,12 @@ button:focus {
 	display: flex;
 }
 
-.btn-spotify:hover {
+.btn-spotify[disabled] {
+	opacity: 0.5;
+	cursor: default;
+}
+
+.btn-spotify:not([disabled]):hover {
 	background: hsla(0, 0%, 100%, .2);
 }
 
@@ -233,9 +238,6 @@ button:focus {
 
 #toastNotification {
 	opacity: 0;
-	/* min-width: 180px;
-	margin-left: -90px; */
-	background-color: #2e77d0;
 	color: white;
 	text-align: center;
 	border-radius: 8px;
@@ -246,6 +248,14 @@ button:focus {
 	bottom: 110px;
 	transition: opacity 0.2s ease-in;
 	box-shadow: 0 0 15px rgb(0 0 0 / 100%);
+}
+
+#toastNotification.success {
+	background-color: #2e77d0;
+}
+
+#toastNotification.fail {
+	background-color: #c41717;
 }
 
 #toastNotification.show {

@@ -23,6 +23,7 @@
 	(function() {
 		$(function() {
 			updateBodyColour('#121212', false);
+			auth();
 			initEvents();
 		});
 
@@ -30,6 +31,14 @@
 			$('.album-container').click(function() {
 				PartialManager.sharedInstance.loadPartial(`/album/${$(this).data('album-id')}`)
 			});
+		}
+
+		async function auth() {
+			var res = await $.get('/auth');
+
+			if (!res.success) {
+				showToastNotification(res.success, res.message);
+			}
 		}
 	})();
 </script>

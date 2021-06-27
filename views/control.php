@@ -209,7 +209,7 @@
 			$saveButton.click(async () => {
 				var res = await $.ajax({
 					type: $saveButton.hasClass('active') ? 'DELETE' : 'PUT',
-					url: `/api/deezerSavedSongs/${Music.sharedInstance.songId()}`
+					url: `/api/saved/${Music.sharedInstance.songId()}`
 				});
 
 				var $tracklistRow = $(`.tracklist-row[data-song-id="${Music.sharedInstance.songId()}"]`);
@@ -224,10 +224,10 @@
 				$tracklistRow.find('.flag-icon').removeClass('active');
 
 				if ($saveButton.hasClass('active')) {
-					showToastNotification("Added to saved songs");
+					showToastNotification(true, "Added to saved songs");
 					$heartButton.addClass('active');
 				} else {
-					showToastNotification("Removed from saved songs");
+					showToastNotification(true, "Removed from saved songs");
 					$heartButton.removeClass('active');
 				}
 			});

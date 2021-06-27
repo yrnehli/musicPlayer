@@ -145,7 +145,7 @@
 
 				var res = await $.ajax({
 					type: action,
-					url: `/api/deezerSavedSongs/${songId}`
+					url: `/api/saved/${songId}`
 				});
 
 				var $parent = $(this).parents(`[data-${CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX}]`);
@@ -159,12 +159,12 @@
 				$(this).siblings('.flag-icon').removeClass('active');
 					
 				if (action === 'PUT') {
-					showToastNotification("Added to saved songs");
+					showToastNotification(true, "Added to saved songs");
 					if (songId.toString() === Music.sharedInstance.songId().toString()) {
 						MusicControl.sharedInstance.elements().$saveButton.addClass('active');
 					}
 				} else if (action === 'DELETE') {
-					showToastNotification("Removed from saved songs")
+					showToastNotification(true, "Removed from saved songs")
 					if (songId.toString() === Music.sharedInstance.songId().toString()) {
 						MusicControl.sharedInstance.elements().$saveButton.removeClass('active');
 					}
@@ -200,7 +200,7 @@
 					Music.sharedInstance.queue().push(
 						$(this).data('song-id')
 					);
-					showToastNotification("Added to queue");
+					showToastNotification(true, "Added to queue");
 				});
 			});
 

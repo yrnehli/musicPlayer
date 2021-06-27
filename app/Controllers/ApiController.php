@@ -166,7 +166,7 @@ class ApiController extends Controller {
 		return compact('albums', 'songs');
 	}
 
-	public function deezerSavedSongs($songId) {
+	public function saved($songId) {
 		if (!str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)) {
 			return;
 		}

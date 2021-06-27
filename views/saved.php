@@ -8,11 +8,11 @@
 		</h1>
 	</div>
 	<div class="d-flex my-3 mx-3">
-		<button id="spotifyImportButton" class="btn-spotify mr-1">
-			<svg class="my-auto mr-2 plus" height="16" width="16">
-				<path></path>
-			</svg>
-			Spotify Import
+		<button id="spotifyExportButton" class="btn-spotify mr-1">
+			<span class="my-auto mr-2">
+				<i class="fal fa-arrow-up"></i>
+			</span>
+			Spotify Export
 		</button>
 	</div>
 	<div>
@@ -59,6 +59,7 @@
 <script>
 	(function() {
 		var $tracklistRows = $('.tracklist-row');
+		var $spotifyExportButton = $('#spotifyExportButton');
 
 		$(function() {
 			updateBodyColour('#121212', false);
@@ -97,7 +98,7 @@
 
 				var res = await $.ajax({
 					type: action,
-					url: `/api/deezerSavedSongs/${songId}`
+					url: `/api/saved/${songId}`
 				});
 
 				var $parent = $(this).parents(`[data-${CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX}]`);
@@ -111,12 +112,12 @@
 				$(this).siblings('.flag-icon').removeClass('active');
 					
 				if (action === 'PUT') {
-					showToastNotification("Added to saved songs");
+					showToastNotification(true, "Added to saved songs");
 					if (songId.toString() === Music.sharedInstance.songId().toString()) {
 						MusicControl.sharedInstance.elements().$saveButton.addClass('active');
 					}
 				} else if (action === 'DELETE') {
-					showToastNotification("Removed from saved songs")
+					showToastNotification(true, "Removed from saved songs")
 					if (songId.toString() === Music.sharedInstance.songId().toString()) {
 						MusicControl.sharedInstance.elements().$saveButton.removeClass('active');
 					}
@@ -129,6 +130,13 @@
 			Music.sharedInstance.off('play.album').on('play.album', () => {
 				$tracklistRows.removeClass('playing');
 				$tracklistRows.filter(`[data-song-id="${Music.sharedInstance.songId()}"]`).addClass('playing');
+			});
+
+			$spotifyExportButton.click(async () => {
+				$spotifyExportButton.prop('disabled', true);
+				var res = await $.get('/saved/export');
+				$spotifyExportButton.prop('disabled', false);
+				showToastNotification(true, res.message);
 			});
 		}
 	})();

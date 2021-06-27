@@ -31,7 +31,7 @@ $(function() {
 						;
 					}
 					
-					showToastNotification("Added to queue");					
+					showToastNotification(true, "Added to queue");					
 				}
 			},
 			GO_TO_ALBUM: {
@@ -64,7 +64,7 @@ $(function() {
 					
 					await $.ajax({
 						type: 'PUT',
-						url: `/api/deezerSavedSongs/${songId}?flagged=true`
+						url: `/api/saved/${songId}?flagged=true`
 					});
 	
 					$target.find('.heart-button').addClass('active');
@@ -74,7 +74,7 @@ $(function() {
 						MusicControl.sharedInstance.elements().$saveButton.addClass('active');
 					}
 
-					showToastNotification("Marked as flagged");
+					showToastNotification(true, "Marked as flagged");
 
 					$target.data(
 						CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
@@ -89,12 +89,12 @@ $(function() {
 					
 					await $.ajax({
 						type: 'PUT',
-						url: `/api/deezerSavedSongs/${songId}?flagged=false`
+						url: `/api/saved/${songId}?flagged=false`
 					});
 
 					$target.find('.flag-icon').removeClass('active');
 
-					showToastNotification("Unmarked as flagged");
+					showToastNotification(true, "Unmarked as flagged");
 
 					$target.data(
 						CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
@@ -208,17 +208,16 @@ function shuffle(arr, options) {
 	return collection;
 }
 
-function showToastNotification(message, timeoutDuration = 3000) {
+function showToastNotification(success, message, timeoutDuration = 3000) {
 	var $toastNotification = $('#toastNotification');
 	var now = new Date();
 	var epoch = Math.round(now.getTime() / 1000);
 
 	$toastNotification
 		.text(message)
-		.css(
-			'margin-left',
-			$toastNotification.outerWidth() / 2 * -1
-		)
+		.removeClass('success', 'fail')
+		.addClass(success ? 'success' : 'fail')
+		.css('margin-left', `${$toastNotification.outerWidth() / 2 * -1}px`)
 		.addClass('show')
 		.data('fadeTime', epoch + 3)
 	;
