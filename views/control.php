@@ -302,6 +302,11 @@
 				e.preventDefault();
 			}
 
+			// Ctrl + D
+			if (e.ctrlKey && e.keyCode === 68) {
+				e.preventDefault();
+			}
+
 			// Ctrl + F
 			if (e.ctrlKey && e.keyCode === 70) {
 				e.preventDefault();
@@ -324,8 +329,15 @@
 				});
 			}
 
+			// Ctrl + D
+			if (e.ctrlKey && e.keyCode === 68) {
+				e.preventDefault();
+				PartialManager.sharedInstance.loadPartial('/saved');
+			}
+
 			// Ctrl + F
 			if (e.ctrlKey && e.keyCode === 70) {
+				e.preventDefault();
 				SearchHandler.sharedInstance.focus();
 			}
 		}

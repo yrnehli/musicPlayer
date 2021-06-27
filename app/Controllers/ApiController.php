@@ -24,21 +24,18 @@ class ApiController extends Controller {
 	}
 
 	private function getDeezerSong($songId) {
-		$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
-		$filepath = "public/userData/deezer/metadata/$songId";
-
-		if (!file_exists($filepath)) {
-			$deezerApi = new DeezerApi();
-			$song = $deezerApi->getSong($songId);
-			file_put_contents($filepath, serialize($song));
-		} else {
-			$song = unserialize(file_get_contents($filepath));
-		}
-
+		$deezerApi = new DeezerApi();
 		$db = new MusicDatabase();
 
-		$song['isDeezer'] = true;
-		$song['isSaved'] = $db->isDeezerSongSaved(DeezerApi::DEEZER_ID_PREFIX . $songId);
+		$song = array_merge(
+			[
+				'isDeezer' => true,
+				'isSaved' => $db->isDeezerSongSaved($songId)
+			],
+			$deezerApi->getSong(
+				str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId)
+			)
+		);
 
 		return $song;
 	}
@@ -64,8 +61,13 @@ class ApiController extends Controller {
 		$stmt->execute();
 		$song = $stmt->fetch();
 
-		$song['isDeezer'] = false;
-		$song['isSaved'] = false;
+		$song = array_merge(
+			[
+				'isDeezer' => false,
+				'isSaved' => false
+			],
+			$song
+		);
 
 		return $song;
 	}

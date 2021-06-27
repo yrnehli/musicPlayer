@@ -7,10 +7,7 @@ require_once 'vendor/autoload.php';
 $directories = [
 	'public/userData',
 	'public/userData/albumArt',
-	'public/userData/deezer',
-	'public/userData/deezer/mp3',
-	'public/userData/deezer/metadata',
-	'public/userData/deezer/album'
+	'public/userData/deezer'
 ];
 
 foreach ($directories as $directory) {

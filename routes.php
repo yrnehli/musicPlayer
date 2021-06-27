@@ -4,10 +4,11 @@ use App\Route;
 
 Route::map("GET", "/", "RootController@index");
 Route::map("GET", "/queue", "RootController@queue");
-
-Route::map("GET", "/mp3/@songId", "Mp3Controller@song");
+Route::map("GET", "/saved", "RootController@saved");
 
 Route::map("GET", "/album/@albumId", "AlbumController@album");
+
+Route::map("GET", "/mp3/@songId", "Mp3Controller@song");
 
 Route::map("GET", "/api/update", "ApiController@update");
 Route::map("GET", "/api/search", "ApiController@search");

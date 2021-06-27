@@ -7,9 +7,9 @@
 		<div class="d-flex mx-2">
 			<div class="mt-auto">
 				<div id="album">ALBUM</div>
-				<div id="albumName" style="visibility: hidden;">
+				<h1 id="albumName" style="visibility: hidden;">
 					<?= $album['name'] ?>
-				</div>
+				</h1>
 				<div class="album-details">
 					<div id="albumArtist">
 						<?= $album['artist'] ?>
@@ -51,14 +51,14 @@
 			Shuffle
 		</button>
 		<button id="queueAlbumButton" class="btn-spotify mx-1">
-			<svg class="my-auto mr-2 queue" height="16" width="16">
+			<svg class="my-auto mr-2 plus" height="16" width="16">
 				<path></path>
 			</svg>
 			Add to queue
 		</button>
 	</div>
 	<div>
-		<div id="tableHeader">
+		<div class="table-header">
 			<div>#</div>
 			<div id="title">TITLE</div>
 			<div id="timeIcon">

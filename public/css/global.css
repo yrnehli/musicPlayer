@@ -260,7 +260,7 @@ svg.shuffle path {
 	d: path("M4.5 6.8l.7-.8C4.1 4.7 2.5 4 .9 4v1c1.3 0 2.6.6 3.5 1.6l.1.2zm7.5 4.7c-1.2 0-2.3-.5-3.2-1.3l-.6.8c1 1 2.4 1.5 3.8 1.5V14l3.5-2-3.5-2v1.5zm0-6V7l3.5-2L12 3v1.5c-1.6 0-3.2.7-4.2 2l-3.4 3.9c-.9 1-2.2 1.6-3.5 1.6v1c1.6 0 3.2-.7 4.2-2l3.4-3.9c.9-1 2.2-1.6 3.5-1.6z");
 }
 
-svg.queue path {
+svg.plus path {
 	d: path("M14 7H9V2H7v5H2v2h5v5h2V9h5z");
 }
 
@@ -412,6 +412,13 @@ input[type="text"]:focus {
 	font-size: 14px;
 }
 
+h1 {
+	font-weight: 900;
+	letter-spacing: -.04em;
+	color: white;
+	padding: 0.08em 0px;
+}
+
 h2 {
 	font-size: 24px;
 	font-weight: 700;
@@ -445,4 +452,142 @@ h3 {
 
 .heart-button.active path {
 	d: path('M13.797 2.727a4.057 4.057 0 00-5.488-.253.558.558 0 01-.31.112.531.531 0 01-.311-.112 4.054 4.054 0 00-5.487.253c-.77.77-1.194 1.794-1.194 2.883s.424 2.113 1.168 2.855l4.462 5.223a1.791 1.791 0 002.726 0l4.435-5.195a4.052 4.052 0 001.195-2.883 4.057 4.057 0 00-1.196-2.883z');
+}
+
+.table-header {
+	grid-template-columns: [index] 16px [first] 4fr [last] minmax(120px,1fr);
+	color: #b3b3b3;
+	border-bottom: 1px solid hsla(0, 0%, 100%, .1);
+	display: grid;
+	padding: 0 16px;
+	grid-gap: 16px;
+	margin-bottom: 0.5rem;
+}
+
+.table-header div {
+	height: 32px;
+	font-weight: 400;
+	line-height: 32px;
+	letter-spacing: .1em;
+}
+
+
+.tracklist-row {
+	display: grid;
+	padding: 0 16px;
+	grid-gap: 16px;
+	grid-template-columns: [index] 16px [first] 4fr [last] minmax(120px,1fr);
+	height: 56px;
+	border-radius: 4px;
+}
+
+.tracklist-row.active {
+	background-color: hsla(0 ,0%, 100%, .2) !important;
+}
+
+.tracklist-row:hover {
+	background-color: hsla(0 ,0%, 100%, .1);
+}
+
+.tracklist-row div {
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.tracklist-row .track-number .equalizer {
+	display: none;
+	width: 14px;
+	height: 14px;
+}
+
+.tracklist-row.playing .track-number .equalizer {
+	display: block !important;
+}
+
+.tracklist-row.playing .track-number div {
+	display: none;
+}
+
+.tracklist-row .track-number .play {
+	display: none;
+	width: 16px;
+	height: 16px;
+}
+
+.tracklist-row .track-number .play path {
+	d: path("M4.018 14L14.41 8 4.018 2z");
+	fill: white;
+}
+
+.tracklist-row.active .track-number div {
+	display: none;
+}
+
+.tracklist-row:hover .track-number div {
+	display: none;
+}
+
+.tracklist-row.active:not(.playing) .track-number .play {
+	display: block !important;
+}
+
+.tracklist-row:not(.playing):hover .track-number .play {
+	display: block !important;
+}
+
+.track-number {
+	font-variant: tabular-nums;
+}
+
+.tracklist-row .total-time {
+	justify-self: end;
+	margin-right: 32px;
+	font-variant-numeric: tabular-nums;
+	width: 4ch;
+	font-size: 14px;
+}
+
+.tracklist-row .track-name :first-child {
+	color: white;
+}
+
+.tracklist-row .track-name :last-child {
+	color: #b3b3b3;
+	font-size: 14px;
+}
+
+.tracklist-row .flag-icon {
+	display: none;
+	position: absolute;
+	right: 170px;
+	fill: white;
+	margin-top: 23px !important;
+}
+
+.tracklist-row .flag-icon.active {
+	display: block;
+}
+
+.tracklist-row .heart-button {
+	position: absolute;
+	right: 130px;
+	fill: white;
+	margin-top: 20px !important;
+}
+
+.tracklist-row .heart-button:not(.active) {
+	display: none;
+}
+
+.tracklist-row:hover .heart-button {
+	display: block !important;
+}
+
+.table-header #title {
+	font-size: 12px;
+}
+
+.table-header #timeIcon {
+	justify-self: end;
+	margin-right: 32px;
 }

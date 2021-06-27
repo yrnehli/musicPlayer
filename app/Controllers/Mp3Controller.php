@@ -11,7 +11,7 @@ class Mp3Controller extends Controller {
 	public function song($songId) {
 		if (str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)) {
 			$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
-			$filepath = "public/userData/deezer/mp3/$songId";
+			$filepath = "public/userData/deezer/$songId";
 			
 			if (!file_exists($filepath)) {
 				$deezerPrivateApi = new DeezerPrivateApi();
