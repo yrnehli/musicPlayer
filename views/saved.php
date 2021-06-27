@@ -61,6 +61,7 @@
 		var $tracklistRows = $('.tracklist-row');
 
 		$(function() {
+			updateBodyColour('#121212', false);
 			initTracklistRows();
 			initEvents();
 		});
