@@ -24,6 +24,7 @@ class Controller {
 		
 		Flight::render($name, $data, 'partial');
 		Flight::render('control', compact('songIds'), 'control');
+		Flight::render('windowControlsOverlay', [], 'windowControlsOverlay');
 		Flight::render('shell');
 	}
 
