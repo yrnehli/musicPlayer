@@ -237,6 +237,7 @@ button:focus {
 }
 
 #toastNotification {
+	display: none;
 	opacity: 0;
 	color: white;
 	text-align: center;
@@ -259,6 +260,7 @@ button:focus {
 }
 
 #toastNotification.show {
+	display: block !important;
 	opacity: 1;
 }
 
