@@ -15,10 +15,10 @@ class Mp3Controller extends Controller {
 			
 			if (!file_exists($filepath)) {
 				$deezerPrivateApi = new DeezerPrivateApi();
-				$song = $deezerPrivateApi->getSongData($songId);
+				$mp3 = $deezerPrivateApi->getSongMp3($songId);
 				file_put_contents(
 					$filepath,
-					($song !== false) ? $song : ""
+					($mp3 !== false) ? $mp3 : ""
 				);
 			}
 		} else {

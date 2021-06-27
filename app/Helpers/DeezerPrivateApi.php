@@ -17,7 +17,7 @@ class DeezerPrivateApi {
 		$this->getApiToken();
 	}
 
-	public function getSongData($songId) {
+	public function getSongMp3($songId) {
 		$song = $this->getSong($songId);
 		$encryptedSong = @file_get_contents(
 			$this->getSongUrl(
