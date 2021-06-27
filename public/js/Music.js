@@ -1,7 +1,7 @@
 class Music extends Howl {
 	static sharedInstance;
 
-	constructor() {
+	constructor(volume) {
 		if (Music.sharedInstance) {
 			return;
 		}
@@ -9,7 +9,7 @@ class Music extends Howl {
 		Music.sharedInstance = super({
 			src: [null],
 			format: 'mp3',
-			volume: 0.0625,
+			volume: volume || 0.0625,
 			html5: true
 		});
 

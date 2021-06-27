@@ -8,7 +8,7 @@ class MusicControl extends EventEmitter {
 
 		MusicControl.sharedInstance = super();
 		
-		this._music = new Music();
+		this._music = new Music(state.volume);
 		this._elements = elements;
 		this._metadata = navigator.mediaSession.metadata = new MediaMetadata();
 
@@ -31,10 +31,6 @@ class MusicControl extends EventEmitter {
 
 				if (state.seek) {
 					this._music.seek(state.seek);
-				}
-
-				if (state.volume) {
-					this._music.volume(state.volume);
 				}
 
 				if (state.queue) {
