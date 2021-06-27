@@ -3,7 +3,7 @@
 <div id="root" class="px-4 pb-4" data-simplebar>
 	<?= $searchResults ?>
 	<div class="d-flex pt-3">
-		<h1 class="mx-3" id="saved">
+		<h1 class="mx-3 my-0" id="saved">
 			SAVED
 		</h1>
 	</div>
