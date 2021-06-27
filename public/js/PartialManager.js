@@ -2,12 +2,12 @@ class PartialManager extends EventEmitter {
 	static sharedInstance;
 
 	constructor($partial, scrollableSelector) {
-		if (!PartialManager.sharedInstance) {
-			PartialManager.sharedInstance = super();
-		} else {
+		if (PartialManager.sharedInstance) {
 			return;
 		}
 
+		PartialManager.sharedInstance = super();
+		
 		this._$partial = $partial;
 		this._scrollableSelector = scrollableSelector;
 		this._initiatedHistory = false;

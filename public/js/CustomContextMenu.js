@@ -2,11 +2,11 @@ class CustomContextMenu {
 	static sharedInstance;
 
 	constructor($contextMenu, $scrollable, actions) {		
-		if (!CustomContextMenu.sharedInstance) {
-			CustomContextMenu.sharedInstance = this;
-		} else {
+		if (CustomContextMenu.sharedInstance) {
 			return;
 		}
+		
+		CustomContextMenu.sharedInstance = this;
 
 		this._$contextMenu = $contextMenu;
 		this._$scrollable = $scrollable;

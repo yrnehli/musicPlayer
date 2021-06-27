@@ -2,16 +2,16 @@ class Music extends Howl {
 	static sharedInstance;
 
 	constructor() {
-		if (!Music.sharedInstance) {
-			Music.sharedInstance = super({
-				src: [null],
-				format: 'mp3',
-				volume: 0.0625,
-				html5: true
-			});
-		} else {
+		if (Music.sharedInstance) {
 			return;
 		}
+
+		Music.sharedInstance = super({
+			src: [null],
+			format: 'mp3',
+			volume: 0.0625,
+			html5: true
+		});
 
 		this._onenable = [];
 		this._ondisable = [];

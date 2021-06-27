@@ -2,12 +2,12 @@ class MusicControl extends EventEmitter {
 	static sharedInstance;
 
 	constructor(elements, state) {
-		if (!MusicControl.sharedInstance) {
-			MusicControl.sharedInstance = super();
-		} else {
+		if (MusicControl.sharedInstance) {
 			return;
 		}
 
+		MusicControl.sharedInstance = super();
+		
 		this._music = new Music();
 		this._elements = elements;
 		this._metadata = navigator.mediaSession.metadata = new MediaMetadata();

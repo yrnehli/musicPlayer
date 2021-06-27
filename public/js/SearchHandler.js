@@ -2,12 +2,12 @@ class SearchHandler {
 	static sharedInstance;
 
 	constructor($searchBar, $clearSearchBarButton) {	
-		if (!SearchHandler.sharedInstance) {
-			SearchHandler.sharedInstance = this;
-		} else {
+		if (SearchHandler.sharedInstance) {
 			return;
 		}
 
+		SearchHandler.sharedInstance = this;
+		
 		this._$searchBar = $searchBar;
 		this._$clearSearchBarButton = $clearSearchBarButton;
 		
