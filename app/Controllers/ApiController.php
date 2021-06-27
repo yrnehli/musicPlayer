@@ -178,11 +178,11 @@ class ApiController extends Controller {
 				$songId,
 				filter_var(Flight::request()->query->flagged, FILTER_VALIDATE_BOOL)
 			);
+			$this->responseHandler(true, "Added to saved songs");
 		} else if (Flight::request()->method === "DELETE") {
 			$db->deleteDeezerSavedSong($songId);
+			$this->responseHandler(true, "Removed from saved songs");
 		}
-
-		$this->responseHandler(true);
 	} 
 }
 

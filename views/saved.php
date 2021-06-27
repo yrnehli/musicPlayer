@@ -8,11 +8,17 @@
 		</h1>
 	</div>
 	<div class="d-flex my-3 mx-3">
-		<button id="spotifyExportButton" class="btn-spotify mr-1">
+		<button id="spotifyExportButton" class="btn-spotify mr-2">
 			<span class="my-auto mr-2">
 				<i class="fal fa-arrow-up"></i>
 			</span>
 			Spotify Export
+		</button>
+		<button id="clearButton" class="btn-spotify mr-2">
+			<span class="my-auto mr-2">
+				<i class="fal fa-times"></i>
+			</span>
+			Clear
 		</button>
 	</div>
 	<div>
@@ -60,6 +66,7 @@
 	(function() {
 		var $tracklistRows = $('.tracklist-row');
 		var $spotifyExportButton = $('#spotifyExportButton');
+		var $clearButton = $('#clearButton');
 
 		$(function() {
 			updateBodyColour('#121212', false);
@@ -137,6 +144,19 @@
 				var res = await $.get('/saved/export');
 				$spotifyExportButton.prop('disabled', false);
 				showToastNotification(true, res.message);
+			});
+
+			$clearButton.click(() => {
+				if (!confirm("Are you sure you want to clear all removed songs?")) {
+					return;
+				}
+
+				$.get('/saved/clear');
+
+				$tracklistRows.find('.heart-button').each(function() {
+					$(this).removeClass('active');
+					$(this).siblings('.flag-icon').removeClass('active');
+				});
 			});
 		}
 	})();

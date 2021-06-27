@@ -7,6 +7,7 @@ Route::map("GET", "/auth", "RootController@auth");
 Route::map("GET", "/queue", "QueueController@index");
 Route::map("GET", "/saved", "SavedController@index");
 Route::map("GET", "/saved/export", "SavedController@export");
+Route::map("GET", "/saved/clear", "SavedController@clear");
 Route::map("GET", "/album/@albumId", "AlbumController@album");
 Route::map("GET", "/mp3/@songId", "Mp3Controller@song");
 Route::map("GET", "/api/update", "ApiController@update");

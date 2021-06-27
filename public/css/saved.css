@@ -2,3 +2,7 @@
 	font-size: 85px;
     line-height: 85px;
 }
+
+#clearButton i {
+	width: 16px;
+}

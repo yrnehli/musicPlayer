@@ -207,29 +207,31 @@
 			});
 
 			$saveButton.click(async () => {
+				var $tracklistRow = $(`.tracklist-row[data-song-id="${Music.sharedInstance.songId()}"]`);
+				var action = $saveButton.hasClass('active') ? 'DELETE' : 'PUT';
 				var res = await $.ajax({
-					type: $saveButton.hasClass('active') ? 'DELETE' : 'PUT',
+					type: action,
 					url: `/api/saved/${Music.sharedInstance.songId()}`
 				});
+				
+				if ($tracklistRow.length) {
+					var $heartButton = $tracklistRow.find('.heart-button');
 
-				var $tracklistRow = $(`.tracklist-row[data-song-id="${Music.sharedInstance.songId()}"]`);
-				var $heartButton = $tracklistRow.find('.heart-button');
+					if (action === 'DELETE') {
+						$heartButton.removeClass('active');
+					} else if (action === 'PUT') {
+						$heartButton.addClass('active');
+					}
 
-				$tracklistRow.data(
-					CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
-					$tracklistRow.data(CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX).replace('UNFLAG', 'FLAG')
-				);
+					$tracklistRow.find('.flag-icon').removeClass('active');
+					$tracklistRow.data(
+						CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
+						$tracklistRow.data(CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX).replace('UNFLAG', 'FLAG')
+					);
+				}
 
 				$saveButton.toggleClass('active');
-				$tracklistRow.find('.flag-icon').removeClass('active');
-
-				if ($saveButton.hasClass('active')) {
-					showToastNotification(true, "Added to saved songs");
-					$heartButton.addClass('active');
-				} else {
-					showToastNotification(true, "Removed from saved songs");
-					$heartButton.removeClass('active');
-				}
+				showToastNotification(true, res.message);
 			});
 
 			$queueButton.click(e => {

@@ -13,27 +13,30 @@ class SavedController extends Controller {
 		$deezerApi = new DeezerApi();
 
 		$savedSongs = $this->getSavedSongs();
-		$savedSongs = array_map(
-			function($savedSong, $i) use ($deezerApi) {
-				$songDetails = $deezerApi->getSong(
-					str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $savedSong['songId'])
-				);
-
-				$savedSong = array_merge(
-					[
-						'id' => $savedSong['songId'],
-						'isFlagged' => ($savedSong['flagged'] === "1"),
-						'trackNumber' => $i,
-						'time' => Utilities::secondsToTimeString($songDetails['songDuration'])
-					],
-					$songDetails
-				);
-
-				return $savedSong;
-			},
-			$savedSongs,
-			range(1, count($savedSongs))
-		);
+		
+		if (!empty($savedSongs)) {
+			$savedSongs = array_map(
+				function($savedSong, $i) use ($deezerApi) {
+					$songDetails = $deezerApi->getSong(
+						str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $savedSong['songId'])
+					);
+	
+					$savedSong = array_merge(
+						[
+							'id' => $savedSong['songId'],
+							'isFlagged' => ($savedSong['flagged'] === "1"),
+							'trackNumber' => $i,
+							'time' => Utilities::secondsToTimeString($songDetails['songDuration'])
+						],
+						$songDetails
+					);
+	
+					return $savedSong;
+				},
+				$savedSongs,
+				range(1, count($savedSongs))
+			);
+		}
 
 		$this->view('saved', compact('savedSongs'));
 	}
@@ -57,6 +60,11 @@ class SavedController extends Controller {
 		}
 		
 		$this->responseHandler(true, "Successfully exported to Spotify");
+	}
+
+	public function clear() {
+		$db = new MusicDatabase();
+		$db->getConn()->prepare("DELETE FROM `deezerSavedSongs`")->execute();
 	}
 
 	private function getSavedSongs() {

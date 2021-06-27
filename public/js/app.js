@@ -215,7 +215,7 @@ function showToastNotification(success, message, timeoutDuration = 3000) {
 
 	$toastNotification
 		.text(message)
-		.removeClass('success', 'fail')
+		.removeClass(success ? 'fail' : 'success')
 		.addClass(success ? 'success' : 'fail')
 		.css('margin-left', `${$toastNotification.outerWidth() / 2 * -1}px`)
 		.addClass('show')
