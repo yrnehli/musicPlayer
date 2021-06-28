@@ -73,8 +73,6 @@ class MusicManager {
 				$musicDatabase->insertSongAlbumMapping($songId, $albumRelation['albumId']);
 			}
 		}
-
-		die("Done");
 	}
 }
 

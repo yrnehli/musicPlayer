@@ -13,6 +13,7 @@ class ApiController extends Controller {
 
 	public function update() {
 		MusicManager::updateDatabase();
+		$this->responseHandler(true);
 	}
 
 	public function song($songId) {
