@@ -196,7 +196,11 @@
 
 				if ($nowPlayingButton.hasClass('active')) {
 					timeout = setTimeout(
-					() => PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`),
+						() => { 
+							if ($nowPlayingButton.hasClass('active')) {
+								PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`)
+							}
+						},
 						3000
 					);
 				}
