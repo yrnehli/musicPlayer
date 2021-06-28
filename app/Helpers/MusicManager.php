@@ -3,6 +3,8 @@
 namespace App\Helpers;
 
 use App\Helpers\MusicDatabase;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 use getID3;
 
 class MusicManager {
@@ -10,9 +12,20 @@ class MusicManager {
 		$getId3 = new getID3;
 		$musicDatabase = new MusicDatabase();
 		$musicDatabase->resetDatabase();
-
-		$mp3s = glob($_ENV["MUSIC_DIRECTORY"] . "/*.mp3");
+		
+		$mp3s = [];
 		$albumRelations = [];
+
+		$files = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($_ENV["MUSIC_DIRECTORY"]),
+			RecursiveIteratorIterator::SELF_FIRST
+		);
+
+		foreach ($files as $file) {
+			if (str_ends_with($file->getFilename(), ".mp3")) {
+				$mp3s[] = $file->getPathname();
+			}
+		}
 
 		foreach ($mp3s as $mp3) {
 			$mp3Info = $getId3->analyze($mp3);
