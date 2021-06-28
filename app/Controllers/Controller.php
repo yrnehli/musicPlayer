@@ -14,18 +14,22 @@ class Controller {
 			Flight::render($name, $data);
 			return;
 		}
-	
+
+		Flight::render($name, $data, 'partial');
+		Flight::render('control', ['songIds' => $this->getSongIds()], 'control');
+		Flight::render('windowControlsOverlay', [], 'windowControlsOverlay');
+		Flight::render('shell');
+	}
+
+	private function getSongIds() {
 		$db = new MusicDatabase();
 		$conn = $db->getConn();
 		
 		$stmt = $conn->prepare("SELECT `id` FROM `songs`");
 		$stmt->execute();
 		$songIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
-		
-		Flight::render($name, $data, 'partial');
-		Flight::render('control', compact('songIds'), 'control');
-		Flight::render('windowControlsOverlay', [], 'windowControlsOverlay');
-		Flight::render('shell');
+
+		return $songIds;
 	}
 
 	protected function responseHandler($success, $message = "", $data = []) {
