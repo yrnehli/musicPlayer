@@ -318,7 +318,7 @@ input[type="text"]:focus {
 #windowControlsOverlay {
 	display: flex;
 	height: 60px;
-	width: env(titlebar-area-width, 100%);
+	width: 100%;
 	-webkit-app-region: drag;
 }
 
