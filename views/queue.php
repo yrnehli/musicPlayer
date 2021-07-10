@@ -71,7 +71,11 @@
 			}
 		});
 
-		setInterval(() => {
+		var interval = setInterval(() => {
+			if (window.location.pathname !== "/queue") {
+				clearInterval(interval);
+			}
+
 			var $queueRows = $queueRowsContainer.children();
 
 			if ($queueRows.length < Music.sharedInstance.queue().length) {

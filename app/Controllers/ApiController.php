@@ -83,15 +83,9 @@ class ApiController extends Controller {
 
 	private function getDeezerAlbum($albumId) {
 		$albumId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $albumId);
-		$filepath = "public/userData/deezer/album/$albumId";
 
-		if (!file_exists($filepath)) {
-			$deezerApi = new DeezerApi();
-			$res = $deezerApi->getAlbum($albumId);
-			file_put_contents($filepath, serialize($res));
-		} else {
-			$res = unserialize(file_get_contents($filepath));
-		}
+		$deezerApi = new DeezerApi();
+		$res = $deezerApi->getAlbum($albumId);
 
 		return ['songIds' => array_column($res['songs'], "id")];
 	}
