@@ -22,18 +22,18 @@ spl_autoload_register(function($className) {
 	if (file_exists($filepath)) {
 		require_once $filepath;
 	} else {
-		throw New Exception("Could not find class $className at $filepath!");
+		throw new Exception("Could not find class $className at $filepath!");
 	}
 });
 
-$objects = new RecursiveIteratorIterator(
+$files = new RecursiveIteratorIterator(
 	new RecursiveDirectoryIterator(realpath('app')),
 	RecursiveIteratorIterator::SELF_FIRST
 );
 
-foreach ($objects as $object) {
-	if (str_ends_with($object->getFilename(), ".php")) {
-		require_once $object->getPathname();
+foreach ($files as $file) {
+	if (str_ends_with($file->getFilename(), ".php")) {
+		require_once $file->getPathname();
 	}
 }
 

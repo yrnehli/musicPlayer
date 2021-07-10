@@ -120,7 +120,8 @@
 				position: 'absolute',
 				top: '-1000px'
 			})
-			.get(0);
+			.get(0)
+		;
 
 		document.body.appendChild(dragGhost);
 		e.dataTransfer.setDragImage(dragGhost, -10, 0);
