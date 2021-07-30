@@ -111,7 +111,7 @@ class DeezerApi {
 					return [
 						"id" => self::DEEZER_ID_PREFIX . $song->SNG_ID,
 						"trackNumber" => $song->TRACK_NUMBER,
-						"name" => $song->SNG_TITLE,
+						"name" => empty($song->VERSION) ? $song->SNG_TITLE : "$song->SNG_TITLE $song->VERSION",
 						"artist" => implode(
 							", ",
 							array_map(
