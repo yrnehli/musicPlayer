@@ -235,6 +235,7 @@
 				}
 
 				$saveButton.toggleClass('active');
+				PartialManager.sharedInstance.updateCurrentState();
 				showToastNotification(true, res.message);
 			});
 
