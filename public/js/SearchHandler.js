@@ -76,11 +76,7 @@ class SearchHandler {
 			.instances
 			.get($searchResults.parents('[data-simplebar]').get(0))
 			.getScrollElement()
-			.scroll({
-				top: 0, 
-				left: 0, 
-				behavior: 'smooth'
-			})
+			.scrollTop = 0
 		;
 	}
 
