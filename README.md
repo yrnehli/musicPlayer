@@ -83,7 +83,7 @@ You should receive a JSON response that looks like this:
 # Features
 - Search and stream from Deezer by prefixing your search query with `e: `, for example `e: 24K Magic`.
 - Save songs from Deezer by pressing the heart icon on the track.
-- Export your saved songs your Spotify liked songs by using the `Spotify Export` button on the `Saved Songs` page `(Ctrl + D)`.
+- Export your saved songs to your Spotify liked songs by using the `Spotify Export` button on the `Saved Songs` page `(Ctrl + D)`.
 
 # PWA Support
 This can be installed as a Progressive Web App (PWA). For the best experience, enable the following flags in your Chromium based browser.
