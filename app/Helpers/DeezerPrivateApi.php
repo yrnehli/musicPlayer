@@ -23,12 +23,20 @@ class DeezerPrivateApi {
 			$this->getSongUrl(
 				$songId,
 				$song->results->DATA->MD5_ORIGIN,
-				$song->results->DATA->MEDIA_VERSION
+				$song->results->DATA->MEDIA_VERSION,
+				3 // 320 kbps
 			)
 		);
 
-		if ($encryptedSong === false) {
-			return false;
+		if ($encryptedSong === false) {			
+			$encryptedSong = file_get_contents(
+				$this->getSongUrl(
+					$songId,
+					$song->results->DATA->MD5_ORIGIN,
+					$song->results->DATA->MEDIA_VERSION,
+					1
+				) // Fallback to 128kbps
+			);
 		}
 
 		return $this->decryptSong($songId, $encryptedSong);
@@ -42,8 +50,7 @@ class DeezerPrivateApi {
 		return $this->request("deezer.pageAlbum", json_encode(['alb_id' => $albumId, 'LANG' => 'en']));
 	}
 
-	private function getSongUrl($songId, $md5, $mediaVersion) {
-		$format = 3; // 320 kbps
+	private function getSongUrl($songId, $md5, $mediaVersion, $format) {
 		$blockSize = 16;
 		$key = "jo6aey6haid2Teih";
 	
