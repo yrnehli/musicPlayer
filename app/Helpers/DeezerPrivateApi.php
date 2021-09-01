@@ -34,8 +34,8 @@ class DeezerPrivateApi {
 					$songId,
 					$song->results->DATA->MD5_ORIGIN,
 					$song->results->DATA->MEDIA_VERSION,
-					1
-				) // Fallback to 128kbps
+					1 // Fallback to 128kbps
+				)
 			);
 		}
 
