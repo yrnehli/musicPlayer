@@ -127,18 +127,58 @@ class ApiController extends Controller {
 	}
 
 	private function searchLocal($term) {
-		$term = str_replace(" ", "%", $term);
-		$term = "%$term%";
-	
+		$term = "%" . str_replace(
+			[" ", "s"],
+			["%", '_'],
+			strtolower($term)
+		) . "%";
+		
 		$db = new MusicDatabase();
 		$conn = $db->getConn();
+		
+		$stmt = $conn->prepare("DROP FUNCTION IF EXISTS `regex_replace`");
+		$stmt->execute();
+
+		$stmt = $conn->prepare(
+			"CREATE FUNCTION `REGEX_REPLACE` (original VARCHAR(1000), pattern VARCHAR(1000), replacement VARCHAR(1000)) RETURNS VARCHAR(1000) CHARSET utf8mb4
+				DETERMINISTIC
+			BEGIN
+				DECLARE temp VARCHAR(1000); 
+				DECLARE ch VARCHAR(1); 
+				DECLARE i INT;
+				SET i = 1;
+				SET temp = '';
+				IF original REGEXP pattern THEN 
+					loop_label: LOOP 
+						IF i > CHAR_LENGTH(original) THEN
+							LEAVE loop_label;  
+						END IF;
+			
+						SET ch = SUBSTRING(original, i, 1);
+			
+						IF NOT ch REGEXP pattern THEN
+							SET temp = CONCAT(temp, ch);
+						ELSE
+							SET temp = CONCAT(temp, replacement);
+						END IF;
+			
+						SET i = i+1;
+					END LOOP;
+				ELSE
+					SET temp = original;
+				END IF;
+			
+				RETURN temp;
+			END"
+		);
+		$stmt->execute();
 
 		$stmt = $conn->prepare(
 			"SELECT `id`, `name`, `artist`, `duration`, `albumDetails`.`duration`, `artFilepath`
 			FROM `albums`
 			INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
-			WHERE CONCAT(`name`, `artist`) LIKE :term
-			OR CONCAT(`artist`, `name`) LIKE :term
+			WHERE REGEX_REPLACE(CONCAT(`name`, `artist`), '[^A-Za-z0-9 ]', '') LIKE :term
+			OR REGEX_REPLACE(CONCAT(`artist`, `name`), '[^A-Za-z0-9 ]', '') LIKE :term
 			LIMIT 5"
 		);
 		$stmt->bindParam(":term", $term);
@@ -150,8 +190,8 @@ class ApiController extends Controller {
 			FROM `songs`
 			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
 			INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
-			WHERE CONCAT(`songs`.`name`, `songs`.`artist`) LIKE :term
-			OR CONCAT(`songs`.`artist`, `songs`.`name`) LIKE :term
+			WHERE REGEX_REPLACE(CONCAT(`songs`.`name`, `songs`.`artist`), '[^A-Za-z0-9 ]', '') LIKE :term
+			OR REGEX_REPLACE(CONCAT(`songs`.`artist`, `songs`.`name`), '[^A-Za-z0-9 ]', '') LIKE :term
 			LIMIT 5"
 		);
 		$stmt->bindParam(":term", $term);
