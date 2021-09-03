@@ -136,7 +136,7 @@ class ApiController extends Controller {
 		$db = new MusicDatabase();
 		$conn = $db->getConn();
 		
-		$stmt = $conn->prepare("DROP FUNCTION IF EXISTS `regex_replace`");
+		$stmt = $conn->prepare("DROP FUNCTION IF EXISTS `REGEX_REPLACE`");
 		$stmt->execute();
 
 		$stmt = $conn->prepare(
@@ -162,7 +162,7 @@ class ApiController extends Controller {
 							SET temp = CONCAT(temp, replacement);
 						END IF;
 			
-						SET i = i+1;
+						SET i = i + 1;
 					END LOOP;
 				ELSE
 					SET temp = original;
