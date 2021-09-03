@@ -203,7 +203,7 @@ class Music extends Howl {
 		} else {
 			// Clear out all events of every type.
 			var keys = Object.keys(self);
-				for (i = 0; i < keys.length; i++) {
+			for (i = 0; i < keys.length; i++) {
 				if ((keys[i].indexOf('_on') === 0) && Array.isArray(self[keys[i]])) {
 					self[keys[i]] = [];
 				}
