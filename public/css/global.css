@@ -360,7 +360,7 @@ input[type="text"]:focus {
 	color: hsla(0, 0%, 100%, .3);
 	z-index: 1;
 	top: 24px;
-	left: 214px;
+	left: 220px;
 	position: absolute;
 	font-size: 10pt;
 	cursor: pointer;
