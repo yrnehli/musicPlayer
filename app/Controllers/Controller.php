@@ -17,11 +17,12 @@ class Controller {
 		}
 
 		$browser = new BrowserDetection();
+		$os = $browser->getOS($_SERVER['HTTP_USER_AGENT']);
 
 		Flight::render($name, $data, 'partial');
 		Flight::render('control', ['songIds' => $this->getSongIds()], 'control');
-		Flight::render('windowControlsOverlay', ['os' => $browser->getOS($_SERVER['HTTP_USER_AGENT'])], 'windowControlsOverlay');
-		Flight::render('shell');
+		Flight::render('windowControlsOverlay', ['os' => $os], 'windowControlsOverlay');
+		Flight::render('shell', ['os' => $os]);
 	}
 
 	private function getSongIds() {
