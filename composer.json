@@ -3,6 +3,7 @@
         "mikecao/flight": "^1.3",
         "james-heinrich/getid3": "^1.9",
         "vlucas/phpdotenv": "^5.3",
-        "ksubileau/color-thief-php": "^1.4"
+        "ksubileau/color-thief-php": "^1.4",
+        "foroco/php-browser-detection": "^2.3"
     }
 }

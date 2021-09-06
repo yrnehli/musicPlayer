@@ -349,9 +349,8 @@ input[type="text"]:focus {
 #searchIcon {
 	color: hsla(0, 0%, 100%, .3);
 	z-index: 1;
-	top: 24px;
-	left: 26px;
-	position: absolute;
+	left: 43px;
+	position: relative;
 	font-size: 10pt;
 	cursor: pointer;
 }
@@ -359,9 +358,8 @@ input[type="text"]:focus {
 #clearSearchBarButton {
 	color: hsla(0, 0%, 100%, .3);
 	z-index: 1;
-	top: 24px;
-	left: 220px;
-	position: absolute;
+	left: -27px;
+	position: relative;
 	font-size: 10pt;
 	cursor: pointer;
 }

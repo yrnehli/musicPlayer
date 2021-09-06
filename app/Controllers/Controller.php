@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use foroco\BrowserDetection;
 use App\Helpers\MusicDatabase;
 use Flight;
 use PDO;
@@ -15,9 +16,11 @@ class Controller {
 			return;
 		}
 
+		$browser = new BrowserDetection();
+
 		Flight::render($name, $data, 'partial');
 		Flight::render('control', ['songIds' => $this->getSongIds()], 'control');
-		Flight::render('windowControlsOverlay', [], 'windowControlsOverlay');
+		Flight::render('windowControlsOverlay', ['os' => $browser->getOS($_SERVER['HTTP_USER_AGENT'])], 'windowControlsOverlay');
 		Flight::render('shell');
 	}
 
