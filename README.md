@@ -5,7 +5,7 @@ A music player built on the LAMP stack which can play local MP3 files and stream
 
 # Requirements
 - PHP 7.2
-- MySQL 5.7
+- MySQL 8
 - Apache
 
 *Other versions of PHP/MySQL may work, but is not guaranteed.*
