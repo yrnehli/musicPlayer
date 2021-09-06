@@ -7,7 +7,7 @@
 	<div id="albums" class="mx-auto centre">
 		<?php foreach ($albums as $album): ?>
 			<div class="album-container mx-2 my-2" data-album-id="<?= $album['id'] ?>" data-context-menu-actions="QUEUE,GO_TO_ALBUM">
-				<img class="album-art" src="<?= $album['artFilepath'] ?>">
+				<img class="lazy album-art" data-src="<?= $album['artFilepath'] ?>">
 				<div class="title">
 					<?= $album['name'] ?>
 				</div>
@@ -22,6 +22,7 @@
 <script>
 	(function() {
 		$(function() {
+			new LazyLoad({});
 			updateBodyColour('#121212', false);
 			auth();
 			initEvents();
