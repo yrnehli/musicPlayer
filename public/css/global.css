@@ -337,7 +337,6 @@ input[type="text"]:focus {
 	height: 30px;
 	line-height: 30px;
 	margin-top: 15px;
-	margin-left: 15px;
 	font-size: 11pt;
 	-webkit-app-region: no-drag;
 }
@@ -349,7 +348,7 @@ input[type="text"]:focus {
 #searchIcon {
 	color: hsla(0, 0%, 100%, .3);
 	z-index: 1;
-	left: 43px;
+	left: 28px;
 	position: relative;
 	font-size: 10pt;
 	cursor: pointer;
