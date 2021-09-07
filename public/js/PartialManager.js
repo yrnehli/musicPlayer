@@ -79,6 +79,17 @@ class PartialManager extends EventEmitter {
 	}
 	
 	_getCurrentState() {
-		return { html: this._$partial.html(), scroll: this._$partial.find(this._scrollableSelector).scrollTop() };
+		var $temp = $('<div></div>');
+
+		// Reset LazyLoad images
+		$temp
+			.html(this._$partial.html())
+			.find('img.lazy')
+			.removeClass(['entered', 'loaded'])
+			.removeAttr('src')
+			.removeAttr('data-ll-status')
+		;
+
+		return { html: $temp.html(), scroll: this._$partial.find(this._scrollableSelector).scrollTop() };
 	}
 }

@@ -149,6 +149,10 @@ body {
 	user-select: none;
 }
 
+img:not([src]):not([srcset]) {
+	visibility: hidden;
+}  
+
 button:focus {
 	outline: none;
 }
