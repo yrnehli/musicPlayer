@@ -8,7 +8,7 @@ A music player built on the LAMP stack which can play local MP3 files and stream
 - MySQL 8
 - Apache
 
-*Other versions of PHP/MySQL may work, but is not guaranteed.*
+*Other versions of PHP may work, but is not guaranteed.*
 
 # Installation
 
@@ -89,6 +89,9 @@ You should receive a JSON response that looks like this:
 This can be installed as a Progressive Web App (PWA). For the best experience, enable the following flags in your Chromium based browser.
 - `#enable-desktop-pwas-remove-status-bar`
 - `#enable-desktop-pwas-window-controls-overlay`
+
+# Troubleshooting
+In the case that images take a long time to load, try turning Apache's `KeepAlive` directive to `Off`.
 
 # Disclaimer
 This repository is for educational/research purposes only, the use of this code is your responsibility.
