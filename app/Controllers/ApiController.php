@@ -141,7 +141,7 @@ class ApiController extends Controller {
 			FROM `albums`
 			INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
 			WHERE REGEXP_REPLACE(CONCAT(`name`, `artist`), '[^A-Za-zÀ-ÖØ-öø-ÿ ]', '') LIKE :term
-			OR REGEXP_REPLACE(CONCAT(`artist`, `name`), '[^A-Za-zÀ-ÖØ-öø-ÿ0-9 ]', '') LIKE :term
+			OR REGEXP_REPLACE(CONCAT(`artist`, `name`), '[^A-Za-zÀ-ÖØ-öø-ÿ ]', '') LIKE :term
 			LIMIT 5"
 		);
 		$stmt->bindParam(":term", $term);
