@@ -140,8 +140,8 @@ class ApiController extends Controller {
 			"SELECT `id`, `name`, `artist`, `duration`, `albumDetails`.`duration`, `artFilepath`
 			FROM `albums`
 			INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
-			WHERE REGEXP_REPLACE(CONCAT(`name`, `artist`), '[^A-Za-z0-9 ]', '') LIKE :term
-			OR REGEXP_REPLACE(CONCAT(`artist`, `name`), '[^A-Za-z0-9 ]', '') LIKE :term
+			WHERE REGEXP_REPLACE(CONCAT(`name`, `artist`), '[^A-Za-zÀ-ÖØ-öø-ÿ ]', '') LIKE :term
+			OR REGEXP_REPLACE(CONCAT(`artist`, `name`), '[^A-Za-zÀ-ÖØ-öø-ÿ0-9 ]', '') LIKE :term
 			LIMIT 5"
 		);
 		$stmt->bindParam(":term", $term);
@@ -153,8 +153,8 @@ class ApiController extends Controller {
 			FROM `songs`
 			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
 			INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
-			WHERE REGEXP_REPLACE(CONCAT(`songs`.`name`, `songs`.`artist`), '[^A-Za-z0-9 ]', '') LIKE :term
-			OR REGEXP_REPLACE(CONCAT(`songs`.`artist`, `songs`.`name`), '[^A-Za-z0-9 ]', '') LIKE :term
+			WHERE REGEXP_REPLACE(CONCAT(`songs`.`name`, `songs`.`artist`), '[^A-Za-zÀ-ÖØ-öø-ÿ ]', '') LIKE :term
+			OR REGEXP_REPLACE(CONCAT(`songs`.`artist`, `songs`.`name`), '[^A-Za-zÀ-ÖØ-öø-ÿ ]', '') LIKE :term
 			LIMIT 5"
 		);
 		$stmt->bindParam(":term", $term);
