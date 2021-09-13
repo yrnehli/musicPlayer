@@ -84,10 +84,16 @@ class MusicControl extends EventEmitter {
 		this._metadata.album = res.data.albumName;
 		this._metadata.artwork = [{ src: res.data.albumArtUrl, sizes: '512x512', type: 'image/png' }];
 
-		if (window.Notification && Notification.permission !== "denied") {
+		if (window.Notification && Notification.permission === "granted") {
 			new Notification(
 				res.data.songName,
-				{ body: res.data.songArtist, icon: res.data.albumArtUrl }
+				{
+					body: res.data.songArtist,
+					icon: res.data.albumArtUrl,
+					silent: true,
+					renotify: true,
+					tag: 'currentSong'
+				}
 			);
 		}
 
