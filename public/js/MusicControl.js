@@ -85,7 +85,7 @@ class MusicControl extends EventEmitter {
 		this._metadata.artwork = [{ src: res.data.albumArtUrl, sizes: '512x512', type: 'image/png' }];
 
 		new Notification(
-			`${res.data.songArtist} - ${res.data.songName}`,
+			`${res.data.songArtist} – ${res.data.songName}`,
 			{ icon: res.data.albumArtUrl }
 		);
 
