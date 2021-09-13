@@ -50,7 +50,7 @@ class MusicControl extends EventEmitter {
 		this._music.on('pause', e => this._elements.$playButton.addClass("paused"));
 		this._music.on('autosongchange', e => this._update(true));
 		this._music.on('manualsongchange', e => this._update(false));
-		
+
 		this._music.on('load', e => {
 			this._elements.$endTime.text(
 				this._music.disabled() ? "0:00" : secondsToTimeString(this._music.duration())
@@ -83,6 +83,11 @@ class MusicControl extends EventEmitter {
 		this._metadata.artist = res.data.songArtist;
 		this._metadata.album = res.data.albumName;
 		this._metadata.artwork = [{ src: res.data.albumArtUrl, sizes: '512x512', type: 'image/png' }];
+
+		new Notification(
+			`${res.data.songArtist} - ${res.data.songName}`,
+			{ icon: res.data.albumArtUrl }
+		);
 
 		if (res.data.isDeezer) {
 			this._elements.$saveButton.show();
