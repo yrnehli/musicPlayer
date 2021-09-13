@@ -2,7 +2,9 @@ if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('/service-worker.js');
 }
 
-Notification.requestPermission();
+if (window.Notification) {
+	Notification.requestPermission();
+}
 
 $(function() {
 	var $root = $('#root');

@@ -84,10 +84,12 @@ class MusicControl extends EventEmitter {
 		this._metadata.album = res.data.albumName;
 		this._metadata.artwork = [{ src: res.data.albumArtUrl, sizes: '512x512', type: 'image/png' }];
 
-		new Notification(
-			`${res.data.songArtist} – ${res.data.songName}`,
-			{ icon: res.data.albumArtUrl }
-		);
+		if (window.Notification && Notification.permission !== "denied") {
+			new Notification(
+				`${res.data.songArtist} – ${res.data.songName}`,
+				{ icon: res.data.albumArtUrl }
+			);
+		}
 
 		if (res.data.isDeezer) {
 			this._elements.$saveButton.show();
