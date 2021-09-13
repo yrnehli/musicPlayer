@@ -86,8 +86,8 @@ class MusicControl extends EventEmitter {
 
 		if (window.Notification && Notification.permission !== "denied") {
 			new Notification(
-				`${res.data.songArtist} – ${res.data.songName}`,
-				{ icon: res.data.albumArtUrl }
+				res.data.songName,
+				{ body: res.data.songArtist, icon: res.data.albumArtUrl }
 			);
 		}
 
