@@ -90,9 +90,7 @@ class MusicControl extends EventEmitter {
 				{
 					body: res.data.songArtist,
 					icon: res.data.albumArtUrl,
-					silent: true,
-					renotify: true,
-					tag: 'currentSong'
+					silent: true
 				}
 			);
 		}
