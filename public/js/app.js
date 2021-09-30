@@ -26,6 +26,11 @@ $(function() {
 						Music.sharedInstance.queue().push(
 							$target.data('song-id')
 						);
+
+						if (Music.sharedInstance.disabled()) {
+							Music.sharedInstance.enable();
+							Music.sharedInstance.skip();
+						}
 					} else if ($target.data('album-id')) {
 						var res = await $.get(`/api/album/${$target.data('album-id')}`);
 						res

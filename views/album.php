@@ -200,6 +200,12 @@
 					Music.sharedInstance.queue().push(
 						$(this).data('song-id')
 					);
+
+					if (Music.sharedInstance.disabled()) {
+						Music.sharedInstance.enable();
+						Music.sharedInstance.skip();
+					}
+
 					showToastNotification(true, "Added to queue");
 				});
 			});
