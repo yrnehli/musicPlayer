@@ -52,7 +52,7 @@ class CustomContextMenu {
 			.forEach(action => {
 				this._$contextMenu.append(
 					$('<li></li>')
-						.text(this._actions[action].text)
+						.html(this._actions[action].html)
 						.click(() => {
 							this._actions[action].callback($target);
 							this.hide();

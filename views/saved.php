@@ -32,7 +32,7 @@
 			</div>
 		</div>
 		<?php foreach ($savedSongs as $savedSong): ?>
-			<div class="tracklist-row" data-song-id="<?= $savedSong['id'] ?>" data-album-id="<?= $savedSong['albumId'] ?>" data-context-menu-actions="<?= ($savedSong['isFlagged']) ? 'QUEUE,GO_TO_ALBUM,UNFLAG' : 'QUEUE,GO_TO_ALBUM,FLAG' ?>" data-activable>
+			<div class="tracklist-row" data-song-id="<?= $savedSong['id'] ?>" data-album-id="<?= $savedSong['albumId'] ?>" data-context-menu-actions="PLAY_NEXT,PLAY_LAST,GO_TO_ALBUM<?= ($savedSong['isFlagged']) ? ',UNFLAG' : ',FLAG' ?>" data-activable>
 				<div class="track-number">
 					<img class="equalizer" src="/public/img/equalizer.gif">
 					<svg class="play">
@@ -80,20 +80,30 @@
 			if (Music.sharedInstance.playing()) {
 				$tracklistRows.filter(`[data-song-id="${Music.sharedInstance.songId()}"]`).addClass('playing');
 			}
-
+			
 			$tracklistRows.dblclick(function() {
 				var $self = $(this);
-				var nextUp = { list: [], i: 0 };
+				var queue = [];
+				var history = [];
+				var positionFound = false;
 
 				$tracklistRows.each(function(i) {
-					nextUp.list.push($(this).data('song-id'));
-
 					if ($(this).is($self)) {
-						nextUp.i = i;
+						positionFound = true;
+					}
+
+					var songId = $(this).data('song-id');
+
+					if (positionFound) {
+						queue.push(songId);
+					} else {
+						history.push(songId);
 					}
 				});
 				
-				Music.sharedInstance.playNextUp(nextUp);
+				Music.sharedInstance.queue(queue);
+				Music.sharedInstance.skip(true);
+				Music.sharedInstance.history(history);
 
 				$tracklistRows.removeClass('active');
 				$self.addClass('active');
@@ -119,12 +129,12 @@
 				$(this).siblings('.flag-icon').removeClass('active');
 					
 				if (action === 'PUT') {
-					showToastNotification(true, "Added to saved songs");
+					showToastNotification(true, "Added to Saved Songs");
 					if (songId.toString() === Music.sharedInstance.songId().toString()) {
 						MusicControl.sharedInstance.elements().$saveButton.addClass('active');
 					}
 				} else if (action === 'DELETE') {
-					showToastNotification(true, "Removed from saved songs")
+					showToastNotification(true, "Removed from Saved Songs")
 					if (songId.toString() === Music.sharedInstance.songId().toString()) {
 						MusicControl.sharedInstance.elements().$saveButton.removeClass('active');
 					}

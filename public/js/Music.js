@@ -23,7 +23,7 @@ class Music extends Howl {
 		this.__songId = null;
 		this.__disabled = true;
 		this.__queue = [];
-		this.__nextUp =	{ list: [], i: 0 };
+		this.__history = [];
 		
 		this.on('end', e => this.skip(e));
 	}
@@ -40,7 +40,7 @@ class Music extends Howl {
 		this.pause();
 		this.__songId = null;
 		this.__queue = [];
-		this.__nextUp = { list: [], i: 0 };
+		this.__history = [];
 		this.__disabled = true;
 		this._emit('disable');
 	}
@@ -109,37 +109,30 @@ class Music extends Howl {
 			return;
 		}
 		
-		if (this.__nextUp.list.length > 0 && this.__nextUp.i - 1 >= 0) {
-			this.changeSong(this.__nextUp.list[--this.__nextUp.i], this.playing());
+		if (this.__history.length > 0) {
+			if (this.__songId) {
+				this.__queue.unshift(this.__songId);
+			}
+			this.changeSong(this.__history.pop(), this.playing());
 		} else {
 			this.disable();
 		}
 	}
 
 	skip(e) {
-		if (this.__disabled) {
-			return;
-		}
-
 		var wasPlaying = (e || this.playing() || (this._queue.some(item => item.event === "play") && !this._queue.some(item => item.event === "pause")));
 
 		if (this.__queue.length > 0) {
+			this.enable();
+			if (this.__songId) {
+				this.__history.push(this.__songId);
+			}
 			this.changeSong(this.__queue.shift(), wasPlaying, e);
-		} else if (this.__nextUp.list.length > 0 && this.__nextUp.i + 1 < this.__nextUp.list.length) {
-			this.changeSong(this.__nextUp.list[++this.__nextUp.i], wasPlaying, e);
 		} else {
 			this.disable();
 		}
 
 		this._emit('skip');
-	}
-
-	nextUp(nextUp) {
-		if (nextUp) {
-			this.__nextUp = nextUp;
-		} else {
-			return this.__nextUp;
-		}
 	}
 
 	queue(queue) {
@@ -150,10 +143,12 @@ class Music extends Howl {
 		}
 	}
 
-	playNextUp(nextUp) {
-		this.__queue = [];
-		this.__nextUp = nextUp;
-		this.changeSong(nextUp.list[nextUp.i], true);
+	history(history) {
+		if (history) {
+			this.__history = history;
+		} else {
+			return this.__history;
+		}
 	}
 
 	on(event, fn) {

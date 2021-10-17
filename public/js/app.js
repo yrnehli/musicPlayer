@@ -19,8 +19,37 @@ $(function() {
 		$contextMenu,
 		$root,
 		{
-			QUEUE: {
-				text: "Add to queue",
+			PLAY_NEXT: {
+				html: `
+					<i class="fal fa-arrow-to-right fa-fw mr-1"></i>
+					Play Next
+				`,
+				callback: async function($target) {
+					if ($target.data('song-id')) {
+						Music.sharedInstance.queue().unshift(
+							$target.data('song-id')
+						);
+					} else if ($target.data('album-id')) {
+						var res = await $.get(`/api/album/${$target.data('album-id')}`);
+						res
+							.data
+							.songIds
+							.forEach(songId => Music.sharedInstance.queue().unshift(songId))
+						;
+					}
+
+					if (Music.sharedInstance.disabled()) {
+						Music.sharedInstance.skip();
+					}
+					
+					showToastNotification(true, "Playing Next");					
+				}
+			},
+			PLAY_LAST: {
+				html: `
+					<i class="fal fa-arrow-to-bottom fa-fw mr-1"></i>
+					Play Last
+				`,
 				callback: async function($target) {
 					if ($target.data('song-id')) {
 						Music.sharedInstance.queue().push(
@@ -36,21 +65,26 @@ $(function() {
 					}
 
 					if (Music.sharedInstance.disabled()) {
-						Music.sharedInstance.enable();
 						Music.sharedInstance.skip();
 					}
 					
-					showToastNotification(true, "Added to queue");					
+					showToastNotification(true, "Playing Last");					
 				}
 			},
 			GO_TO_ALBUM: {
-				text: "Go to album",
+				html: `
+					<i class="fal fa-record-vinyl fa-fw mr-1"></i>
+					Go to Album
+				`,
 				callback: function($target) {
 					PartialManager.sharedInstance.loadPartial(`/album/${$target.data('album-id')}`);
 				}
 			},
 			REMOVE_FROM_QUEUE: {
-				text: "Remove from queue",
+				html: `
+					<i class="fal fa-times fa-fw mr-1"></i>
+					Remove
+				`,
 				callback: function($target) {
 					var index;
 
@@ -67,7 +101,10 @@ $(function() {
 				}
 			},
 			FLAG: {
-				text: "Flag",
+				html: `
+					<i class="fal fa-flag fa-fw mr-1"></i>
+					Flag
+				`,
 				callback: async function($target) {
 					var songId = $target.data('song-id');
 					
@@ -83,7 +120,7 @@ $(function() {
 						MusicControl.sharedInstance.elements().$saveButton.addClass('active');
 					}
 
-					showToastNotification(true, "Marked as flagged");
+					showToastNotification(true, "Marked as Flagged");
 
 					$target.data(
 						CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
@@ -92,7 +129,10 @@ $(function() {
 				}
 			},
 			UNFLAG: {
-				text: "Unflag",
+				html: `
+					<i class="fal fa-flag fa-fw mr-1"></i>
+					Unflag
+				`,
 				callback: async function($target) {
 					var songId = $target.data('song-id');
 					
@@ -103,7 +143,7 @@ $(function() {
 
 					$target.find('.flag-icon').removeClass('active');
 
-					showToastNotification(true, "Unmarked as flagged");
+					showToastNotification(true, "Unmarked as Flagged");
 
 					$target.data(
 						CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,

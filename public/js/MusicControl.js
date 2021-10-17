@@ -37,8 +37,8 @@ class MusicControl extends EventEmitter {
 					this._music.queue(state.queue);
 				}
 		
-				if (state.nextUp) {
-					this._music.nextUp(state.nextUp);
+				if (state.history) {
+					this._music.history(state.history);
 				}
 			}
 		});

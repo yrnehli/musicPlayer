@@ -50,7 +50,7 @@
 			</svg>
 			Shuffle
 		</button>
-		<button id="queueAlbumButton" class="btn-spotify mx-1">
+		<button id="playLastButton" class="btn-spotify mx-1">
 			<svg class="my-auto mr-2 plus" height="16" width="16">
 				<path></path>
 			</svg>
@@ -68,7 +68,7 @@
 			</div>
 		</div>
 		<?php foreach ($songs as $song): ?>
-			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>" data-context-menu-actions="<?= ($song['isDeezer']) ? (($song['isFlagged']) ? 'QUEUE,UNFLAG' : 'QUEUE,FLAG') : 'QUEUE' ?>" data-activable>
+			<div class="tracklist-row" data-song-id="<?= $song['id'] ?>" data-context-menu-actions="PLAY_NEXT,PLAY_LAST<?= ($song['isDeezer']) ? (($song['isFlagged']) ? ',UNFLAG' : ',FLAG') : null ?>" data-activable>
 				<div class="track-number">
 					<img class="equalizer" src="/public/img/equalizer.gif">
 					<svg class="play">
@@ -104,7 +104,7 @@
 	(function() {
 		var $playAlbumButton = $('#playAlbumButton');
 		var $shuffleAlbumButton = $('#shuffleAlbumButton');
-		var $queueAlbumButton = $('#queueAlbumButton');
+		var $playLastButton = $('#playLastButton');
 		var $tracklistRows = $('.tracklist-row');
 
 		$(function() {
@@ -123,17 +123,27 @@
 
 			$tracklistRows.dblclick(function() {
 				var $self = $(this);
-				var nextUp = { list: [], i: 0 };
+				var queue = [];
+				var history = [];
+				var positionFound = false;
 
 				$tracklistRows.each(function(i) {
-					nextUp.list.push($(this).data('song-id'));
-
 					if ($(this).is($self)) {
-						nextUp.i = i;
+						positionFound = true;
+					}
+
+					var songId = $(this).data('song-id');
+
+					if (positionFound) {
+						queue.push(songId);
+					} else {
+						history.push(songId);
 					}
 				});
 				
-				Music.sharedInstance.playNextUp(nextUp);
+				Music.sharedInstance.queue(queue);
+				Music.sharedInstance.skip(true);
+				Music.sharedInstance.history(history);
 
 				$tracklistRows.removeClass('active');
 				$self.addClass('active');
@@ -159,12 +169,12 @@
 				$(this).siblings('.flag-icon').removeClass('active');
 					
 				if (action === 'PUT') {
-					showToastNotification(true, "Added to saved songs");
+					showToastNotification(true, "Added to Saved Songs");
 					if (songId.toString() === Music.sharedInstance.songId().toString()) {
 						MusicControl.sharedInstance.elements().$saveButton.addClass('active');
 					}
 				} else if (action === 'DELETE') {
-					showToastNotification(true, "Removed from saved songs")
+					showToastNotification(true, "Removed from Saved Songs")
 					if (songId.toString() === Music.sharedInstance.songId().toString()) {
 						MusicControl.sharedInstance.elements().$saveButton.removeClass('active');
 					}
@@ -180,31 +190,26 @@
 			});
 
 			$playAlbumButton.click(() => {
-				Music.sharedInstance.playNextUp({
-					list: $('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id')),
-					i: 0
-				});
+				Music.sharedInstance.queue(
+					$('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id'))
+				);
+				Music.sharedInstance.skip(true);
 			});
 
 			$shuffleAlbumButton.click(() => {
-				Music.sharedInstance.playNextUp({
-					list: shuffle(
+				Music.sharedInstance.queue(
+					shuffle(
 						$('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id'))
-					),
-					i: 0
-				});
+					)
+				);
+				Music.sharedInstance.skip(true);
 			});
 
-			$queueAlbumButton.click(() => {
+			$playLastButton.click(() => {
 				$('.tracklist-row').each(function() {
 					Music.sharedInstance.queue().push(
 						$(this).data('song-id')
 					);
-
-					if (Music.sharedInstance.disabled()) {
-						Music.sharedInstance.enable();
-						Music.sharedInstance.skip();
-					}
 
 					showToastNotification(true, "Added to queue");
 				});

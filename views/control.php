@@ -114,7 +114,7 @@
 					JSON.stringify({
 						volume: Music.sharedInstance.volume(),
 						queue: Music.sharedInstance.queue(),
-						nextUp: Music.sharedInstance.nextUp(),
+						history: Music.sharedInstance.history(),
 						seek: Music.sharedInstance.seek(),
 						songId: Music.sharedInstance.songId()
 					})
@@ -330,10 +330,9 @@
 			// Ctrl + S
 			if (e.ctrlKey && e.keyCode === 83) {
 				e.preventDefault();
-				Music.sharedInstance.playNextUp({
-					list: shuffle([<?= implode(", ", $songIds) ?>]),
-					i: 0
-				});
+				Music.sharedInstance.queue(
+					shuffle([<?= implode(", ", $songIds) ?>])
+				);
 			}
 
 			// Ctrl + D

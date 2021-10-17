@@ -81,7 +81,7 @@ class SearchHandler {
 	}
 
 	_createResultRow(type, id, albumId, name, artist, duration, artFilepath) {
-		var $resultRow = $(`<div class="music-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="QUEUE,GO_TO_ALBUM" data-activable></div>`);
+		var $resultRow = $(`<div class="music-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="PLAY_NEXT,PLAY_LAST,GO_TO_ALBUM" data-activable></div>`);
 		var $img = $('<img>').prop('src', artFilepath);
 		var $artwork = $('<div class="artwork"></div>').append($img);
 		var $details = $('<div class="details"></div>').append([
@@ -105,10 +105,7 @@ class SearchHandler {
 
 	async _playAlbum($resultRow) {
 		var res = await $.get(`/api/album/${$resultRow.data('album-id')}`);
-		Music.sharedInstance.playNextUp({
-			list: res.data.songIds,
-			i: 0
-		});
+		Music.sharedInstance.queue(res.data.songIds);
 	}
 
 	focus() {

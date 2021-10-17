@@ -6,7 +6,7 @@
 	</div>
 	<div id="albums" class="mx-auto centre">
 		<?php foreach ($albums as $album): ?>
-			<div class="album-container mx-2 my-2" data-album-id="<?= $album['id'] ?>" data-context-menu-actions="QUEUE,GO_TO_ALBUM">
+			<div class="album-container mx-2 my-2" data-album-id="<?= $album['id'] ?>" data-context-menu-actions="PLAY_NEXT,PLAY_LAST,GO_TO_ALBUM">
 				<img class="lazy album-art" data-src="<?= $album['artFilepath'] ?>">
 				<div class="title">
 					<?= $album['name'] ?>
