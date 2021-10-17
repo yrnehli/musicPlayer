@@ -36,7 +36,7 @@
 
 	async function createQueueRows(songIds) {
 		if (songIds.length > 50) {
-			songIds = songIds.slice(0, 49);
+			songIds = songIds.slice(49);
 		}
 
 		var queueRows = $queueRowsContainer
