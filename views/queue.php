@@ -35,8 +35,8 @@
 	});
 
 	async function createQueueRows(songIds) {
-		if (songIds.length > 100) {
-			songIds = songIds.slice(0, 99);
+		if (songIds.length > 50) {
+			songIds = songIds.slice(0, 49);
 		}
 
 		var queueRows = $queueRowsContainer
@@ -59,6 +59,8 @@
 			queueRow.addEventListener('dragleave', handleDragLeave, false);
 			queueRow.addEventListener('drop', handleDrop, false);
 		});
+
+		new LazyLoad({});
 	}
 
 	function initEvents() {
@@ -180,9 +182,10 @@
 	function handleDrop(e) {
 		e.stopPropagation();
 
+		var queue = Music.sharedInstance.queue();
 		var queueRows = $queueRowsContainer.children().get();
 		var queueRowsToShift = [];
-		var thisIndex, dragSourceIndex;
+		var thisIndex, dragSourceIndex, temp;
 
 		if (dragSource !== self) {
 			queueRows.forEach((tracklistRow, i) => {
@@ -193,15 +196,20 @@
 				}
 			});
 
+			temp = queue[dragSourceIndex];
+			queue[dragSourceIndex] = queue[thisIndex];
+			queue[thisIndex] = temp;
+
 			if (thisIndex > dragSourceIndex) {
 				for (var i = dragSourceIndex + 1; i <= thisIndex; i++) {
 					queueRowsToShift.push({
 						html: queueRows[i].innerHTML,
-						songId: queueRows[i].getAttribute('data-song-id')
+						songId: parseInt(queueRows[i].getAttribute('data-song-id'))
 					});
 				}
 
 				for (var i = dragSourceIndex, j = 0; i < thisIndex; i++, j++) {
+					queue[i] = queueRowsToShift[j].songId;
 					queueRows[i].innerHTML = queueRowsToShift[j].html;
 					queueRows[i].setAttribute('data-song-id', queueRowsToShift[j].songId);
 				}
@@ -209,11 +217,12 @@
 				for (var i = thisIndex; i < dragSourceIndex; i++) {
 					queueRowsToShift.push({
 						html: queueRows[i].innerHTML,
-						songId: queueRows[i].getAttribute('data-song-id')
+						songId: parseInt(queueRows[i].getAttribute('data-song-id'))
 					});
 				}
 
 				for (var i = thisIndex + 1, j = 0; i <= dragSourceIndex; i++, j++) {
+					queue[i] = queueRowsToShift[j].songId;
 					queueRows[i].innerHTML = queueRowsToShift[j].html;
 					queueRows[i].setAttribute('data-song-id', queueRowsToShift[j].songId);
 				}
@@ -224,19 +233,13 @@
 			this.innerHTML = data.html;
 		}
 
-		queueRows = $queueRowsContainer.children().get();
-
-		Music.sharedInstance.queue(
-			queueRows.map(queueRow => queueRow.getAttribute('data-song-id'))
-		);
-
 		return false;
 	}
 
 	async function createQueueRow(songId) {
 		var res = await $.get(`/api/song/${songId}`);
 		var $queueRow = $(`<div class="music-row" draggable="true" data-song-id=${songId} data-album-id=${res.data.albumId} data-context-menu-actions="REMOVE_FROM_QUEUE" data-activable></div>`);
-		var $img = $('<img>').prop('src', res.data.albumArtUrl);
+		var $img = $('<img class="lazy">').attr('data-src', res.data.albumArtUrl);
 		var $artwork = $('<div class="artwork"></div>').append($img);
 		var $totalTime = $('<div class="total-time"></div>').text(secondsToTimeString(res.data.songDuration));
 		var $details = $('<div class="details"></div>').append([
