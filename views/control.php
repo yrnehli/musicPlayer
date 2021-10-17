@@ -330,9 +330,11 @@
 			// Ctrl + S
 			if (e.ctrlKey && e.keyCode === 83) {
 				e.preventDefault();
+				Music.sharedInstance.history([]);
 				Music.sharedInstance.queue(
 					shuffle([<?= implode(", ", $songIds) ?>])
 				);
+				Music.sharedInstance.skip(true);
 			}
 
 			// Ctrl + D
