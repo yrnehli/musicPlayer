@@ -31,11 +31,14 @@
 	$(async function() {
 		$queueRowsContainer.empty();
 		updateNowPlaying();
-		createQueueRows(Music.sharedInstance.queue());
 		initEvents();
 	});
 
 	async function createQueueRows(songIds) {
+		if (songIds.length > 100) {
+			songIds = songIds.slice(0, 99);
+		}
+
 		var queueRows = $queueRowsContainer
 			.append(
 				await Promise.all(
@@ -71,23 +74,24 @@
 			}
 		});
 
-		var interval = setInterval(() => {
-			if (window.location.pathname !== "/queue") {
-				clearInterval(interval);
-			}
+		// TODO - Fix Implementation
+		// var interval = setInterval(() => {
+			// if (window.location.pathname !== "/queue") {
+			// 	clearInterval(interval);
+			// }
 
-			var $queueRows = $queueRowsContainer.children();
+			// var $queueRows = $queueRowsContainer.children();
 
-			if ($queueRows.length < Music.sharedInstance.queue().length) {
-				var songIds = [];
+			// if ($queueRows.length < Music.sharedInstance.queue().length) {
+			// 	var songIds = [];
 
-				for (var i = $queueRows.length; i < Music.sharedInstance.queue().length; i++) {
-					songIds.push(Music.sharedInstance.queue()[i]);
-				}
+			// 	for (var i = $queueRows.length; i < Music.sharedInstance.queue().length; i++) {
+			// 		songIds.push(Music.sharedInstance.queue()[i]);
+			// 	}
 
-				createQueueRows(songIds);
-			}
-		}, 500);
+			// 	createQueueRows(songIds);
+			// }
+		// }, 500);
 	}
 
 	async function updateNowPlaying() {
