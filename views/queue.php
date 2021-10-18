@@ -32,6 +32,11 @@
 		$queueRowsContainer.empty();
 		updateNowPlaying();
 		initEvents();
+
+		// Temporary
+		setTimeout(() => {
+			createQueueRows(Music.sharedInstance.queue());
+		}, 500);
 	});
 
 	async function createQueueRows(songIds) {
