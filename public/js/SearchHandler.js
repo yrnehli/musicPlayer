@@ -100,11 +100,15 @@ class SearchHandler {
 	}
 
 	_playSong($resultRow) {
+		Music.sharedInstance.history([]);
 		Music.sharedInstance.changeSong($resultRow.data('song-id'), true);
+		Music.sharedInstance.queue([]);
 	}
 
 	async _playAlbum($resultRow) {
 		var res = await $.get(`/api/album/${$resultRow.data('album-id')}`);
+		Music.sharedInstance.history([]);
+		Music.sharedInstance.changeSong(res.data.songIds.shift(), true);
 		Music.sharedInstance.queue(res.data.songIds);
 	}
 
