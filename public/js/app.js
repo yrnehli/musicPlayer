@@ -34,6 +34,7 @@ $(function() {
 						res
 							.data
 							.songIds
+							.reverse()
 							.forEach(songId => Music.sharedInstance.queue().unshift(songId))
 						;
 					}
