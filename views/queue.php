@@ -37,14 +37,14 @@
 
 	async function updateQueueRows() {
 		var songIds = Music.sharedInstance.queue();
-		var queueRowSongIds = $queueRowsContainer.children().get().map(queueRow => parseInt(queueRow.dataset.songId));
+		var queueRowSongIds = $queueRowsContainer.children().get().map(queueRow => String(queueRow.dataset.songId));
 
 		if (songIds.length > 50) {
 			songIds = songIds.slice(0, 49);
 		}
 
 		var $queueRows = await Promise.all(
-			songIds.filter(x => !queueRowSongIds.includes(parseInt(x))).map(songId => createQueueRow(songId))
+			songIds.filter(x => !queueRowSongIds.includes(String(x))).map(songId => createQueueRow(songId))
 		);
 
 		$queueRows.forEach($queueRow => {
@@ -188,7 +188,7 @@
 				for (var i = dragSourceIndex + 1; i <= thisIndex; i++) {
 					queueRowsToShift.push({
 						html: queueRows[i].innerHTML,
-						songId: parseInt(queueRows[i].getAttribute('data-song-id'))
+						songId: queueRows[i].getAttribute('data-song-id')
 					});
 				}
 
@@ -201,7 +201,7 @@
 				for (var i = thisIndex; i < dragSourceIndex; i++) {
 					queueRowsToShift.push({
 						html: queueRows[i].innerHTML,
-						songId: parseInt(queueRows[i].getAttribute('data-song-id'))
+						songId: queueRows[i].getAttribute('data-song-id')
 					});
 				}
 
