@@ -31,32 +31,24 @@
 	$(async function() {
 		$queueRowsContainer.empty();
 		updateNowPlaying();
+		updateQueueRows();
 		initEvents();
-
-		// Temporary
-		setTimeout(() => {
-			createQueueRows(Music.sharedInstance.queue());
-		}, 500);
 	});
 
-	async function createQueueRows(songIds) {
+	async function updateQueueRows() {
+		var songIds = Music.sharedInstance.queue();
+		var queueRowSongIds = $queueRowsContainer.children().get().map(queueRow => parseInt(queueRow.dataset.songId));
+
 		if (songIds.length > 50) {
 			songIds = songIds.slice(0, 49);
 		}
 
-		var queueRows = $queueRowsContainer
-			.append(
-				await Promise.all(
-					songIds.map(songId => createQueueRow(songId))
-				)
-			)
-			.children()
-			.get()
-		;
+		var $queueRows = await Promise.all(
+			songIds.filter(x => !queueRowSongIds.includes(parseInt(x))).map(songId => createQueueRow(songId))
+		);
 
-		(queueRows.length) ? $nextUp.show() : $nextUp.hide();
-
-		queueRows.forEach(queueRow => {
+		$queueRows.forEach($queueRow => {
+			var queueRow = $queueRow.get()[0];
 			queueRow.addEventListener('dragstart', handleDragStart, false);
 			queueRow.addEventListener('dragend', handleDragEnd, false);
 			queueRow.addEventListener('dragover', handleDragOver, false);
@@ -65,40 +57,27 @@
 			queueRow.addEventListener('drop', handleDrop, false);
 		});
 
+		if ($queueRows.length) {
+			($queueRows[0].data('song-id') == Music.sharedInstance.queue()[0]) ? $queueRowsContainer.prepend($queueRows) : $queueRowsContainer.append($queueRows);
+		}
+
+		($queueRowsContainer.children().length) ? $nextUp.show() : $nextUp.hide();
+
 		new LazyLoad({});
+
+		setTimeout(updateQueueRows, 500);
 	}
 
-	function initEvents() {
+	async function initEvents() {
 		Music.sharedInstance.off('songchange.queue').on('songchange.queue', () => updateNowPlaying());
 		Music.sharedInstance.off('disable.queue').on('disable.queue', () => updateNowPlaying());
 		Music.sharedInstance.off('skip.queue').on('skip.queue', () => {
-			var $queueRows = $queueRowsContainer.children();
-
-			$queueRows.first().remove();
+			$queueRowsContainer.children().first().remove();
 			
 			if ($queueRowsContainer.children().length === 0) {
 				$nextUp.hide();
 			}
 		});
-
-		// TODO - Fix Implementation
-		// var interval = setInterval(() => {
-			// if (window.location.pathname !== "/queue") {
-			// 	clearInterval(interval);
-			// }
-
-			// var $queueRows = $queueRowsContainer.children();
-
-			// if ($queueRows.length < Music.sharedInstance.queue().length) {
-			// 	var songIds = [];
-
-			// 	for (var i = $queueRows.length; i < Music.sharedInstance.queue().length; i++) {
-			// 		songIds.push(Music.sharedInstance.queue()[i]);
-			// 	}
-
-			// 	createQueueRows(songIds);
-			// }
-		// }, 500);
 	}
 
 	async function updateNowPlaying() {
