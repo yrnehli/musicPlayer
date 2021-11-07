@@ -15,7 +15,7 @@ class RootController extends Controller {
 		$stmt = $conn->prepare(
 			"SELECT *
 			FROM `albums`
-			ORDER BY `artist`"
+			ORDER BY `artist`, `year`"
 		);
 		$stmt->execute();
 		$albums = $stmt->fetchAll();
