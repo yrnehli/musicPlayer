@@ -50,11 +50,13 @@
 			</svg>
 			Shuffle
 		</button>
+		<button id="playNextButton" class="btn-spotify mx-1">
+			<i class="fal fa-arrow-to-right fa-fw mr-1 my-auto"></i>
+			Play Next
+		</button>
 		<button id="playLastButton" class="btn-spotify mx-1">
-			<svg class="my-auto mr-2 plus" height="16" width="16">
-				<path></path>
-			</svg>
-			Add to queue
+			<i class="fal fa-arrow-to-bottom fa-fw mr-1 my-auto"></i>
+			Play Last
 		</button>
 	</div>
 	<div>
@@ -104,6 +106,7 @@
 	(function() {
 		var $playAlbumButton = $('#playAlbumButton');
 		var $shuffleAlbumButton = $('#shuffleAlbumButton');
+		var $playNextButton = $('#playNextButton');
 		var $playLastButton = $('#playLastButton');
 		var $tracklistRows = $('.tracklist-row');
 
@@ -205,13 +208,26 @@
 				Music.sharedInstance.skip(true);
 			});
 
+			$playNextButton.click(() => {
+				$('.tracklist-row')
+					.map(function() {
+						return $(this).data('song-id')	
+					})
+					.get()
+					.reverse()
+					.forEach(songId => Music.sharedInstance.queue().unshift(songId))
+				;
+
+				showToastNotification(true, "Playing Next");
+			});
+
 			$playLastButton.click(() => {
 				$('.tracklist-row').each(function() {
 					Music.sharedInstance.queue().push(
 						$(this).data('song-id')
 					);
 
-					showToastNotification(true, "Added to queue");
+					showToastNotification(true, "Playing Last");
 				});
 			});
 
