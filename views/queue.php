@@ -19,7 +19,10 @@
 		</div>
 	</div>
 	<div class="mb-3" id="nextUp" style="display:none;">
-		<h3>Next up</h3>
+		<div class="d-flex mb-2">
+			<h3 class="my-auto">Next up</h3>
+			<div id="clearQueueButton" class="btn btn-spotify ml-auto mr-2">Clear</div>
+		</div>
 		<div id="queueRowsContainer"></div>
 	</div>
 </div>
@@ -27,6 +30,7 @@
 	var $queueRowsContainer = $('#queueRowsContainer');
 	var $nowPlaying = $('#nowPlaying');
 	var $nextUp = $('#nextUp');
+	var $clearQueueButton = $('#clearQueueButton');
 
 	$(async function() {
 		$queueRowsContainer.empty();
@@ -78,6 +82,10 @@
 				$nextUp.hide();
 			}
 		});
+		$clearQueueButton.click(() => {
+			$queueRowsContainer.empty();
+			Music.sharedInstance.queue([]);
+		})
 	}
 
 	async function updateNowPlaying() {
