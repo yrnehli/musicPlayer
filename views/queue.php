@@ -84,8 +84,8 @@
 		});
 		$clearQueueButton.click(() => {
 			$nextUp.hide();
-			$queueRowsContainer.empty();
 			Music.sharedInstance.queue([]);
+			$queueRowsContainer.empty();
 		})
 	}
 
