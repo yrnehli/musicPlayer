@@ -40,6 +40,10 @@
 	});
 
 	async function updateQueueRows() {
+		if (window.location.pathname !== "/queue") {
+			return;
+		}
+
 		var songIds = Music.sharedInstance.queue();
 		var queueRowSongIds = $queueRowsContainer.children().get().map(queueRow => String(queueRow.dataset.songId));
 
