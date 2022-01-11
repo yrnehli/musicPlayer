@@ -127,15 +127,24 @@ class ApiController extends Controller {
 	}
 
 	private function searchLocal($term) {
+		$term = "%" . str_replace(
+			[" ", "s"],
+			["%", '_'],
+			$term
+		) . "%";
+		
 		$db = new MusicDatabase();
 		$conn = $db->getConn();
+
+		$ignoreRegex = "^A-Za-zÀ-ÖØ-öø-ÿ0-9 ";
 
 		$stmt = $conn->prepare(
 			"SELECT `id`, `name`, `artist`, `duration`, `albumDetails`.`duration`, `artFilepath`
 			FROM `albums`
 			INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
-			WHERE MATCH (`name`, `artist`)
-			AGAINST (:term IN NATURAL LANGUAGE MODE)
+			WHERE REGEXP_REPLACE(CONCAT(`name`, `artist`), '[$ignoreRegex]', '') LIKE :term
+			OR REGEXP_REPLACE(CONCAT(`artist`, `name`), '[$ignoreRegex]', '') LIKE :term
+			ORDER BY CHAR_LENGTH(`name`)
 			LIMIT 5"
 		);
 		$stmt->bindParam(":term", $term);
@@ -147,8 +156,9 @@ class ApiController extends Controller {
 			FROM `songs`
 			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
 			INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
-			WHERE MATCH (`songs`.`name`, `songs`.`artist`)
-			AGAINST (:term IN NATURAL LANGUAGE MODE)
+			WHERE REGEXP_REPLACE(CONCAT(`songs`.`name`, `songs`.`artist`), '[$ignoreRegex]', '') LIKE :term
+			OR REGEXP_REPLACE(CONCAT(`songs`.`artist`, `songs`.`name`), '[$ignoreRegex]', '') LIKE :term
+			ORDER BY CHAR_LENGTH(`songs`.`name`)
 			LIMIT 5"
 		);
 		$stmt->bindParam(":term", $term);
