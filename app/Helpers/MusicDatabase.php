@@ -59,9 +59,9 @@ class MusicDatabase {
 		$this->conn->prepare("DELETE FROM `albums`")->execute();
 	}
 
-	public function insertDeezerSavedSong($songId, $flagged = false) {
+	public function insertSavedSong($songId, $flagged = false) {
 		$stmt = $this->conn->prepare(
-			"INSERT INTO `deezerSavedSongs` (`songId`, `flagged`)
+			"INSERT INTO `savedSongs` (`songId`, `flagged`)
 			VALUES (:songId, :flagged)
 			ON DUPLICATE KEY UPDATE `flagged` = :flagged"
 		);
@@ -70,9 +70,9 @@ class MusicDatabase {
 		$stmt->execute();
 	}
 
-	public function deleteDeezerSavedSong($songId) {
+	public function deleteSavedSong($songId) {
 		$stmt = $this->conn->prepare(
-			"DELETE FROM `deezerSavedSongs`
+			"DELETE FROM `savedSongs`
 			WHERE `songId` = :songId"
 		);
 		$stmt->bindParam(":songId", $songId);
@@ -82,7 +82,7 @@ class MusicDatabase {
 	public function isDeezerSongSaved($songId) {
 		$stmt = $this->conn->prepare(
 			"SELECT *
-			FROM `deezerSavedSongs`
+			FROM `savedSongs`
 			WHERE `songId` = :songId"
 		);
 		$stmt->bindParam(":songId", $songId);
@@ -95,7 +95,7 @@ class MusicDatabase {
 	public function isDeezerSongFlagged($songId) {
 		$stmt = $this->conn->prepare(
 			"SELECT `flagged`
-			FROM `deezerSavedSongs`
+			FROM `savedSongs`
 			WHERE `songId` = :songId"
 		);
 		$stmt->bindParam(":songId", $songId);

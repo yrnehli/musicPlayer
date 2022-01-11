@@ -64,14 +64,14 @@ class SavedController extends Controller {
 
 	public function clear() {
 		$db = new MusicDatabase();
-		$db->getConn()->prepare("DELETE FROM `deezerSavedSongs`")->execute();
+		$db->getConn()->prepare("DELETE FROM `savedSongs`")->execute();
 	}
 
 	private function getSavedSongs() {
 		$db = new MusicDatabase();
 		$conn = $db->getConn();
 
-		$stmt = $conn->prepare("SELECT * FROM `deezerSavedSongs`");
+		$stmt = $conn->prepare("SELECT * FROM `savedSongs`");
 		$stmt->execute();
 		$savedSongs = $stmt->fetchAll();
 
