@@ -74,9 +74,7 @@ class Music extends Howl {
 		}
 
 		this._emit('songchange');
-		this._emit(
-			(auto) ? 'autosongchange' : 'manualsongchange'
-		);
+		this._emit(auto ? 'autosongchange' : 'manualsongchange');
 	}
 
 	togglePlay() {
@@ -120,14 +118,16 @@ class Music extends Howl {
 	}
 
 	skip(e) {
-		var wasPlaying = (e || this.playing() || (this._queue.some(item => item.event === "play") && !this._queue.some(item => item.event === "pause")));
-
 		if (this.__queue.length > 0) {
-			this.enable();
 			if (this.__songId) {
 				this.__history.push(this.__songId);
 			}
-			this.changeSong(this.__queue.shift(), wasPlaying, e);
+
+			this.changeSong(
+				this.__queue.shift(),
+				(e || this.playing() || (this._queue.some(item => item.event === "play") && !this._queue.some(item => item.event === "pause"))),
+				e
+			);
 		} else {
 			this.disable();
 		}
@@ -172,12 +172,9 @@ class Music extends Howl {
 
 	off(event, fn) {
 		var self = this;
-		var namespace;
 
 		if (event.includes(".")) {
-			var parts = event.split(".");
-			event = parts[0];
-			namespace = parts[1];
+			var [event, namespace] = event.split(".");
 		}
 
 		var events = self['_on' + event];
