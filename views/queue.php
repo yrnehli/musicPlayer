@@ -3,7 +3,7 @@
 <div id="root" class="px-4 pb-4" data-simplebar>
 	<?= $searchResults ?>
 	<h2>Queue</h2>
-	<div class="mb-3" id="nowPlaying" style="display:none;">
+	<div class="mb-3" id="nowPlaying" style="display: none;">
 		<h3>Now Playing</h3>
 		<div class="music-row" data-activable>
 			<div>
@@ -18,7 +18,7 @@
 			<div class="total-time"></div>
 		</div>
 	</div>
-	<div class="mb-3" id="nextUp" style="display:none;">
+	<div class="mb-3" id="nextUp" style="display: none;">
 		<div class="d-flex mb-2">
 			<h3 class="my-auto">Next up</h3>
 			<div id="clearQueueButton" class="btn btn-spotify ml-auto mr-2">Clear</div>

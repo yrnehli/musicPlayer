@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 8.0.26)
 # Database: musicPlayer
-# Generation Time: 2022-01-11 3:33:42 PM +0000
+# Generation Time: 2022-01-11 3:49:41 PM +0000
 # ************************************************************
 
 
@@ -45,8 +45,7 @@ CREATE TABLE `albums` (
   `genre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `year` int DEFAULT NULL,
   `artFilepath` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  FULLTEXT KEY `name` (`name`,`artist`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -95,8 +94,7 @@ CREATE TABLE `songs` (
   `discNumber` int DEFAULT NULL,
   `duration` int NOT NULL,
   `filepath` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  FULLTEXT KEY `name` (`name`,`artist`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
