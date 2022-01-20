@@ -25,7 +25,7 @@ class Music extends Howl {
 		this.__queue = [];
 		this.__history = [];
 		
-		this.on('end', e => this.skip(e));
+		this.on('end', e => this.skip(true, e));
 	}
 
 	disabled() {
@@ -117,7 +117,7 @@ class Music extends Howl {
 		}
 	}
 
-	skip(e) {
+	skip(play, auto) {
 		if (this.__queue.length > 0) {
 			if (this.__songId) {
 				this.__history.push(this.__songId);
@@ -125,8 +125,8 @@ class Music extends Howl {
 
 			this.changeSong(
 				this.__queue.shift(),
-				(e || this.playing() || (this._queue.some(item => item.event === "play") && !this._queue.some(item => item.event === "pause"))),
-				e
+				(play || this.playing() || (this._queue.some(item => item.event === "play") && !this._queue.some(item => item.event === "pause"))),
+				auto
 			);
 		} else {
 			this.disable();

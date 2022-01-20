@@ -334,7 +334,7 @@
 				Music.sharedInstance.queue(
 					shuffle([<?= implode(", ", $songIds) ?>])
 				);
-				Music.sharedInstance.skip();
+				Music.sharedInstance.skip(true);
 			}
 
 			// Ctrl + D

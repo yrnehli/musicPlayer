@@ -40,7 +40,7 @@ $(function() {
 					}
 
 					if (Music.sharedInstance.disabled()) {
-						Music.sharedInstance.skip();
+						Music.sharedInstance.skip(true);
 					}
 					
 					showToastNotification(true, "Playing Next");					
@@ -66,7 +66,7 @@ $(function() {
 					}
 
 					if (Music.sharedInstance.disabled()) {
-						Music.sharedInstance.skip();
+						Music.sharedInstance.skip(true);
 					}
 					
 					showToastNotification(true, "Playing Last");					

@@ -145,7 +145,7 @@
 				});
 				
 				Music.sharedInstance.queue(queue);
-				Music.sharedInstance.skip();
+				Music.sharedInstance.skip(true);
 				Music.sharedInstance.history(history);
 
 				$tracklistRows.removeClass('active');
@@ -196,7 +196,7 @@
 				Music.sharedInstance.queue(
 					$('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id'))
 				);
-				Music.sharedInstance.skip();
+				Music.sharedInstance.skip(true);
 			});
 
 			$shuffleAlbumButton.click(() => {
@@ -205,7 +205,7 @@
 						$('.tracklist-row').get().map(tracklistRow => $(tracklistRow).data('song-id'))
 					)
 				);
-				Music.sharedInstance.skip();
+				Music.sharedInstance.skip(true);
 			});
 
 			$playNextButton.click(() => {
