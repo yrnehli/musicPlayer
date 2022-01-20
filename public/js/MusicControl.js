@@ -50,7 +50,7 @@ class MusicControl extends EventEmitter {
 		this._music.on('pause', e => this._elements.$playButton.addClass("paused"));
 		this._music.on('manualsongchange', e => this._update(false));
 		this._music.on('autosongchange', e => {
-			$.get(`/api/scrobble/${this._music.songId()}`);
+			$.get(`/api/scrobble/${this._music.history().slice(-1).pop()}`);
 			this._update(true);
 		});
 
