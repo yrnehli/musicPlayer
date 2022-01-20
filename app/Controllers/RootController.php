@@ -37,5 +37,3 @@ class RootController extends Controller {
 		$this->responseHandler(true);
 	}
 }
-
-?>

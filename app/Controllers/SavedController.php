@@ -78,5 +78,3 @@ class SavedController extends Controller {
 		return $savedSongs;
 	}
 }
-
-?>

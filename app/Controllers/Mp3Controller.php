@@ -66,5 +66,3 @@ class Mp3Controller extends Controller {
 		return $data;
 	}
 }
-
-?>

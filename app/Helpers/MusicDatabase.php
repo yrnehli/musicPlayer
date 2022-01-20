@@ -109,5 +109,3 @@ class MusicDatabase {
 		return $this->conn;
 	}
 }
-
-?>

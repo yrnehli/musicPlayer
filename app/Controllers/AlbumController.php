@@ -78,5 +78,3 @@ class AlbumController extends Controller {
 		return compact('album', 'songs', 'art');
 	}
 }
-
-?>

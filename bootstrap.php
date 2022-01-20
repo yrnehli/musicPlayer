@@ -43,5 +43,3 @@ $dotenv->load();
 include_once "routes.php";
 
 Flight::start();
-
-?>

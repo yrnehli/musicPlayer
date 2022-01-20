@@ -7,5 +7,3 @@ class QueueController extends Controller {
 		$this->view('queue');
 	}
 }
-
-?>

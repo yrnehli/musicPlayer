@@ -56,5 +56,3 @@ class Utilities {
 		return $accentColour;
 	}
 }
-
-?>

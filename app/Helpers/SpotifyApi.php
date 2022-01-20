@@ -90,5 +90,3 @@ class SpotifyApi {
 		return compact('data', 'httpCode');
 	}
 }
-
-?>

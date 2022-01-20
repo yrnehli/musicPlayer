@@ -154,5 +154,3 @@ class DeezerApi {
 		return $res;
 	}
 }
-
-?>
