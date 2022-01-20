@@ -1,7 +1,7 @@
 # Henry's Music Player
 A music player built on the LAMP stack which can play local MP3 files and stream music from Deezer.
 
-![depiction](https://user-images.githubusercontent.com/44710606/130645428-a70ddf29-384b-44ea-88c2-7b2785fa67f7.png)
+![depiction](https://user-images.githubusercontent.com/44710606/150382026-c24d2615-5075-4130-b940-59a132be58f7.png)
 
 # Requirements
 - PHP 7.2
