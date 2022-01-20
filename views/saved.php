@@ -102,7 +102,7 @@
 				});
 				
 				Music.sharedInstance.queue(queue);
-				Music.sharedInstance.skip(true);
+				Music.sharedInstance.skip();
 				Music.sharedInstance.history(history);
 
 				$tracklistRows.removeClass('active');

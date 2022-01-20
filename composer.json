@@ -4,6 +4,7 @@
         "james-heinrich/getid3": "^1.9",
         "vlucas/phpdotenv": "^5.3",
         "ksubileau/color-thief-php": "^1.4",
-        "foroco/php-browser-detection": "^2.3"
+        "foroco/php-browser-detection": "^2.3",
+        "matto1990/lastfm-api": "^1.6"
     }
 }

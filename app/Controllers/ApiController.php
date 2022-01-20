@@ -5,6 +5,9 @@ namespace App\Controllers;
 use App\Helpers\MusicDatabase;
 use App\Helpers\MusicManager;
 use App\Helpers\DeezerApi;
+use LastFmApi\Api\TrackApi;
+use LastFmApi\Api\AuthApi;
+use Exception;
 use Flight;
 use PDO;
 
@@ -20,7 +23,9 @@ class ApiController extends Controller {
 		$this->responseHandler(
 			true,
 			"",
-			str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX) ? $this->getDeezerSong($songId) : $this->getLocalSong($songId)
+			str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)
+				? $this->getDeezerSong($songId)
+				: $this->getLocalSong($songId)
 		);
 	}
 
@@ -185,7 +190,41 @@ class ApiController extends Controller {
 			$db->deleteSavedSong($songId);
 			$this->responseHandler(true, "Removed from saved songs");
 		}
-	} 
+	}
+
+	public function scrobble($songId) {
+		try {
+			$trackApi = new TrackApi(
+				new AuthApi(
+					'setsession',
+					[
+						'apiKey' => $_ENV['LASTFM_API_KEY'],
+						'apiSecret' => $_ENV['LASTFM_API_SECRET'],
+						'sessionKey' => $_ENV['LASTFM_SESSION_KEY'],
+						'username' => $_ENV['LASTFM_USERNAME'],
+						'subscriber' => 0
+					]
+				)
+			);
+	
+			$song = str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)
+				? $this->getDeezerSong($songId)
+				: $this->getLocalSong($songId)
+			;
+			
+			$this->responseHandler(
+				$trackApi->scrobble([
+					'artist' => explode(",", $song['songArtist'])[0],
+					'track' => $song['songName'],
+					'album' => $song['albumName'],
+					'duration' => intval($song['songDuration']),
+					'timestamp' => time() - $song['songDuration']
+				])
+			);
+		} catch (Exception $e) {
+			$this->responseHandler(false);
+		}
+	}
 }
 
 ?>

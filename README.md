@@ -28,15 +28,19 @@ cd musicPlayer && composer install
 - Make a copy of `.env.example` and rename it to `.env`.
 - Populate the environment variables
 
-| Key | Value |
-| ----------- | ----------- |
-| `DB_SERVERNAME` | The server name or IP of your MySQL database. |
-| `DB_USERNAME` | The username for your MySQL database. |
-| `DB_PASSWORD` | The password for the MySQL user defined in `DB_USERNAME`. |
-| `DB_DBNAME` | The name of the schema you imported `database.sql` to. |
-| `MUSIC_DIRECTORY` | The full directory of where your local MP3 files are stored. |
-| `SPOTIFY_SP_DC` | Your Spotify `sp_dc` cookie obtained from logging into Spotify's web player. |
-| `DEEZER_ARL` | Your Deezer `arl` cookie obtained from logging into Deezer's web player. |
+| Key | Value | Required |
+| ----------- | ----------- | ----------- |
+| `DB_SERVERNAME` | The server name or IP of your MySQL database. | Yes |
+| `DB_USERNAME` | The username for your MySQL database. | Yes |
+| `DB_PASSWORD` | The password for the MySQL user defined in `DB_USERNAME`. | Yes |
+| `DB_DBNAME` | The name of the schema you imported `database.sql` to. | Yes |
+| `MUSIC_DIRECTORY` | The full directory of where your local MP3 files are stored. | No |
+| `SPOTIFY_SP_DC` | Your Spotify `sp_dc` cookie obtained from logging into Spotify's web player. | No |
+| `DEEZER_ARL` | Your Deezer `arl` cookie obtained from logging into Deezer's web player. | No |
+| `LASTFM_API_KEY` | Your Last.fm API key. | No |
+| `LASTFM_API_SECRET` | Your Last.fm API secret. | No |
+| `LASTFM_SESSION_KEY` | Your Last.fm session key. | No |
+| `LASTFM_USERNAME` | Your Last.fm username. | No |
 
 5. Setup an Apache VirtualHost for the repo. Example:
 ```
@@ -84,6 +88,7 @@ You should receive a JSON response that looks like this:
 - Search and stream from Deezer by prefixing your search query with `e: `, for example `e: 24K Magic`.
 - Save songs from Deezer by pressing the heart icon on the track.
 - Export your saved songs to your Spotify liked songs by using the `Spotify Export` button on the `Saved Songs` page `(Ctrl + D)`.
+- Automatically scrobbles songs to Last.fm when a track finishes playing.
 
 # PWA Support
 This can be installed as a Progressive Web App (PWA). For the best experience, enable the following flags in your Chromium based browser.

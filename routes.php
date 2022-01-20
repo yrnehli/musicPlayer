@@ -16,5 +16,6 @@ Route::map("GET", "/api/song/@songId", "ApiController@song");
 Route::map("GET", "/api/album/@albumId", "ApiController@album");
 Route::map("PUT", "/api/saved/@songId", "ApiController@saved");
 Route::map("DELETE", "/api/saved/@songId", "ApiController@saved");
+Route::map("GET", "/api/scrobble/@songId", "ApiController@scrobble");
 
 ?>
