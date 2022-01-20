@@ -36,7 +36,7 @@ class ApiController extends Controller {
 		$song = array_merge(
 			[
 				'isDeezer' => true,
-				'isSaved' => $db->isDeezerSongSaved($songId)
+				'isSaved' => $db->isSongSaved($songId)
 			],
 			$deezerApi->getSong(
 				str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId)

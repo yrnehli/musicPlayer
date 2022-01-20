@@ -79,7 +79,7 @@ class MusicDatabase {
 		$stmt->execute();
 	}
 
-	public function isDeezerSongSaved($songId) {
+	public function isSongSaved($songId) {
 		$stmt = $this->conn->prepare(
 			"SELECT *
 			FROM `savedSongs`
@@ -92,7 +92,7 @@ class MusicDatabase {
 		return ($res !== false);
 	}
 
-	public function isDeezerSongFlagged($songId) {
+	public function isSongFlagged($songId) {
 		$stmt = $this->conn->prepare(
 			"SELECT `flagged`
 			FROM `savedSongs`

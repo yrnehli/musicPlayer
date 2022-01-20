@@ -21,8 +21,8 @@ class AlbumController extends Controller {
 		foreach ($data['songs'] as &$song) {
 			$song['time'] = Utilities::secondsToTimeString($song['duration']);
 			$song['isDeezer'] = str_starts_with($song['id'], DeezerApi::DEEZER_ID_PREFIX);
-			$song['isFlagged'] = ($song['isDeezer']) ? $db->isDeezerSongFlagged($song['id']) : false;
-			$song['isSaved'] = ($song['isDeezer']) ? $db->isDeezerSongSaved($song['id']) : false;
+			$song['isFlagged'] = ($song['isDeezer']) ? $db->isSongFlagged($song['id']) : false;
+			$song['isSaved'] = ($song['isDeezer']) ? $db->isSongSaved($song['id']) : false;
 		}
 
 		$data['album']['englishTime'] = Utilities::secondsToEnglishTime($data['album']['duration']);
