@@ -16,10 +16,13 @@ class Music extends Howl {
 		this._onenable = [];
 		this._ondisable = [];
 		this._onskip = [];
+		this._onautoskip = [];
+		this._onmanualskip = [];
 		this._onsongchange = [];
 		this._onautosongchange = [];
 		this._onmanualsongchange = [];
 
+		this.__lastSongId = null;
 		this.__songId = null;
 		this.__disabled = true;
 		this.__queue = [];
@@ -35,9 +38,14 @@ class Music extends Howl {
 	songId() {
 		return this.__songId;
 	}
+	
+	lastSongId() {
+		return this.__lastSongId;
+	}
 
 	disable() {
 		this.pause();
+		this.__lastSongId = this.__songId;
 		this.__songId = null;
 		this.__queue = [];
 		this.__history = [];
@@ -55,6 +63,7 @@ class Music extends Howl {
 	}
 
 	async changeSong(songId, play, auto) {
+		this.__lastSongId = this.__songId;
 		this.__songId = songId;
 		this.enable();
 		
@@ -133,6 +142,7 @@ class Music extends Howl {
 		}
 
 		this._emit('skip');
+		this._emit(auto ? 'autoskip' : 'manualskip');
 	}
 
 	queue(queue) {
