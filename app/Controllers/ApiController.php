@@ -207,14 +207,12 @@ class ApiController extends Controller {
 				)
 			);
 	
-			$song = str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)
-				? $this->getDeezerSong($songId)
-				: $this->getLocalSong($songId)
-			;
+			$isDeezerSong = str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX);
+			$song = $isDeezerSong ? $this->getDeezerSong($songId) : $this->getLocalSong($songId);
 			
 			$this->responseHandler(
 				$trackApi->scrobble([
-					'artist' => explode(",", $song['songArtist'])[0],
+					'artist' => $isDeezerSong ? $song['mainSongArtist'] : $song['songArtist'],
 					'track' => $song['songName'],
 					'album' => $song['albumName'],
 					'duration' => intval($song['songDuration']),

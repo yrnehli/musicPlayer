@@ -68,6 +68,7 @@ class DeezerApi {
 					$res->contributors
 				)
 			),
+			'mainSongArtist' => $res->contributors[0],
 			'songDuration' => $res->duration,
 			'albumArtUrl' => $res->album->cover,
 			'albumName' => $res->album->title,
