@@ -4,6 +4,9 @@ ini_set('memory_limit' ,'-1');
 
 require_once 'vendor/autoload.php';
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 $directories = [
 	'public/userData',
 	'public/userData/albumArt',
@@ -36,9 +39,6 @@ foreach ($files as $file) {
 		require_once $file->getPathname();
 	}
 }
-
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 
 include_once "routes.php";
 

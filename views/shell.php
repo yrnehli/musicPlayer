@@ -22,7 +22,7 @@
 		<link rel="stylesheet" href="https://code.jquery.com/git/ui/jquery-ui-git.css">
 		<link rel="stylesheet" href="/public/css/global.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.css">
-		<link rel="manifest" href="<?= ($os['os_family'] === 'macintosh') ? '/manifest-mac.webmanifest' : '/manifest.webmanifest' ?>">
+		<link rel="manifest" href="/manifest.webmanifest">
 		<link rel="icon" href="data:,">
 		<title>Music</title>
 	</head>
