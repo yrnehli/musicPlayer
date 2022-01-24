@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Helpers\MusicDatabase;
 use App\Helpers\DeezerPrivateApi;
 use App\Helpers\SpotifyApi;
+use App\Helpers\LastFmApi;
 use App\Helpers\Utilities;
 use Exception;
 
@@ -43,49 +44,55 @@ class RootController extends Controller {
 	}
 
 	public function wrapped() {
+		// https://www.last.fm/user/username/partial/albums?albums_date_preset=LAST_7_DAYS
+		// https://www.last.fm/user/username/partial/albums?albums_date_preset=LAST_30_DAYS
+		// https://www.last.fm/user/username/partial/albums?albums_date_preset=LAST_90_DAYS
+		// https://www.last.fm/user/username/partial/albums?albums_date_preset=LAST_180_DAYS
+		// https://www.last.fm/user/username/partial/albums?albums_date_preset=LAST_365_DAYS
+		// https://www.last.fm/user/username/partial/albums?albums_date_preset=ALL
 		// ["7day", "1month", "3month", "6month", "12month", "overall"]
-		$period = "overall";
+
+		$lastFmApi = new LastFmApi();
 		$username = $_ENV["LASTFM_USERNAME"];
-		
-		$res = json_decode(
-			file_get_contents("https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=$username&period=$period&limit=1000&api_key=b1ec88afd67a475d63b76ca0749e469e&format=json")
-		);
-		$minutes = number_format(
-			array_sum(
-				array_column(
-					$res->toptracks->track,
-					"duration"
+		$period = "overall"; 
+
+		$topTracks = $lastFmApi->getTopTracks($username, $period);
+		$data = [
+			"scrobbles" => number_format(
+				array_sum(
+					array_column(
+						$topTracks,
+						"playcount"
+					)
 				)
-			) / 60
+			),
+			"minutes" => number_format(
+				array_sum(
+					array_column(
+						$topTracks,
+						"duration"
+					)
+				) / 60
+			),
+			"artists" => array_column(
+				$lastFmApi->getTopArtists($username, $period, 5),
+				"name"
+			),
+			"albums" => array_column(
+				$lastFmApi->getTopAlbums($username, $period, 5),
+				"name"
+			)
+		];
+
+		preg_match(
+			"/https.*avatar300s.*jpg/",
+			file_get_contents("https://www.last.fm/user/$username/partial/albums?albums_date_preset=ALL"),
+			$matches
 		);
 
-		$res = json_decode(
-			file_get_contents("https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=$username&period=$period&limit=5&api_key=b1ec88afd67a475d63b76ca0749e469e&format=json")
-		);
-		$artists = array_column(
-			$res->topartists->artist,
-			"name"
-		);
+		$data['mainAlbumArt'] = str_replace("avatar300s", "avatar1000s", $matches[0]);
+		$data['accentColour'] = Utilities::getAccentColour($data['mainAlbumArt']);
 
-		$res = json_decode(
-			file_get_contents("https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=$username&period=$period&limit=5&api_key=b1ec88afd67a475d63b76ca0749e469e&format=json")
-		);
-		$albums = array_column(
-			$res->topalbums->album,
-			"name"
-		);
-
-		$res = json_decode(
-			file_get_contents("https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=$username&api_key=b1ec88afd67a475d63b76ca0749e469e&format=json")
-		);
-		$scrobbles = number_format($res->user->playcount);
-
-		$res = file_get_contents("https://www.last.fm/user/$username/partial/albums?albums_date_preset=ALL");
-		preg_match("/https.*avatar300s.*jpg/", $res, $matches);
-		$mainAlbumArt = str_replace("avatar300s", "avatar1000s", $matches[0]);
-
-		$accentColour = Utilities::getAccentColour($mainAlbumArt);
-
-		$this->view('wrapped', compact('minutes', 'artists', 'albums', 'scrobbles', 'mainAlbumArt', 'accentColour'));
+		$this->view('wrapped', $data);
 	}
 }

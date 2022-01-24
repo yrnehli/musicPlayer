@@ -5,9 +5,8 @@ namespace App\Helpers;
 use Exception;
 
 class SpotifyApi {
-	private $spDc;
-
 	private const API_BASE = "https://api.spotify.com/v1";
+	private $spDc;
 	
 	public function __construct() {
 		$this->spDc = $_ENV['SPOTIFY_SP_DC'];
