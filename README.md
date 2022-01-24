@@ -83,7 +83,7 @@ You should receive a JSON response that looks like this:
 | `Ctrl + F` | Search |
 | `Ctrl + D` | Saved Songs |
 | `Ctrl + S` | Shuffle All Songs |
-| `Ctrl + W` | Last.fm ‘Wrapped❜ |
+| `Ctrl + W` | Last.fm “Wrapped” |
 
 # Features
 - Search and stream from Deezer by prefixing your search query with `e: `, for example `e: 24K Magic`.
