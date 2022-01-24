@@ -304,6 +304,11 @@
 				}
 			}
 
+			// Ctrl + W
+			if (e.ctrlKey && e.keyCode === 87) {
+				e.preventDefault();
+			}
+
 			// Ctrl + S
 			if (e.ctrlKey && e.keyCode === 83) {
 				e.preventDefault();
@@ -325,6 +330,12 @@
 			if (e.keyCode === 27) {
 				e.preventDefault();
 				PartialManager.sharedInstance.loadPartial('/');
+			}
+
+			// Ctrl + W
+			if (e.ctrlKey && e.keyCode === 87) {
+				e.preventDefault();
+				PartialManager.sharedInstance.loadPartial('/wrapped');
 			}
 			
 			// Ctrl + S
