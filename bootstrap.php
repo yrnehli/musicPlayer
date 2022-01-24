@@ -40,6 +40,7 @@ foreach ($files as $file) {
 	}
 }
 
+include_once "global.php";
 include_once "routes.php";
 
 Flight::start();
