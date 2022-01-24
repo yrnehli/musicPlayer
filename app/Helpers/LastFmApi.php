@@ -11,29 +11,28 @@ class LastFmApi {
 	}
 
 	public function getTopTracks($username, $period, $limit = null) {
-		return $this->getTop("user.gettoptracks", $username, $period, $limit);
+		return $this->getTop("tracks", $username, $period, $limit);
 	}
 
 	public function getTopArtists($username, $period, $limit = null) {
-		return $this->getTop("user.gettopartists", $username, $period, $limit);
+		return $this->getTop("artists", $username, $period, $limit);
 	}
 
 	public function getTopAlbums($username, $period, $limit = null) {
-		return $this->getTop("user.gettopalbums", $username, $period, $limit);
+		return $this->getTop("albums", $username, $period, $limit);
 	}
 
-	private function getTop($method, $username, $period, $limit = null) {
+	private function getTop($resource, $username, $period, $limit = null) {
 		$top = [];
 		$page = 1;
-		$resourceName = str_replace("user.get", "", $method);
-		$singularResourceName = rtrim(substr($resourceName, 3), "s");
+		$topResource = "top$resource";
 
 		do {
 			$res = json_decode(
 				$this->curlRequest(
 					"GET",
 					self::API_BASE . "/?" . http_build_query([
-						'method' => $method,
+						'method' => "user.get$topResource",
 						'user' => $username,
 						'period' => $period,
 						'api_key' => $this->apiKey,
@@ -44,9 +43,9 @@ class LastFmApi {
 				)
 			);
 
-			$top = array_merge($top, $res->{$resourceName}->{$singularResourceName});
+			$top = array_merge($top, $res->{$topResource}->{rtrim($resource, "s")});
 			$page++;
-		} while (empty($limit) && $page <= $res->{$resourceName}->{'@attr'}->totalPages);
+		} while (empty($limit) && $page <= $res->{$topResource}->{'@attr'}->totalPages);
 
 		return $top;
 	}
