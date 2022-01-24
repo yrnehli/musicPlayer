@@ -4,7 +4,8 @@ use App\Route;
 
 Route::map("GET", "/", "RootController@index");
 Route::map("GET", "/auth", "RootController@auth");
-Route::map("GET", "/queue", "QueueController@index");
+Route::map("GET", "/queue", "RootController@queue");
+Route::map("GET", "/wrapped", "RootController@wrapped");
 Route::map("GET", "/saved", "SavedController@index");
 Route::map("GET", "/saved/export", "SavedController@export");
 Route::map("GET", "/saved/clear", "SavedController@clear");
