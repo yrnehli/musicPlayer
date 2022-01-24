@@ -86,11 +86,11 @@ class RootController extends Controller {
 
 		preg_match(
 			"/https.*avatar300s.*jpg/",
-			file_get_contents("https://www.last.fm/user/$username/partial/albums?albums_date_preset=ALL"),
+			file_get_contents("https://www.last.fm/user/$username/partial/artists?artists_date_preset=ALL"),
 			$matches
 		);
 
-		$data['mainAlbumArt'] = str_replace("avatar300s", "avatar1000s", $matches[0]);
+		$data['mainAlbumArt'] = $matches[0];
 		$data['accentColour'] = Utilities::getAccentColour($data['mainAlbumArt']);
 
 		$this->view('wrapped', $data);
