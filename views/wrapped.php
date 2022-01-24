@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="/public/css/wrapped.css">
 <div id="root" class="px-4 d-flex" data-simplebar>
 	<?= $searchResults ?>
-	<div id="wrapped" style="display: none;">
+	<div id="wrapped" style="visibility: hidden;">
 		<div class="row">
 			<div class="col-6 d-flex">
 				<div class="ml-auto">
@@ -32,7 +32,7 @@
 							</h2>
 						<?php endforeach; ?>
 					</div>
-					<hr style="visibility: hidden">
+					<hr style="visibility: hidden;">
 					<div>
 						<h1>
 							Top Albums
@@ -67,7 +67,7 @@
 				);
 			}
 
-			$wrapped.show();
+			$wrapped.css('visibility', 'visible');
 		}
 	})();
 </script>
