@@ -193,6 +193,16 @@ class ApiController extends Controller {
 	}
 
 	public function scrobble($songId) {
+		$isDeezerSong = str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX);
+		$song = $isDeezerSong ? $this->getDeezerSong($songId) : $this->getLocalSong($songId);
+		$scrobble = [
+			'artist' => $isDeezerSong ? $song['mainSongArtist'] : $song['songArtist'],
+			'track' => $song['songName'],
+			'album' => $song['albumName'],
+			'duration' => intval($song['songDuration']),
+			'timestamp' => time() - $song['songDuration']
+		];
+
 		try {
 			$trackApi = new TrackApi(
 				new AuthApi(
@@ -206,21 +216,22 @@ class ApiController extends Controller {
 					]
 				)
 			);
-	
-			$isDeezerSong = str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX);
-			$song = $isDeezerSong ? $this->getDeezerSong($songId) : $this->getLocalSong($songId);
 
-			$this->responseHandler(
-				$trackApi->scrobble([
-					'artist' => $isDeezerSong ? $song['mainSongArtist'] : $song['songArtist'],
-					'track' => $song['songName'],
-					'album' => $song['albumName'],
-					'duration' => intval($song['songDuration']),
-					'timestamp' => time() - $song['songDuration']
-				])
-			);
+			$success = $trackApi->scrobble($scrobble);
 		} catch (Exception $e) {
-			$this->responseHandler(false, $e->getMessage());
+			$success = false;
 		}
+
+		$db = new MusicDatabase();
+		$db->insertScrobble(
+			$scrobble['artist'],
+			$scrobble['track'],
+			$scrobble['album'],
+			$scrobble['duration'],
+			$scrobble['timestamp'],
+			$success
+		);
+
+		$this->responseHandler($success);
 	}
 }

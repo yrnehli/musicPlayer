@@ -13,6 +13,20 @@ class MusicDatabase {
 		$this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 	}
 
+	public function insertScrobble($artist, $track, $album, $duration, $timestamp, $success) {
+		$stmt = $this->conn->prepare(
+			"INSERT INTO `scrobbles` (`artist`, `track`, `album`, `duration`, `timestamp`, `success`)
+			VALUES (:artist, :track, :album, :duration, :timestamp, :success)"
+		);
+		$stmt->bindParam(":artist", $artist);
+		$stmt->bindParam(":track", $track);
+		$stmt->bindParam(":album", $album);
+		$stmt->bindParam(":duration", $duration);
+		$stmt->bindParam(":timestamp", $timestamp);
+		$stmt->bindParam(":success", $success, PDO::PARAM_INT);
+		$stmt->execute();
+	}
+
 	public function insertSong($name, $artist, $trackNumber, $discNumber, $duration, $filepath) {
 		$stmt = $this->conn->prepare(
 			"INSERT INTO `songs` (`name`, `artist`, `trackNumber`, `discNumber`, `duration`, `filepath`)

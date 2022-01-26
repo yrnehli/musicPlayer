@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Ace SQL dump
-# Version 20016
+# Version 20025
 #
 # https://sequel-ace.com/
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
-# Host: 127.0.0.1 (MySQL 8.0.26)
+# Host: 127.0.0.1 (MySQL 8.0.27)
 # Database: musicPlayer
-# Generation Time: 2022-01-11 3:49:41 PM +0000
+# Generation Time: 2022-01-26 11:24:56 PM +0000
 # ************************************************************
 
 
@@ -59,6 +59,24 @@ CREATE TABLE `savedSongs` (
   `songId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `flagged` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`songId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+# Dump of table scrobbles
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `scrobbles`;
+
+CREATE TABLE `scrobbles` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `artist` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `track` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `album` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `duration` int NOT NULL,
+  `timestamp` int NOT NULL,
+  `success` bit(1) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
