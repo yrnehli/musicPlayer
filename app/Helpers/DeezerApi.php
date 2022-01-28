@@ -29,7 +29,8 @@ class DeezerApi {
 					"name" => $song->title,
 					"artist" => $song->artist->name,
 					"duration" => $song->duration,
-					"artFilepath" => "https://cdns-images.dzcdn.net/images/cover/$song->md5_image/500x500.jpg"
+					"artFilepath" => "https://cdns-images.dzcdn.net/images/cover/$song->md5_image/500x500.jpg",
+					"explicit" => $song->explicit_lyrics
 				];
 			}
 
@@ -39,7 +40,8 @@ class DeezerApi {
 					"name" => $song->album->title,
 					"artist" => $song->artist->name,
 					"duration" => null,
-					"artFilepath" => "https://cdns-images.dzcdn.net/images/cover/$song->md5_image/500x500.jpg"
+					"artFilepath" => "https://cdns-images.dzcdn.net/images/cover/$song->md5_image/500x500.jpg",
+					"explicit" => $song->explicit_lyrics
 				];
 			}
 		}

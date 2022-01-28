@@ -39,7 +39,7 @@ class SearchHandler {
 		var $searchResults = $('#searchResults');
 
 		this._timeout = setTimeout(
-			async() => {
+			async () => {
 				var term = this._$searchBar.val();
 				var $songs = $('#songs');
 				var $albums = $('#albums');
@@ -60,8 +60,8 @@ class SearchHandler {
 	
 				var res = await $.get('/api/search', { term: term });
 	
-				$songsContainer.empty().append(res.data.songs.map(song => this._createResultRow('song', song.id, song.albumId, song.name, song.artist, song.duration, song.artFilepath)));
-				$albumsContainer.empty().append(res.data.albums.map(album => this._createResultRow('album', album.id, album.id, album.name, album.artist, album.duration, album.artFilepath)));
+				$songsContainer.empty().append(res.data.songs.map(song => this._createResultRow('song', song.id, song.albumId, song.name, song.artist, song.duration, song.artFilepath, song.explicit)));
+				$albumsContainer.empty().append(res.data.albums.map(album => this._createResultRow('album', album.id, album.id, album.name, album.artist, album.duration, album.artFilepath, album.explicit)));
 	
 				(res.data.songs.length > 0 || res.data.albums.length > 0) ? $searchResults.show() : $searchResults.hide();
 				(res.data.songs.length > 0) ? $songs.show(): $songs.hide();
@@ -80,12 +80,13 @@ class SearchHandler {
 		;
 	}
 
-	_createResultRow(type, id, albumId, name, artist, duration, artFilepath) {
+	_createResultRow(type, id, albumId, name, artist, duration, artFilepath, explicit) {
 		var $resultRow = $(`<div class="music-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="PLAY_NEXT,PLAY_LAST,GO_TO_ALBUM" data-activable></div>`);
 		var $img = $('<img>').prop('src', artFilepath);
 		var $artwork = $('<div class="artwork"></div>').append($img);
+		var $name = $('<div></div>').text(name);
 		var $details = $('<div class="details"></div>').append([
-			$('<div></div>').text(name),
+			explicit ? $name : $name.append('<div class="explicit">E</div>'),
 			$('<div></div>').text(artist),
 		]);
 		var $totalTime = (duration) ? $('<div class="total-time"></div>').text(secondsToTimeString(duration)) : "";
