@@ -4,10 +4,6 @@ ini_set('memory_limit' ,'-1');
 
 require_once 'vendor/autoload.php';
 
-if (is_file(realpath(ltrim($_SERVER["REQUEST_URI"], '/')))) {
-	return false;
-}
-
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
