@@ -1,14 +1,11 @@
 # Henry's Music Player
-A music player built on the LAMP stack which can play local MP3 files and stream music from Deezer.
+A music player built using PHP and MySQL which can play local MP3 files and stream music from Deezer.
 
 ![depiction](https://user-images.githubusercontent.com/44710606/150382026-c24d2615-5075-4130-b940-59a132be58f7.png)
 
 # Requirements
-- PHP 7.2
+- PHP 7 or above
 - MySQL 8
-- Apache
-
-*Other versions of PHP may work, but is not guaranteed.*
 
 # Installation
 
@@ -42,26 +39,14 @@ cd musicPlayer && composer install
 | `LASTFM_SESSION_KEY` | Your Last.fm session key. | No |
 | `LASTFM_USERNAME` | Your Last.fm username. | No |
 
-5. Setup an Apache VirtualHost for the repo. Example:
-```
-<VirtualHost *:8080>
-	ServerName localhost
-	DocumentRoot /mnt/c/Users/henry/Repos/Personal/musicPlayer
-
-	<Directory /mnt/c/Users/henry/Repos/Personal/musicPlayer>
-		Options Indexes FollowSymLinks
-		AllowOverride All
-		Require all granted
-	</Directory>
-
-	ErrorLog ${APACHE_LOG_DIR}/error.log
-	CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
+5. Start the PHP server (or alternatively use Apache).
+```bash
+php -S localhost:8888 bootstrap.php
 ```
 
 6. Call the update endpoint to populate the database with information about your local MP3 files. Example:
 ```bash
-curl http://localhost:8080/api/update
+curl http://localhost:8888/api/update
 ```
 
 You should receive a JSON response that looks like this:
@@ -97,7 +82,7 @@ This can be installed as a Progressive Web App (PWA). For the best experience, e
 - `#enable-desktop-pwas-window-controls-overlay`
 
 # Troubleshooting
-In the case that images take a long time to load, try turning Apache's `KeepAlive` directive to `Off`.
+If you are using Apache and images are taking a long time to load, try turning Apache's `KeepAlive` directive to `Off`.
 
 # Disclaimer
 This repository is for educational/research purposes only, the use of this code is your responsibility.
