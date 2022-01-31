@@ -68,9 +68,11 @@ class RootController extends Controller {
 			),
 			"minutes" => number_format(
 				array_sum(
-					array_column(
-						$topTracks,
-						"duration"
+					array_map(
+						function($topTrack) {
+							return $topTrack->duration * $topTrack->playcount;
+						},
+						$topTracks
 					)
 				) / 60
 			),
