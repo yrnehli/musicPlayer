@@ -192,6 +192,37 @@ class ApiController extends Controller {
 		}
 	}
 
+	public function nowPlaying($songId) {
+		$isDeezerSong = str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX);
+		$song = $isDeezerSong ? $this->getDeezerSong($songId) : $this->getLocalSong($songId);
+
+		try {
+			$trackApi = new TrackApi(
+				new AuthApi(
+					'setsession',
+					[
+						'apiKey' => $_ENV['LASTFM_API_KEY'],
+						'apiSecret' => $_ENV['LASTFM_API_SECRET'],
+						'sessionKey' => $_ENV['LASTFM_SESSION_KEY'],
+						'username' => $_ENV['LASTFM_USERNAME'],
+						'subscriber' => 0
+					]
+				)
+			);
+
+			$success = $trackApi->updateNowPlaying([
+				'artist' => $isDeezerSong ? $song['mainSongArtist'] : $song['songArtist'],
+				'track' => $song['songName'],
+				'album' => $song['albumName'],
+				'duration' => intval($song['songDuration'])
+			]);
+		} catch (Exception $e) {
+			$success = false;
+		}
+
+		$this->responseHandler($success);
+	}
+
 	public function scrobble($songId) {
 		$isDeezerSong = str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX);
 		$song = $isDeezerSong ? $this->getDeezerSong($songId) : $this->getLocalSong($songId);
