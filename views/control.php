@@ -105,7 +105,7 @@
 
 		function initStateInterval() {
 			setInterval(() => {
-				if (!Music.sharedInstance.loaded() || Music.sharedInstance.disabled()) {
+				if (!Music.sharedInstance.loaded()) {
 					return;
 				}
 
