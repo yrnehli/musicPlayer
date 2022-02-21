@@ -235,7 +235,7 @@
 
 	async function createQueueRow(songId) {
 		var res = await $.get(`/api/song/${songId}`);
-		var $queueRow = $(`<div class="music-row" draggable="true" data-song-id=${songId} data-album-id=${res.data.albumId} data-context-menu-actions="GO_TO_ALBUM,REMOVE_FROM_QUEUE" data-activable></div>`);
+		var $queueRow = $(`<div class="music-row" draggable="true" data-song-id=${songId} data-album-id=${res.data.albumId} data-context-menu-actions="REMOVE_FROM_QUEUE,GO_TO_ALBUM" data-activable></div>`);
 		var $img = $('<img class="lazy">').attr('data-src', res.data.albumArtUrl);
 		var $artwork = $('<div class="artwork"></div>').append($img);
 		var $totalTime = $('<div class="total-time"></div>').text(secondsToTimeString(res.data.songDuration));
