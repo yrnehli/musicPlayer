@@ -161,7 +161,7 @@
 			initSlider(
 				$volumeSlider,
 				Math.pow(
-					(state.volume >= 0) ? state.volume : Music.sharedInstance.volume(),
+					Music.sharedInstance.volume(),
 					1/4
 				) * 100,
 				{
