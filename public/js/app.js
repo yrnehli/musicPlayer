@@ -180,13 +180,13 @@ $(function() {
 	});
 
 	$(window).keydown(e => {
-		if (e.shiftKey) {
+		if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
 			this._shiftDown = true;
 		}
 	});
 
 	$(window).keyup(e => {
-		if (e.shiftKey) {
+		if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
 			this._shiftDown = false;
 		}
 	});
