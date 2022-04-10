@@ -14,20 +14,7 @@ class SearchHandler {
 		this._initEvents();
 	}
 
-	_initEvents() {
-		$(window).mousedown(function(e) {
-			var $element = $(e.target).is(`[data-${SearchHandler.ACTIVABLE_DATA_SUFFIX}]`)
-				? $(e.target)
-				: $(e.target).parents(`[data-${SearchHandler.ACTIVABLE_DATA_SUFFIX}]`).first()
-			;
-
-			$(`[data-${SearchHandler.ACTIVABLE_DATA_SUFFIX}]`).removeClass('active');
-
-			if ($element) {
-				$element.addClass('active');
-			}
-		});
-		
+	_initEvents() {	
 		this._$searchBar.focus(e => MusicControl.sharedInstance.elements().$nowPlayingButton.removeClass('active'));
 		this._$searchBar.keyup(e => this._search());
 		this._$clearSearchBarButton.click(e => this.reset());

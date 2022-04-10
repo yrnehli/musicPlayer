@@ -44,6 +44,8 @@ class CustomContextMenu {
 	}
 
 	_createActions($target) {
+		var $targets = $target.siblings('.active').addBack();
+
 		this._$contextMenu.empty();
 
 		$target
@@ -54,7 +56,7 @@ class CustomContextMenu {
 					$('<li></li>')
 						.html(this._actions[action].html)
 						.click(() => {
-							this._actions[action].callback($target);
+							this._actions[action].callback($target, $targets);
 							this.hide();
 						})
 				);

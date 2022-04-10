@@ -24,20 +24,24 @@ $(function() {
 					<i class="fal fa-arrow-to-right fa-fw mr-1"></i>
 					Play Next
 				`,
-				callback: async function($target) {
-					if ($target.data('song-id')) {
-						Music.sharedInstance.queue().unshift(
-							$target.data('song-id')
-						);
-					} else if ($target.data('album-id')) {
-						var res = await $.get(`/api/album/${$target.data('album-id')}`);
-						res
-							.data
-							.songIds
-							.reverse()
-							.forEach(songId => Music.sharedInstance.queue().unshift(songId))
-						;
-					}
+				callback: function($target, $targets) {
+					$targets.get().reverse().forEach(async function(target) {
+						var $target = $(target);
+
+						if ($target.data('song-id')) {
+							Music.sharedInstance.queue().unshift(
+								$(target).data('song-id')
+							);
+						} else if ($target.data('album-id')) {
+							var res = await $.get(`/api/album/${$target.data('album-id')}`);
+							res
+								.data
+								.songIds
+								.reverse()
+								.forEach(songId => Music.sharedInstance.queue().unshift(songId))
+							;
+						}
+					});
 
 					if (Music.sharedInstance.disabled()) {
 						Music.sharedInstance.skip();
@@ -51,19 +55,23 @@ $(function() {
 					<i class="fal fa-arrow-to-bottom fa-fw mr-1"></i>
 					Play Last
 				`,
-				callback: async function($target) {
-					if ($target.data('song-id')) {
-						Music.sharedInstance.queue().push(
-							$target.data('song-id')
-						);
-					} else if ($target.data('album-id')) {
-						var res = await $.get(`/api/album/${$target.data('album-id')}`);
-						res
-							.data
-							.songIds
-							.forEach(songId => Music.sharedInstance.queue().push(songId))
-						;
-					}
+				callback: function($target, $targets) {
+					$targets.each(async function() {
+						var $target = $(this);
+
+						if ($target.data('song-id')) {
+							Music.sharedInstance.queue().push(
+								$target.data('song-id')
+							);
+						} else if ($target.data('album-id')) {
+							var res = await $.get(`/api/album/${$target.data('album-id')}`);
+							res
+								.data
+								.songIds
+								.forEach(songId => Music.sharedInstance.queue().push(songId))
+							;
+						}
+					});
 
 					if (Music.sharedInstance.disabled()) {
 						Music.sharedInstance.skip();
@@ -86,19 +94,23 @@ $(function() {
 					<i class="fal fa-times fa-fw mr-1"></i>
 					Remove
 				`,
-				callback: function($target) {
-					var index;
+				callback: function($target, $targets) {
+					var position;
 
-					$target.parent().children().each(function(i) {
-						if ($(this).is($target)) {
-							index = i;
+					$targets.each(function() {
+						var $target = $(this);
+
+						$target.parent().children().each(function(i) {
+							if ($(this).is($target)) {
+								position = i;
+							}
+						});
+	
+						if (position >= 0) {
+							Music.sharedInstance.queue().splice(position, 1);
+							$target.remove();
 						}
 					});
-
-					if (index >= 0) {
-						Music.sharedInstance.queue().splice(index, 1);
-						$target.remove();
-					}
 				}
 			},
 			FLAG: {
@@ -106,27 +118,30 @@ $(function() {
 					<i class="fal fa-flag fa-fw mr-1"></i>
 					Flag
 				`,
-				callback: async function($target) {
-					var songId = $target.data('song-id');
-					
-					await $.ajax({
-						type: 'PUT',
-						url: `/api/saved/${songId}?flagged=true`
+				callback: function($target, $targets) {
+					$targets.each(async function() {
+						var $target = $(this);
+						var songId = $target.data('song-id');
+						
+						await $.ajax({
+							type: 'PUT',
+							url: `/api/saved/${songId}?flagged=true`
+						});
+		
+						$target.find('.heart-button').addClass('active');
+						$target.find('.flag-icon').addClass('active');
+						
+						if (songId.toString() === Music.sharedInstance.songId().toString()) {
+							MusicControl.sharedInstance.elements().$saveButton.addClass('active');
+						}
+		
+						$target.data(
+							CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
+							$target.data(CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX).replace("FLAG", "UNFLAG")
+						);
 					});
-	
-					$target.find('.heart-button').addClass('active');
-					$target.find('.flag-icon').addClass('active');
-					
-					if (songId.toString() === Music.sharedInstance.songId().toString()) {
-						MusicControl.sharedInstance.elements().$saveButton.addClass('active');
-					}
 
 					showToastNotification(true, "Marked as Flagged");
-
-					$target.data(
-						CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
-						$target.data(CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX).replace("FLAG", "UNFLAG")
-					);
 				}
 			},
 			UNFLAG: {
@@ -134,32 +149,83 @@ $(function() {
 					<i class="fal fa-flag fa-fw mr-1"></i>
 					Unflag
 				`,
-				callback: async function($target) {
-					var songId = $target.data('song-id');
-					
-					await $.ajax({
-						type: 'PUT',
-						url: `/api/saved/${songId}?flagged=false`
+				callback: function($target, $targets) {
+					$targets.each(async function() {
+						var $target = $(this);
+						var songId = $target.data('song-id');
+						
+						await $.ajax({
+							type: 'PUT',
+							url: `/api/saved/${songId}?flagged=false`
+						});
+	
+						$target.find('.flag-icon').removeClass('active');
+						$target.data(
+							CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
+							$target.data(CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX).replace("UNFLAG", "FLAG")
+						);
 					});
 
-					$target.find('.flag-icon').removeClass('active');
-
 					showToastNotification(true, "Unmarked as Flagged");
-
-					$target.data(
-						CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
-						$target.data(CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX).replace("UNFLAG", "FLAG")
-					);
 				}
 			}
 		}
 	);
-
 		
 	PartialManager.sharedInstance.on('preupdate', e =>  SearchHandler.sharedInstance.reset());
 	PartialManager.sharedInstance.on('pathchange', e => {
 		if (window.location.pathname !== `/album/${MusicControl.sharedInstance.albumId()}`) {
 			MusicControl.sharedInstance.elements().$nowPlayingButton.removeClass('active');
+		}
+	});
+
+	$(window).keydown(e => {
+		// Shift
+		if (e.keyCode === 16) {
+			this._shiftDown = true;
+		}
+	});
+
+	$(window).keyup(e => {
+		// Shift
+		if (e.keyCode === 16) {
+			this._shiftDown = false;
+		}
+	});
+
+	$(window).mousedown(e => {
+		var $activables = $(`[data-${SearchHandler.ACTIVABLE_DATA_SUFFIX}]`);
+		var $element = $(e.target).is(`[data-${SearchHandler.ACTIVABLE_DATA_SUFFIX}]`)
+			? $(e.target)
+			: $(e.target).parents(`[data-${SearchHandler.ACTIVABLE_DATA_SUFFIX}]`).first()
+		;
+
+		if (!this._shiftDown && e.which === 1) {
+			$activables.removeClass('active');
+			this._$firstActiveElement = null;
+		}
+
+		if ($element) {
+			if (!this._$firstActiveElement) {
+				this._$firstActiveElement = $element;
+			}
+
+			if (this._shiftDown && this._$firstActiveElement) {
+				var $firstActiveElement = this._$firstActiveElement;
+				var diff = $element.index() > $firstActiveElement.index();
+
+				$activables.removeClass('active');
+
+				if (diff === 0) {
+					return;
+				} else if (diff > 0) {
+					$element.prevUntil($firstActiveElement).addBack().add($firstActiveElement).addClass('active');
+				} else {
+					$element.nextUntil($firstActiveElement).addBack().add($firstActiveElement).addClass('active');
+				}
+			}
+			
+			$element.addClass('active');
 		}
 	});
 });
