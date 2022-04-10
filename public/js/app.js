@@ -201,8 +201,15 @@ $(function() {
 		;
 
 		if (!this._shiftDown && e.which === 1) {
-			$activables.removeClass('active');
 			this._$firstActiveElement = null;
+			$activables.removeClass('active');
+			$activables.css({
+				"border-bottom-left-radius": "",
+				"border-bottom-right-radius": "",
+				"border-top-left-radius": "",
+				"border-top-right-radius": "",
+				"border-radius": ""
+			});
 		}
 
 		if ($element) {
@@ -213,16 +220,39 @@ $(function() {
 			if (this._shiftDown && this._$firstActiveElement) {
 				var $firstActiveElement = this._$firstActiveElement;
 				var diff = $element.index() > $firstActiveElement.index();
+				var $elements;
 
 				$activables.removeClass('active');
 
 				if (diff === 0) {
 					return;
 				} else if (diff > 0) {
-					$element.prevUntil($firstActiveElement).addBack().add($firstActiveElement).addClass('active');
+					$elements = $element.prevUntil($firstActiveElement).addBack().add($firstActiveElement);
 				} else {
-					$element.nextUntil($firstActiveElement).addBack().add($firstActiveElement).addClass('active');
+					$elements = $element.nextUntil($firstActiveElement).addBack().add($firstActiveElement);
 				}
+
+				$elements.each(function(i) {
+					switch (i) {
+						case 0:
+							$(this).css({
+								'border-bottom-left-radius': '0px',
+								'border-bottom-right-radius': '0px'
+							});
+							break;
+						case $elements.length - 1:
+							$(this).css({
+								'border-top-left-radius': '0px',
+								'border-top-right-radius': '0px'
+							});
+							break;
+						default:
+							$(this).css('border-radius', '0px');
+							break;
+					}
+
+					$(this).addClass('active');
+				});
 			}
 			
 			$element.addClass('active');
