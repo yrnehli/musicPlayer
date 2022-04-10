@@ -200,19 +200,25 @@ $(function() {
 			: $(e.target).parents(`[data-${SearchHandler.ACTIVABLE_DATA_SUFFIX}]`).first()
 		;
 
-		if (!this._shiftDown && e.which === 1) {
-			this._$firstActiveElement = null;
-			$activables.removeClass('active');
-			$activables.css({
-				"border-bottom-left-radius": "",
-				"border-bottom-right-radius": "",
-				"border-top-left-radius": "",
-				"border-top-right-radius": "",
-				"border-radius": ""
-			});
+		var resetActivables = () => {
+			$(`[data-${SearchHandler.ACTIVABLE_DATA_SUFFIX}]`)
+				.removeClass('active')
+				.css({
+					'border-bottom-left-radius': '',
+					'border-bottom-right-radius': '',
+					'border-top-left-radius': '',
+					'border-top-right-radius': '',
+					'border-radius': ''
+				})
+			;
 		}
 
-		if ($element) {
+		if (!this._shiftDown && e.which === 1) {
+			this._$firstActiveElement = null;
+			resetActivables();
+		}
+
+		if ($element.length) {
 			if (!this._$firstActiveElement) {
 				this._$firstActiveElement = $element;
 			}
@@ -222,15 +228,16 @@ $(function() {
 				var diff = $element.index() > $firstActiveElement.index();
 				var $elements;
 
-				$activables.removeClass('active');
+				resetActivables();
 
 				if (diff === 0) {
 					return;
-				} else if (diff > 0) {
-					$elements = $element.prevUntil($firstActiveElement).addBack().add($firstActiveElement);
-				} else {
-					$elements = $element.nextUntil($firstActiveElement).addBack().add($firstActiveElement);
 				}
+				
+				$elements = (diff > 0)
+					? $element.prevUntil($firstActiveElement).addBack().add($firstActiveElement)
+					: $elements = $element.nextUntil($firstActiveElement).addBack().add($firstActiveElement);
+				;
 
 				$elements.each(function(i) {
 					switch (i) {
