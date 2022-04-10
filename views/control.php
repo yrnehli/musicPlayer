@@ -291,55 +291,46 @@
 		}
 
 		function assignKeydown(e) {
-			// Esc
-			if (e.keyCode === 27) {
+			if (e.code === 'Escape') {
 				e.preventDefault();
 			}
 
-			// Space
-			if (e.keyCode === 32) {
+			if (e.code === 'Space') {
 				if ($('input:focus').length === 0) {
 					e.preventDefault();
 					Music.sharedInstance.togglePlay();
 				}
 			}
 
-			// Ctrl + W
-			if (e.ctrlKey && e.keyCode === 87) {
+			if (e.ctrlKey && e.code === 'KeyW') {
 				e.preventDefault();
 			}
 
-			// Ctrl + S
-			if (e.ctrlKey && e.keyCode === 83) {
+			if (e.ctrlKey && e.code === 'KeyS') {
 				e.preventDefault();
 			}
 
-			// Ctrl + D
-			if (e.ctrlKey && e.keyCode === 68) {
+			if (e.ctrlKey && e.code === 'KeyD') {
 				e.preventDefault();
 			}
 
-			// Ctrl + F
-			if (e.ctrlKey && e.keyCode === 70) {
+			if (e.ctrlKey && e.code === 'KeyF') {
 				e.preventDefault();
 			}
 		}
 
 		function assignKeyup(e) {
-			// Esc
-			if (e.keyCode === 27) {
+			if (e.code === 'Escape') {
 				e.preventDefault();
 				PartialManager.sharedInstance.loadPartial('/');
 			}
 
-			// Ctrl + W
-			if (e.ctrlKey && e.keyCode === 87) {
+			if (e.ctrlKey && e.code === 'KeyW') {
 				e.preventDefault();
 				PartialManager.sharedInstance.loadPartial('/wrapped');
 			}
 			
-			// Ctrl + S
-			if (e.ctrlKey && e.keyCode === 83) {
+			if (e.ctrlKey && e.code === 'KeyS') {
 				e.preventDefault();
 				Music.sharedInstance.history([]);
 				Music.sharedInstance.queue(
@@ -348,14 +339,12 @@
 				Music.sharedInstance.skip(true);
 			}
 
-			// Ctrl + D
-			if (e.ctrlKey && e.keyCode === 68) {
+			if (e.ctrlKey && e.code === 'KeyD') {
 				e.preventDefault();
 				PartialManager.sharedInstance.loadPartial('/saved');
 			}
 
-			// Ctrl + F
-			if (e.ctrlKey && e.keyCode === 70) {
+			if (e.ctrlKey && e.code === 'KeyF') {
 				e.preventDefault();
 				SearchHandler.sharedInstance.focus();
 			}

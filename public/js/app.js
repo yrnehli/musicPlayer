@@ -180,21 +180,18 @@ $(function() {
 	});
 
 	$(window).keydown(e => {
-		// Shift
-		if (e.keyCode === 16) {
+		if (e.shiftKey) {
 			this._shiftDown = true;
 		}
 	});
 
 	$(window).keyup(e => {
-		// Shift
-		if (e.keyCode === 16) {
+		if (e.shiftKey) {
 			this._shiftDown = false;
 		}
 	});
 
 	$(window).mousedown(e => {
-		var $activables = $(`[data-${SearchHandler.ACTIVABLE_DATA_SUFFIX}]`);
 		var $element = $(e.target).is(`[data-${SearchHandler.ACTIVABLE_DATA_SUFFIX}]`)
 			? $(e.target)
 			: $(e.target).parents(`[data-${SearchHandler.ACTIVABLE_DATA_SUFFIX}]`).first()
