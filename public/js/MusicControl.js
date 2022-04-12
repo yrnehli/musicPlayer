@@ -87,7 +87,7 @@ class MusicControl extends EventEmitter {
 		this._metadata.artwork = [{ src: res.data.albumArtUrl, sizes: '512x512', type: 'image/png' }];
 
 		if (window.Notification && Notification.permission === "granted") {
-			new Notification(
+			const notification = new Notification(
 				res.data.songName,
 				{
 					body: res.data.songArtist,
@@ -95,6 +95,11 @@ class MusicControl extends EventEmitter {
 					silent: true
 				}
 			);
+			
+			notification.onclick = (e) => {
+				e.preventDefault();
+				notification.close();
+			};
 		}
 
 		if (res.data.isDeezer) {
