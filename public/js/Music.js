@@ -106,12 +106,12 @@ class Music extends Howl {
 		}
 	}
 
-	previous() {
+	previous(force = false) {
 		if (this.__disabled) {
 			return;
 		}
 
-		if (this.seek() >= 3) {
+		if (!force && this.seek() >= 3) {
 			this.seek(0);
 			return;
 		}

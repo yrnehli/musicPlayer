@@ -86,20 +86,31 @@ class MusicControl extends EventEmitter {
 		this._metadata.album = res.data.albumName;
 		this._metadata.artwork = [{ src: res.data.albumArtUrl, sizes: '512x512', type: 'image/png' }];
 
-		if (window.Notification && Notification.permission === "granted") {
-			const notification = new Notification(
+		if (
+			window.Notification &&
+			Notification.permission === "granted" &&
+			'serviceWorker' in navigator
+		) {
+			const sw = await navigator.serviceWorker.getRegistration('/');
+
+			sw.showNotification(
 				res.data.songName,
 				{
 					body: res.data.songArtist,
 					icon: res.data.albumArtUrl,
+					actions: [
+						{
+							action: "previous-action",
+							title: "Previous"
+						},
+						{
+							action: "skip-action",
+							title: "Skip"
+						}
+					],
 					silent: true
 				}
 			);
-			
-			notification.onclick = (e) => {
-				e.preventDefault();
-				notification.close();
-			};
 		}
 
 		if (res.data.isDeezer) {

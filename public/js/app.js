@@ -1,5 +1,15 @@
 if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('/service-worker.js');
+	navigator.serviceWorker.addEventListener('message', e => {
+		switch (e.data) {
+			case 'previous-action':
+				Music.sharedInstance.previous(true);
+				break;
+			case 'skip-action':
+				Music.sharedInstance.skip();
+				break;
+		}
+	});
 }
 
 if (window.Notification) {
