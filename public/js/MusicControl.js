@@ -65,8 +65,6 @@ class MusicControl extends EventEmitter {
 						if (this._wakeLock = await obtainWakelock()) {
 							clearInterval(interval);
 						}
-
-						console.log(this._wakeLock);
 					}, 5000);
 				} else {
 					this._wakeLock.addEventListener('release', () => {
