@@ -46,19 +46,60 @@ class MusicControl extends EventEmitter {
 
 	_initEvents() {
 		this._music.on('enable', e => this._elements.$progressSlider.slider('enable'));
-		this._music.on('play', e => this._elements.$playButton.removeClass("paused"));
-		this._music.on('pause', e => this._elements.$playButton.addClass("paused"));
+		this._music.on('play', async () => {
+			this._elements.$playButton.removeClass("paused")
+			
+			if ('wakeLock' in navigator) {
+				const obtainWakelock = async () => {
+					try {
+						return await navigator.wakeLock.request('screen');
+					} catch (e) {
+						return null;
+					}
+				};
+
+				this._wakeLock = await obtainWakelock();
+
+				if (!this._wakeLock) {
+					let interval = setInterval(async () => {
+						if (this._wakeLock = await obtainWakelock()) {
+							clearInterval(interval);
+						}
+
+						console.log(this._wakeLock);
+					}, 5000);
+				} else {
+					this._wakeLock.addEventListener('release', () => {
+						let interval = setInterval(async () => {
+							if (this._wakeLock = await obtainWakelock()) {
+								clearInterval(interval);
+							}
+						}, 5000);
+					});
+				}
+			}
+		});
+		this._music.on('pause', async () => {
+			this._elements.$playButton.addClass("paused")
+			
+			if ('wakeLock' in navigator && this._wakeLock) {
+				this._wakeLock
+					.release()
+					.then(() => {
+						this._wakeLock = null;
+					})
+				;
+			}
+		});
 		this._music.on('songchange', e => $.get(`/api/nowPlaying/${this._music.songId()}`));
 		this._music.on('manualsongchange', e => this._update(false));
 		this._music.on('autosongchange', e =>this._update(true));
 		this._music.on('autoskip', e => $.get(`/api/scrobble/${this._music.lastSongId()}`));
-
 		this._music.on('load', e => {
 			this._elements.$endTime.text(
 				this._music.disabled() ? "0:00" : secondsToTimeString(this._music.duration())
 			)	
 		});
-
 		this._music.on('disable', e => {
 			this._elements.$albumArt.removeAttr('src');
 			this._elements.$songName.text('');
