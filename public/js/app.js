@@ -17,7 +17,6 @@ if (window.Notification) {
 }
 
 $(function() {
-	var $root = $('#root');
 	var $partial = $('#partial');
 	var $contextMenu = $('#contextMenu');
 	var $searchBar = $('#searchBar');
@@ -27,7 +26,7 @@ $(function() {
 	new PartialManager($partial, '.simplebar-content-wrapper');
 	new CustomContextMenu(
 		$contextMenu,
-		$root,
+		$partial,
 		{
 			PLAY_NEXT: {
 				html: `
