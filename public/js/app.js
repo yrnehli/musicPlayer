@@ -1,11 +1,12 @@
 if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('/service-worker.js');
 	navigator.serviceWorker.addEventListener('message', e => {
+		console.log(e);
 		switch (e.data) {
 			case 'previous-action':
 				Music.sharedInstance.previous(true);
 				break;
-			case 'skip-action':
+			default:
 				Music.sharedInstance.skip();
 				break;
 		}
