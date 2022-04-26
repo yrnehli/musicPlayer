@@ -221,7 +221,7 @@ $(function() {
 			;
 		}
 
-		if (!this._shiftDown && e.which === 1) {
+		if (!this._shiftDown && e.which === 1 || (!$element.hasClass('active')) && e.which === 3) {
 			this._$firstActiveElement = null;
 			resetActivables();
 		}
