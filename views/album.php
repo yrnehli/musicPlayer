@@ -170,16 +170,17 @@
 
 				$(this).toggleClass('active');
 				$(this).siblings('.flag-icon').removeClass('active');
-					
-				if (action === 'PUT') {
-					showToastNotification(true, "Added to Saved Songs");
-					if (songId.toString() === Music.sharedInstance.songId().toString()) {
-						MusicControl.sharedInstance.elements().$saveButton.addClass('active');
-					}
-				} else if (action === 'DELETE') {
-					showToastNotification(true, "Removed from Saved Songs")
-					if (songId.toString() === Music.sharedInstance.songId().toString()) {
-						MusicControl.sharedInstance.elements().$saveButton.removeClass('active');
+
+				showToastNotification(true, res.message);
+				
+				if (songId.toString() === Music.sharedInstance.songId().toString()) {
+					switch (action) {
+						case 'PUT':
+							MusicControl.sharedInstance.elements().$saveButton.addClass('active');
+							break;
+						case 'DELETE':
+							MusicControl.sharedInstance.elements().$saveButton.removeClass('active');
+							break;
 					}
 				}
 			});

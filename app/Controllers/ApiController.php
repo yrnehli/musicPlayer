@@ -185,10 +185,10 @@ class ApiController extends Controller {
 				$songId,
 				filter_var(Flight::request()->query->flagged, FILTER_VALIDATE_BOOL)
 			);
-			$this->responseHandler(true, "Added to saved songs");
+			$this->responseHandler(true, "Added to Saved Songs");
 		} else if (Flight::request()->method === "DELETE") {
 			$db->deleteSavedSong($songId);
-			$this->responseHandler(true, "Removed from saved songs");
+			$this->responseHandler(true, "Removed from Saved Songs");
 		}
 	}
 

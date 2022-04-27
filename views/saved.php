@@ -157,7 +157,7 @@
 			});
 
 			$clearButton.click(() => {
-				if (!confirm("Are you sure you want to clear all removed songs?")) {
+				if (!confirm("Are you sure you want to clear all saved songs?")) {
 					return;
 				}
 
