@@ -17,7 +17,7 @@ class Music extends EventEmitter {
 		this._history = [];
 		
 		this.volume(volume);
-		this.on('end', e => this.skip(true, e));
+		this.on('end', () => this.skip(true, true));
 	}
 
 	disabled() {
@@ -170,7 +170,7 @@ class Music extends EventEmitter {
 		if (position === undefined) {
 			return this._audio.currentTime || 0;
 		}
-		
+
 		this._audio.currentTime = position;
 	}
 
