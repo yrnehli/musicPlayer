@@ -3,10 +3,6 @@ class MusicControl extends EventEmitter {
 
 	constructor(elements, state) {
 		if (MusicControl.sharedInstance) {
-			if (!MusicControl.sharedInstance._metadata) {
-				MusicControl.sharedInstance._metadata = navigator.mediaSession.metadata = new MediaMetadata();
-			}
-
 			return MusicControl.sharedInstance;
 		}
 
@@ -94,7 +90,7 @@ class MusicControl extends EventEmitter {
 			}
 		});
 		this._music.on('songchange', e => {
-			$.get(`/api/nowPlaying/${this._music.songId()}`);
+			$.get(`/api/now-playing/${this._music.songId()}`);
 
 			this._elements.$endTime.text(
 				this._music.disabled() ? "0:00" : secondsToTimeString(this._music.duration())
