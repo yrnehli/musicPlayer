@@ -14,7 +14,7 @@ class EventEmitter {
 
 		var events = self['_on' + event];
 
-		if (! events) {
+		if (!events) {
 			events = self['_on' + event] = [];
 		}
 
