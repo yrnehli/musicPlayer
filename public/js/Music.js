@@ -1,87 +1,76 @@
-class Music extends Howl {
+class Music extends EventEmitter {
 	static sharedInstance;
 
 	constructor(volume) {
 		if (Music.sharedInstance) {
-			return;
+			return Music.sharedInstance;
 		}
 
-		Music.sharedInstance = super({
-			src: [null],
-			format: 'mp3',
-			volume: volume || 0.0625,
-			html5: true
-		});
+		Music.sharedInstance = super();
 
-		this._onenable = [];
-		this._ondisable = [];
-		this._onskip = [];
-		this._onautoskip = [];
-		this._onmanualskip = [];
-		this._onsongchange = [];
-		this._onautosongchange = [];
-		this._onmanualsongchange = [];
-
-		this.__lastSongId = null;
-		this.__songId = null;
-		this.__disabled = true;
-		this.__queue = [];
-		this.__history = [];
+		this._audio = document.createElement('audio');
+		this._backup = document.createElement('audio');
+		this._lastSongId = null;
+		this._songId = null;
+		this._disabled = true;
+		this._queue = [];
+		this._history = [];
 		
+		this.volume(volume);
 		this.on('end', e => this.skip(true, e));
 	}
 
 	disabled() {
-		return this.__disabled;
+		return this._disabled;
 	}
 
 	songId() {
-		return this.__songId;
+		return this._songId;
 	}
 	
 	lastSongId() {
-		return this.__lastSongId;
+		return this._lastSongId;
 	}
 
 	disable() {
 		this.pause();
-		this.__lastSongId = this.__songId;
-		this.__songId = null;
-		this.__queue = [];
-		this.__history = [];
-		this.__disabled = true;
+		this._lastSongId = this._songId;
+		this._songId = null;
+		this._queue = [];
+		this._history = [];
+		this._disabled = true;
+		this._audio.src = '';
+		this._backup.src = '';
 		this._emit('disable');
 	}
 
 	enable() {
-		this.__disabled = false;
+		this._disabled = false;
 		this._emit('enable');
 	}
 
-	loaded() {
-		return (this._state === "loaded");
-	}
-
 	async changeSong(songId, play, auto) {
-		this.__lastSongId = this.__songId;
-		this.__songId = songId;
+		this._lastSongId = this._songId;
+		this._songId = songId;
 		this.enable();
-		
-		this.unload();
-		this._queue = [];
-		this._sounds = [];
-		this._duration = 0;
-		this._sprite = {};
-		this._src = `/mp3/${songId}`;
-		this.load();
+
+		if (this._songId) {
+			[this._audio, this._backup] = [this._backup, this._audio];
+			this._backup.pause();
+			this._audio.src = `/mp3/${songId}`;			
+		} else {
+			this._audio.src = `/mp3/${songId}`;
+			this._backup.src = `/mp3/${songId}`;
+		}
 		
 		// Play even if we want don't want to so we get the media session metadata
-		this.play();
+		await this.play();
 		
 		if (!play) {
 			this.pause();
 		}
 
+		this._audio.onended = () => this._emit('end');
 		this._emit('songchange');
 		this._emit(auto ? 'autosongchange' : 'manualsongchange');
 	}
@@ -90,24 +79,26 @@ class Music extends Howl {
 		this.playing() ? this.pause() : this.play();
 	}
 
-	play() {
-		if (!this.__disabled) {
-			super.play();
+	async play() {
+		if (!this._disabled) {
+			await this._audio.play();
+			this._emit('play');
 		} else {
 			return;
 		}
 	}
 
 	pause() {
-		if (!this.__disabled) {
-			super.pause();
+		if (!this._disabled) {
+			this._audio.pause();
+			this._emit('pause');
 		} else {
 			return;
 		}
 	}
 
 	previous(force = false) {
-		if (this.__disabled) {
+		if (this._disabled) {
 			return;
 		}
 
@@ -116,24 +107,25 @@ class Music extends Howl {
 			return;
 		}
 		
-		if (this.__history.length > 0) {
-			if (this.__songId) {
-				this.__queue.unshift(this.__songId);
+		if (this._history.length > 0) {
+			if (this._songId) {
+				this._queue.unshift(this._songId);
 			}
-			this.changeSong(this.__history.pop(), this.playing());
+
+			this.changeSong(this._history.pop(), this.playing());
 		} else {
 			this.disable();
 		}
 	}
 
 	skip(play, auto) {
-		if (this.__queue.length > 0) {
-			if (this.__songId) {
-				this.__history.push(this.__songId);
+		if (this._queue.length > 0) {
+			if (this._songId) {
+				this._history.push(this._songId);
 			}
 
 			this.changeSong(
-				this.__queue.shift(),
+				this._queue.shift(),
 				(play || this.playing() || (this._queue.some(item => item.event === "play") && !this._queue.some(item => item.event === "pause"))),
 				auto
 			);
@@ -147,71 +139,42 @@ class Music extends Howl {
 
 	queue(queue) {
 		if (queue) {
-			this.__queue = queue;
+			this._queue = queue;
 		} else {
-			return this.__queue;
+			return this._queue;
 		}
 	}
 
 	history(history) {
 		if (history) {
-			this.__history = history;
+			this._history = history;
 		} else {
-			return this.__history;
+			return this._history;
 		}
 	}
 
-	on(event, fn) {
-		var self = this;
-		var namespace;
-
-		if (event.includes(".")) {
-			var parts = event.split(".");
-			event = parts[0];
-			namespace = parts[1];
-		}
-
-		var events = self['_on' + event];
-
-		if (typeof fn === 'function') {
-			events.push({ namespace: namespace, fn: fn, id: undefined });
-		}
-
-		return self;
+	playing() {
+		return !this._audio.paused;
 	}
 
-	off(event, fn) {
-		var self = this;
-
-		if (event.includes(".")) {
-			var [event, namespace] = event.split(".");
+	volume(volume) {
+		if (volume === undefined) {
+			return this._audio.volume;
 		}
 
-		var events = self['_on' + event];
-	
-		if (fn || namespace) {
-			// Loop through event store and remove the passed function.
-			for (var i = 0; i < events.length; i++) {
-				var isNamespace = (namespace === events[i].namespace);
+		this._audio.volume = volume;
+		this._backup.volume = volume;
+	}
 
-				if (fn === events[i].fn && isNamespace || !fn && isNamespace) {
-					events.splice(i, 1);
-					break;
-				}
-			}
-		} else if (event) {
-			// Clear out all events of this type.
-			self['_on' + event] = [];
+	seek(position) {
+		if (position !== undefined) {
+			this._audio.currentTime = position;
 		} else {
-			// Clear out all events of every type.
-			var keys = Object.keys(self);
-			for (i = 0; i < keys.length; i++) {
-				if ((keys[i].indexOf('_on') === 0) && Array.isArray(self[keys[i]])) {
-					self[keys[i]] = [];
-				}
-			}
+			return this._audio.currentTime || 0;
 		}
-	
-		return self;
+	}
+
+	duration() {
+		return this._audio.duration || 0;
 	}
 }

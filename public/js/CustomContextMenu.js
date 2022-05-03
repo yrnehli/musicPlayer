@@ -3,7 +3,7 @@ class CustomContextMenu {
 
 	constructor($contextMenu, $scrollable, actions) {		
 		if (CustomContextMenu.sharedInstance) {
-			return;
+			return CustomContextMenu.sharedInstance;
 		}
 		
 		CustomContextMenu.sharedInstance = this;

@@ -105,10 +105,6 @@
 
 		function initStateInterval() {
 			setInterval(() => {
-				if (!Music.sharedInstance.loaded()) {
-					return;
-				}
-
 				localStorage.setItem(
 					"state",
 					JSON.stringify({
@@ -144,12 +140,12 @@
 			}
 
 			var progressIntervalCallback = function() {
-				if (!Music.sharedInstance.loaded() || Music.sharedInstance.disabled()) {
+				if (Music.sharedInstance.disabled()) {
 					return;
 				}
 
 				var duration = Music.sharedInstance.duration();
-				var progress = Music.sharedInstance.seek() / duration;
+				var progress = Music.sharedInstance.seek() / duration || 0;
 				var elapsedSeconds = progress * duration;
 
 				$elapsedTime.text(secondsToTimeString(elapsedSeconds));

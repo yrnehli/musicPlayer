@@ -3,7 +3,7 @@ class PartialManager extends EventEmitter {
 
 	constructor($partial, scrollableSelector) {
 		if (PartialManager.sharedInstance) {
-			return;
+			return PartialManager.sharedInstance;
 		}
 
 		PartialManager.sharedInstance = super();

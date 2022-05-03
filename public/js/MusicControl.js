@@ -3,7 +3,7 @@ class MusicControl extends EventEmitter {
 
 	constructor(elements, state) {
 		if (MusicControl.sharedInstance) {
-			return;
+			return MusicControl.sharedInstance;
 		}
 
 		MusicControl.sharedInstance = super();
@@ -89,15 +89,16 @@ class MusicControl extends EventEmitter {
 				;
 			}
 		});
-		this._music.on('songchange', e => $.get(`/api/nowPlaying/${this._music.songId()}`));
+		this._music.on('songchange', e => {
+			$.get(`/api/nowPlaying/${this._music.songId()}`);
+
+			this._elements.$endTime.text(
+				this._music.disabled() ? "0:00" : secondsToTimeString(this._music.duration())
+			);
+		});
 		this._music.on('manualsongchange', e => this._update(false));
 		this._music.on('autosongchange', e =>this._update(true));
 		this._music.on('autoskip', e => $.get(`/api/scrobble/${this._music.lastSongId()}`));
-		this._music.on('load', e => {
-			this._elements.$endTime.text(
-				this._music.disabled() ? "0:00" : secondsToTimeString(this._music.duration())
-			)	
-		});
 		this._music.on('disable', e => {
 			this._elements.$albumArt.removeAttr('src');
 			this._elements.$songName.text('');

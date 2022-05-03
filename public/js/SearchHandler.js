@@ -3,7 +3,7 @@ class SearchHandler {
 
 	constructor($searchBar, $clearSearchBarButton) {	
 		if (SearchHandler.sharedInstance) {
-			return;
+			return SearchHandler.sharedInstance;
 		}
 
 		SearchHandler.sharedInstance = this;
