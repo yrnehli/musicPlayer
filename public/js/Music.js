@@ -80,21 +80,21 @@ class Music extends EventEmitter {
 	}
 
 	async play() {
-		if (!this._disabled) {
-			await this._audio.play();
-			this._emit('play');
-		} else {
+		if (this._disabled) {
 			return;
 		}
+
+		await this._audio.play();
+		this._emit('play');
 	}
 
 	pause() {
-		if (!this._disabled) {
-			this._audio.pause();
-			this._emit('pause');
-		} else {
+		if (this._disabled) {
 			return;
 		}
+
+		this._audio.pause();
+		this._emit('pause');
 	}
 
 	previous(force = false) {
@@ -138,19 +138,19 @@ class Music extends EventEmitter {
 	}
 
 	queue(queue) {
-		if (queue) {
-			this._queue = queue;
-		} else {
+		if (queue === undefined) {
 			return this._queue;
 		}
+
+		this._queue = queue;
 	}
 
 	history(history) {
-		if (history) {
-			this._history = history;
-		} else {
+		if (history === undefined) {
 			return this._history;
 		}
+
+		this._history = history;
 	}
 
 	playing() {
@@ -167,11 +167,11 @@ class Music extends EventEmitter {
 	}
 
 	seek(position) {
-		if (position !== undefined) {
-			this._audio.currentTime = position;
-		} else {
+		if (position === undefined) {
 			return this._audio.currentTime || 0;
 		}
+		
+		this._audio.currentTime = position;
 	}
 
 	duration() {
