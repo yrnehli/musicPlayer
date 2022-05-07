@@ -179,6 +179,7 @@
 	function handleDrop(e) {
 		e.stopPropagation();
 
+		var self = this;
 		var queue = Music.sharedInstance.queue();
 		var queueRows = $queueRowsContainer.children().get();
 		var queueRowsToShift = [];
