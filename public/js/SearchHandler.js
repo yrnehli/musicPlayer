@@ -73,7 +73,7 @@ class SearchHandler {
 		var $artwork = $('<div class="artwork"></div>').append($img);
 		var $name = $('<div></div>').text(name);
 		var $details = $('<div class="details"></div>').append([
-			explicit ? $name : $name.append('<div class="explicit">E</div>'),
+			(explicit === true) ? $name.append('<div class="explicit">E</div>') : $name,
 			$('<div></div>').text(artist),
 		]);
 		var $totalTime = (duration) ? $('<div class="total-time"></div>').text(secondsToTimeString(duration)) : "";

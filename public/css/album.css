@@ -6,6 +6,7 @@
 }
 
 #album {
+	display: flex;
 	font-size: 12px;
 	font-weight: 700;
 	color: white;

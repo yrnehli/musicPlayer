@@ -6,7 +6,10 @@
 		<img id="albumArtLarge" class="mx-3" src="<?= $album['artUrl'] ?>">		
 		<div class="d-flex mx-2">
 			<div class="mt-auto">
-				<div id="album">ALBUM</div>
+				<div id="album">
+					ALBUM
+					<?= $album['explicit'] ? '<div class="explicit my-auto">E</div>' : null ?>
+				</div>
 				<h1 id="albumName" style="visibility: hidden;">
 					<?= $album['name'] ?>
 				</h1>

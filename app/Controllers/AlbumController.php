@@ -61,6 +61,8 @@ class AlbumController extends Controller {
 		if ($album === false) {
 			return false;
 		}
+		
+		$album['explicit'] = false;
 	
 		$stmt = $conn->prepare(
 			"SELECT `songs`.*

@@ -107,7 +107,8 @@ class DeezerApi {
 						},
 						$res->results->SONGS->data
 					)
-				)
+				),
+				"explicit" => in_array($res->results->DATA->EXPLICIT_ALBUM_CONTENT->EXPLICIT_LYRICS_STATUS, [1, 4])
 			],
 			"songs" => array_map(
 				function($song) {
