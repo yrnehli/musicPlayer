@@ -52,27 +52,30 @@ class DeezerApi {
 	}
 
 	public function getSong($songId) {
-		$deezerPrivateApi = new DeezerPrivateApi();
-		$res = $deezerPrivateApi->getSong($songId);
+		$res = json_decode(
+			$this->curlRequest(
+				"GET",
+				self::API_BASE . "/track/$songId"
+			)
+		);
 
 		$song = [
-			'songName' => $res->results->DATA->SNG_TITLE,
+			'songName' => $res->title,
 			'songArtist' => implode(
 				", ",
 				array_map(
-					function($artist) {
-						return $artist->ART_NAME;
+					function($contributor) {
+						return $contributor->name;
 					},
-					$res->results->DATA->ARTISTS
+					$res->contributors
 				)
 			),
-			'mainSongArtist' => $res->results->DATA->ARTISTS[0]->ART_NAME,
-			'songDuration' => $res->results->DATA->DURATION,
-			'albumArtUrl' => "https://cdns-images.dzcdn.net/images/cover/{$res->results->DATA->ALB_PICTURE}/500x500.jpg",
-			'albumName' => $res->results->DATA->ALB_TITLE,
-			'albumId' => DeezerApi::DEEZER_ID_PREFIX . $res->results->DATA->ALB_ID,
-			'isrc' => $res->results->DATA->ISRC,
-			'lyrics' => property_exists($res->results, 'LYRICS') ? $res->results->LYRICS->LYRICS_SYNC_JSON : []
+			'mainSongArtist' => $res->contributors[0]->name,
+			'songDuration' => $res->duration,
+			'albumArtUrl' => $res->album->cover,
+			'albumName' => $res->album->title,
+			'albumId' => DeezerApi::DEEZER_ID_PREFIX . $res->album->id,
+			'isrc' => $res->isrc
 		];
 
 		return $song;
