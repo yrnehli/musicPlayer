@@ -171,3 +171,19 @@
 #queueButton.active {
 	color: white;
 }
+
+#lyricsButton {
+	color: #b3b3b3;
+}
+
+#lyricsButton:hover {
+	color: white;
+}
+
+#lyricsButton:active {
+	color: #b3b3b3 !important;
+}
+
+#lyricsButton.active {
+	color: white;
+}

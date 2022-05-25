@@ -40,6 +40,7 @@
 		<svg id="saveButton" class="heart-button my-auto mx-2" height="16" width="16" style="display: none;">
 			<path></path>
 		</svg>
+		<i id="lyricsButton" class="fal fa-microphone-stand my-auto mx-2"></i>
 		<svg id="nowPlayingButton" class="my-auto mx-2" height="16" width="16">
 			<path></path>
 			<path></path>
@@ -65,6 +66,7 @@
 		var $playButton = $('#playButton');
 		var $skipButton = $('#skipButton');
 		var $saveButton = $('#saveButton');
+		var $lyricsButton = $('#lyricsButton');
 		var $queueButton = $('#queueButton');
 		var $nowPlayingButton = $('#nowPlayingButton');
 		var $volumeSlider = $('#volumeSlider');
@@ -234,6 +236,10 @@
 				PartialManager.sharedInstance.updateCurrentState();
 				showToastNotification(true, res.message);
 			});
+
+			$lyricsButton.click(() => {
+				PartialManager.sharedInstance.loadPartial('/lyrics/' + Music.sharedInstance.songId())
+			})
 
 			$queueButton.click(e => {
 				if ($queueButton.hasClass('active')) {
