@@ -90,10 +90,6 @@ class PartialManager extends EventEmitter {
 			.removeAttr('data-ll-status')
 		;
 
-		return { html: $temp.html(), scroll: this.scrollTop() };
-	}
-
-	scrollTop() {
-		return this._$partial.find(this._scrollableSelector).scrollTop();
+		return { html: $temp.html(), scroll: this._$partial.find(this._scrollableSelector).scrollTop() };
 	}
 }

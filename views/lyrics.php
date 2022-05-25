@@ -1,35 +1,33 @@
-<!-- <link rel="stylesheet" href="/public/css/queue.css"> -->
-<style>
-	#lyrics .active {
-		color: white;
-		font-weight: bolder;
-	}
-
-	#lyrics {
-		font-size: 24px;
-	}
-</style>
-
+<link rel="stylesheet" href="/public/css/lyrics.css">
 <div id="root" class="px-4 pb-4" data-simplebar>
 	<?= $searchResults ?>
-	<h1>Lyrics</h1>
-	<div id="lyrics">
-		<?php foreach ($lyrics as $lyric): ?>
-			<?php if (empty($lyric->line)): ?>
-				<br>
-			<?php else: ?>
-				<div data-time="<?= $lyric->milliseconds ?>" data-duration="<?= $lyric->duration ?>">
-					<?= $lyric->line ?>
-				</div>
-			<?php endif; ?>
-		<?php endforeach; ?>
+	<div class="my-3 mx-4">
+		<h1>Lyrics</h1>
+		<div id="lyrics">
+			<?php foreach ($lyrics as $lyric): ?>
+				<?php if (empty($lyric->line)): ?>
+					<br>
+				<?php else: ?>
+					<div data-time="<?= $lyric->milliseconds ?>" data-duration="<?= $lyric->duration ?>">
+						<?= $lyric->line ?>
+					</div>
+				<?php endif; ?>
+			<?php endforeach; ?>
+		</div>
 	</div>
 </div>
 <script>
 	var $lyrics = $('#lyrics');
 
 	$(function() {
-		setInterval(() => {		
+		var interval = setInterval(() => {
+			var r = new RegExp('.*\/lyrics\/.*', 'i');
+
+			if (!r.test(window.location.pathname)) {
+				clearInterval(interval);
+				return;
+			}
+
 			const time = Math.floor(Music.sharedInstance.seek() * 1000);
 			let $activeLyric;
 	
@@ -54,12 +52,11 @@
 			if ($activeLyric) {
 				$activeLyric.addClass('active');
 
-				SimpleBar
-					.instances
-					.get($('[data-simplebar]').get(0))
-					.getScrollElement()
-					.scrollTop = $activeLyric.scrollTop();
-				;
+				$activeLyric.get(0).scrollIntoView({
+					behavior: 'smooth',
+					block: 'center',
+					inline: 'center'
+				});
 
 				if (Music.sharedInstance.playing()) {
 					setTimeout(() => {
