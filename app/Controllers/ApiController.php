@@ -46,7 +46,7 @@ class ApiController extends Controller {
 		return $song;
 	}
 
-	private function getLocalSong($songId) {
+	public function getLocalSong($songId) {
 		$db = new MusicDatabase();
 		$conn = $db->getConn();
 		

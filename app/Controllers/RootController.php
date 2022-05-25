@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Helpers\MusicDatabase;
+use App\Helpers\DeezerApi;
 use App\Helpers\DeezerPrivateApi;
 use App\Helpers\SpotifyApi;
 use App\Helpers\LastFmApi;
@@ -44,11 +45,31 @@ class RootController extends Controller {
 	}
 
 	public function lyrics($songId) {
-		$deezerPrivateApi = new DeezerPrivateApi();
-		$res = $deezerPrivateApi->getSong(explode('-', $songId)[1]);
-		$lyrics = property_exists($res->results, 'LYRICS') ? $res->results->LYRICS->LYRICS_SYNC_JSON : [];
+		$lyrics = [];
 
-		$this->view('lyrics', ['lyrics' => $lyrics]);
+		if (!str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)) {
+			$api = new ApiController();
+			$deezerApi = new DeezerApi();
+
+			$song = $api->getLocalSong($songId);
+			$res = $deezerApi->search("track:\"{$song['songName']}\" artist:\"{$song['songArtist']}\"");
+			$songId = (count($res['songs']) > 0) ? $res['songs'][0]['id'] : "";
+		}
+
+		$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
+
+		if (!empty($songId)) {
+			$deezerPrivateApi = new DeezerPrivateApi();
+			$res = $deezerPrivateApi->getSong($songId);
+			$lyrics = property_exists($res->results, 'LYRICS') ? $res->results->LYRICS->LYRICS_SYNC_JSON : [];
+		}
+
+		$this->view('lyrics', [
+			'lyrics' => $lyrics,
+			'accentColour' => !empty($songId)
+				? Utilities::getAccentColour("https://cdns-images.dzcdn.net/images/cover/{$res->results->DATA->ALB_PICTURE}/500x500.jpg")
+				: false
+		]);
 	}
 
 	public function wrapped() {
