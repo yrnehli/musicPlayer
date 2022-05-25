@@ -11,6 +11,7 @@ Route::map("GET", "/saved/export", "SavedController@export");
 Route::map("GET", "/saved/clear", "SavedController@clear");
 Route::map("GET", "/album/@albumId", "AlbumController@album");
 Route::map("GET", "/mp3/@songId", "Mp3Controller@song");
+Route::map("GET", "/lyrics/@songId", "RootController@lyrics");
 Route::map("GET", "/api/update", "ApiController@update");
 Route::map("GET", "/api/search", "ApiController@search");
 Route::map("GET", "/api/song/@songId", "ApiController@song");

@@ -43,6 +43,14 @@ class RootController extends Controller {
 		$this->view('queue');
 	}
 
+	public function lyrics($songId) {
+		$deezerPrivateApi = new DeezerPrivateApi();
+		$res = $deezerPrivateApi->getSong(explode('-', $songId)[1]);
+		$lyrics = property_exists($res->results, 'LYRICS') ? $res->results->LYRICS->LYRICS_SYNC_JSON : [];
+
+		$this->view('lyrics', ['lyrics' => $lyrics]);
+	}
+
 	public function wrapped() {
 		// https://www.last.fm/user/username/partial/albums?albums_date_preset=LAST_7_DAYS
 		// https://www.last.fm/user/username/partial/albums?albums_date_preset=LAST_30_DAYS
