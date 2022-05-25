@@ -42,7 +42,7 @@ class DeezerPrivateApi {
 		return $this->decryptSong($songId, $encryptedSong);
 	}
 
-	private function getSong($songId) {
+	public function getSong($songId) {
 		return $this->request("deezer.pageTrack", json_encode(['sng_id' => $songId]));
 	}
 
