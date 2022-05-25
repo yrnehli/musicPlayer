@@ -3,6 +3,9 @@
 	<?= $searchResults ?>
 	<div class="my-3 mx-4">
 		<h1>Lyrics</h1>
+		<?php if (empty($lyrics)): ?>
+			<h5>No lyrics available</h5>
+		<?php endif; ?>
 		<div id="lyrics">
 			<?php foreach ($lyrics as $lyric): ?>
 				<?php if (!empty($lyric->line)): ?>
