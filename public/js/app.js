@@ -184,7 +184,10 @@ $(function() {
 	PartialManager.sharedInstance.on('preupdate', e =>  SearchHandler.sharedInstance.reset());
 	PartialManager.sharedInstance.on('pathchange', e => {
 		if (window.location.pathname !== `/album/${MusicControl.sharedInstance.albumId()}`) {
-			MusicControl.sharedInstance.elements().$nowPlayingButton.removeClass('active');
+			if (window.location.pathname !== `/lyrics/${Music.sharedInstance.songId()}`) {
+				MusicControl.sharedInstance.elements().$nowPlayingButton.removeClass('active');
+				MusicControl.sharedInstance.elements().$lyricsButton.removeClass('active');
+			}
 		}
 	});
 

@@ -90,7 +90,8 @@
 				$elapsedTime: $elapsedTime,
 				$endTime: $endTime,
 				$saveButton: $saveButton,
-				$nowPlayingButton: $nowPlayingButton
+				$nowPlayingButton: $nowPlayingButton,
+				$lyricsButton: $lyricsButton
 			},
 			state
 		);
@@ -205,7 +206,8 @@
 			}).on('disable', e => localStorage.clear());
 
 			PartialManager.sharedInstance.on('pathchange', e => {
-				(window.location.pathname === '/queue') ? $queueButton.addClass('active') : $queueButton.removeClass('active');
+				window.location.pathname === '/queue' ? $queueButton.addClass('active') : $queueButton.removeClass('active');
+				window.location.pathname === '/lyrics/' + Music.sharedInstance.songId() ? $lyricsButton.addClass('active') : $lyricsButton.removeClass('active');
 			});
 
 			$saveButton.click(async () => {
@@ -238,7 +240,12 @@
 			});
 
 			$lyricsButton.click(() => {
-				PartialManager.sharedInstance.loadPartial('/lyrics/' + Music.sharedInstance.songId())
+				if (!$lyricsButton.hasClass('active')) {
+					$lyricsButton.addClass('active');
+					PartialManager.sharedInstance.loadPartial('/lyrics/' + Music.sharedInstance.songId());
+				} else {
+					PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`);
+				}
 			})
 
 			$queueButton.click(e => {
@@ -254,7 +261,10 @@
 
 				if ($nowPlayingButton.hasClass('active')) {
 					SearchHandler.sharedInstance.reset();
-					if (MusicControl.sharedInstance.albumId()) {
+
+					if (MusicControl.sharedInstance.playing() && $lyricsButton.hasClass('active')) {
+						PartialManager.sharedInstance.loadPartial('/lyrics/' + Music.sharedInstance.songId())
+					} else if (MusicControl.sharedInstance.albumId()) {
 						PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`);
 					}
 				}
