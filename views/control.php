@@ -262,7 +262,7 @@
 				if ($nowPlayingButton.hasClass('active')) {
 					SearchHandler.sharedInstance.reset();
 
-					if (MusicControl.sharedInstance.playing() && $lyricsButton.hasClass('active')) {
+					if (Music.sharedInstance.playing() && $lyricsButton.hasClass('active')) {
 						PartialManager.sharedInstance.loadPartial('/lyrics/' + Music.sharedInstance.songId())
 					} else if (MusicControl.sharedInstance.albumId()) {
 						PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`);
