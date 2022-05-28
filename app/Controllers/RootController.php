@@ -54,10 +54,9 @@ class RootController extends Controller {
 			$res = $deezerApi->search("track:\"{$song['songName']}\" artist:\"{$song['songArtist']}\" album:\"{$song['albumName']}\"");
 			$songId = (count($res['songs']) > 0) ? $res['songs'][0]['id'] : "";
 		} else {
+			$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
 			$song = $deezerApi->getSong($songId);
 		}
-
-		$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
 
 		if (!empty($songId)) {
 			$deezerPrivateApi = new DeezerPrivateApi();
