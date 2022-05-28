@@ -46,7 +46,7 @@
 					return;
 				}
 	
-				const time = Math.floor(Music.sharedInstance.seek() * 1000);
+				const time = Math.ceil(Music.sharedInstance.seek() * 1000);
 				let $activeLyric;
 		
 				$lyrics.children().each(function() {
@@ -84,7 +84,7 @@
 						}, $activeLyric.data('duration') + 1000);
 					}
 				}
-			}, 500);
+			}, 1000);
 		}
 	})();
 </script>
