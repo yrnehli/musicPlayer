@@ -2,7 +2,14 @@
 <div id="root" class="px-4 pb-4" data-simplebar>
 	<?= $searchResults ?>
 	<div class="my-3 mx-4">
-		<h1>Lyrics</h1>
+		<div class="mb-4">
+			<h1 class="mb-0">
+				<?= $song['songName'] ?>
+			</h1>
+			<h6>
+				<?= $song['songArtist'] ?>
+			</h6>
+		</div>
 		<?php if (empty($lyrics)): ?>
 			<h5>No lyrics available</h5>
 		<?php endif; ?>
