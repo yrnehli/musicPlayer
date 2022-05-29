@@ -51,6 +51,7 @@ class RootController extends Controller {
 		if (!str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)) {
 			$api = new ApiController();
 			$song = $api->getLocalSong($songId);
+			$albumArt = $song['albumArtUrl'];
 			$res = $deezerApi->search("track:\"{$song['songName']}\" artist:\"{$song['songArtist']}\" album:\"{$song['albumName']}\"");
 			$songId = (count($res['songs']) > 0) ? $res['songs'][0]['id'] : null;
 		} else {
@@ -63,14 +64,13 @@ class RootController extends Controller {
 				str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId)
 			);
 			$lyrics = property_exists($res->results, 'LYRICS') ? $res->results->LYRICS->LYRICS_SYNC_JSON : [];
+			$albumArt = "https://cdns-images.dzcdn.net/images/cover/{$res->results->DATA->ALB_PICTURE}/500x500.jpg";
 		}
 
 		$this->view('lyrics', [
 			'song' => $song,
 			'lyrics' => $lyrics,
-			'accentColour' => !empty($songId)
-				? Utilities::getAccentColour("https://cdns-images.dzcdn.net/images/cover/{$res->results->DATA->ALB_PICTURE}/500x500.jpg")
-				: false
+			'accentColour' => !empty($songId) ? Utilities::getAccentColour($albumArt) : false
 		]);
 	}
 
