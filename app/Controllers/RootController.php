@@ -52,15 +52,16 @@ class RootController extends Controller {
 			$api = new ApiController();
 			$song = $api->getLocalSong($songId);
 			$res = $deezerApi->search("track:\"{$song['songName']}\" artist:\"{$song['songArtist']}\" album:\"{$song['albumName']}\"");
-			$songId = (count($res['songs']) > 0) ? str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $res['songs'][0]['id']) : null;
+			$songId = (count($res['songs']) > 0) ? $res['songs'][0]['id'] : null;
 		} else {
-			$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
 			$song = $deezerApi->getSong($songId);
 		}
 
 		if (!empty($songId)) {
 			$deezerPrivateApi = new DeezerPrivateApi();
-			$res = $deezerPrivateApi->getSong($songId);
+			$res = $deezerPrivateApi->getSong(
+				str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId)
+			);
 			$lyrics = property_exists($res->results, 'LYRICS') ? $res->results->LYRICS->LYRICS_SYNC_JSON : [];
 		}
 
