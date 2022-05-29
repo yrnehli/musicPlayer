@@ -18,6 +18,7 @@ class DeezerPrivateApi {
 	}
 
 	public function getSongMp3($songId) {
+		$songId = DeezerApi::removePrefix($songId);
 		$song = $this->getSong($songId);
 		$encryptedSong = @file_get_contents(
 			$this->getSongUrl(
@@ -43,7 +44,7 @@ class DeezerPrivateApi {
 	}
 
 	public function getSong($songId) {
-		return $this->request("deezer.pageTrack", json_encode(['sng_id' => $songId]));
+		return $this->request("deezer.pageTrack", json_encode(['sng_id' => DeezerApi::removePrefix($songId)]));
 	}
 
 	public function getAlbum($albumId) {
@@ -124,6 +125,7 @@ class DeezerPrivateApi {
 	}
 
 	private function getBlowfishKey($songId) {
+		$songId = DeezerApi::removePrefix($songId);
 		$secret = "g4el58wc0zvf9na1";
 		$songIdMd5 = md5($songId);
 		$blowfishKey = "";

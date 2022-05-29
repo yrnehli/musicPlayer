@@ -52,6 +52,7 @@ class DeezerApi {
 	}
 
 	public function getSong($songId) {
+		$songId = DeezerApi::removePrefix($songId);
 		$res = json_decode(
 			$this->curlRequest(
 				"GET",
@@ -133,6 +134,10 @@ class DeezerApi {
 		];
 
 		return $res;
+	}
+
+	public static function removePrefix($songId) {
+		return str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
 	}
 
 	private function curlRequest($requestType, $url, $headers = [], $payload = "") {
