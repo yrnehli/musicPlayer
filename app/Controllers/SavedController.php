@@ -18,7 +18,7 @@ class SavedController extends Controller {
 			$savedSongs = array_map(
 				function($savedSong, $i) use ($deezerApi) {
 					$songDetails = $deezerApi->getSong(
-						str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $savedSong['songId'])
+						DeezerApi::removePrefix($savedSong['songId'])
 					);
 	
 					$savedSong = array_merge(
@@ -49,7 +49,7 @@ class SavedController extends Controller {
 			foreach ($this->getSavedSongs() as $savedSong) {
 				$spotifyId = $spotifyApi->getSpotifyId(
 					$deezerApi->getSong(
-						str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $savedSong['songId'])
+						DeezerApi::removePrefix($savedSong['songId'])
 					)['isrc']
 				);
 	

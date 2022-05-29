@@ -30,6 +30,7 @@ class ApiController extends Controller {
 	}
 
 	private function getDeezerSong($songId) {
+		$songId = DeezerApi::removePrefix($songId);
 		$deezerApi = new DeezerApi();
 		$db = new MusicDatabase();
 
@@ -38,9 +39,7 @@ class ApiController extends Controller {
 				'isDeezer' => true,
 				'isSaved' => $db->isSongSaved($songId)
 			],
-			$deezerApi->getSong(
-				str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId)
-			)
+			$deezerApi->getSong($songId)
 		);
 
 		return $song;
@@ -87,8 +86,7 @@ class ApiController extends Controller {
 	}
 
 	private function getDeezerAlbum($albumId) {
-		$albumId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $albumId);
-
+		$albumId = DeezerApi::removePrefix($albumId);
 		$deezerApi = new DeezerApi();
 		$res = $deezerApi->getAlbum($albumId);
 

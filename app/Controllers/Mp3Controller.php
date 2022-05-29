@@ -10,7 +10,7 @@ use Flight;
 class Mp3Controller extends Controller {
 	public function song($songId) {
 		if (str_starts_with($songId, DeezerApi::DEEZER_ID_PREFIX)) {
-			$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
+			$songId = DeezerApi::removePrefix($songId);
 			$filepath = "public/userData/deezer/$songId";
 			
 			if (!file_exists($filepath)) {

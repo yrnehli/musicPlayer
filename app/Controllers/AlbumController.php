@@ -32,10 +32,9 @@ class AlbumController extends Controller {
 	}
 
 	private function getDeezerAlbum($albumId) {
+		$albumId = DeezerApi::removePrefix($albumId);
 		$deezerApi = new DeezerApi();
-		$res = $deezerApi->getAlbum(
-			str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $albumId)
-		);
+		$res = $deezerApi->getAlbum($albumId);
 
 		return [
 			'album' => $res['album'],
