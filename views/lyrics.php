@@ -38,7 +38,8 @@
 		});
 
 		function initEvents() {
-			var interval = setInterval(() => {
+			let i = 0;
+			let interval = setInterval(() => {
 				const r = new RegExp('.*\/lyrics\/.*', 'i');
 	
 				if (!r.test(window.location.pathname)) {
@@ -46,7 +47,7 @@
 					return;
 				}
 	
-				const time = Math.ceil(Music.sharedInstance.seek() * 1000);
+				const time = Music.sharedInstance.seek() * 1000;
 				let $activeLyric;
 		
 				$lyrics.children().each(function() {
@@ -71,11 +72,13 @@
 					$activeLyric.addClass('active');
 	
 					if (Music.sharedInstance.playing()) {
-						$activeLyric.get(0).scrollIntoView({
-							behavior: 'smooth',
-							block: 'center',
-							inline: 'center'
-						});
+						if (i % 4 === 0) {
+							$activeLyric.get(0).scrollIntoView({
+								behavior: 'smooth',
+								block: 'center',
+								inline: 'center'
+							});
+						}
 	
 						setTimeout(() => {
 							if (Music.sharedInstance.playing()) {
@@ -84,7 +87,9 @@
 						}, $activeLyric.data('duration') + 1000);
 					}
 				}
-			}, 1000);
+
+				i++;
+			}, 250);
 		}
 	})();
 </script>
