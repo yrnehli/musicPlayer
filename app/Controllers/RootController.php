@@ -52,7 +52,7 @@ class RootController extends Controller {
 			$api = new ApiController();
 			$song = $api->getLocalSong($songId);
 			$res = $deezerApi->search("track:\"{$song['songName']}\" artist:\"{$song['songArtist']}\" album:\"{$song['albumName']}\"");
-			$songId = (count($res['songs']) > 0) ? $res['songs'][0]['id'] : "";
+			$songId = (count($res['songs']) > 0) ? str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $res['songs'][0]['id']) : null;
 		} else {
 			$songId = str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
 			$song = $deezerApi->getSong($songId);
