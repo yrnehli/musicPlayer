@@ -67,10 +67,9 @@
 						return false;
 					}
 				});
-	
-				$lyrics.find('.active').removeClass('active');
-	
+				
 				if ($activeLyric) {
+					$lyrics.find('.active').removeClass('active');
 					$activeLyric.addClass('active');
 	
 					if (Music.sharedInstance.playing()) {
@@ -86,7 +85,7 @@
 							if (Music.sharedInstance.playing()) {
 								$activeLyric.removeClass('active');
 							}
-						}, $activeLyric.data('duration') + 3000);
+						}, $activeLyric.data('duration') + 1000);
 					}
 				}
 
