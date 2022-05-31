@@ -1,8 +1,6 @@
 <link rel="stylesheet" href="/public/css/queue.css">
-
 <div id="root" class="px-4 pb-4" data-simplebar>
-	<?= $searchResults ?>
-	<h2>Queue</h2>
+		<h2>Queue</h2>
 	<div class="mb-3" id="nowPlaying" style="display: none;">
 		<h3>Now Playing</h3>
 		<div class="music-row" data-activable>

@@ -1,5 +1,4 @@
 <link rel="stylesheet" href="/public/css/control.css">
-
 <div id="control" class="fixed-bottom d-flex">
 	<div id="playerDetails" class="h-100 d-flex">
 		<img id="albumArt" class="my-auto"></img>
@@ -56,7 +55,6 @@
 		</div>
 	</div>
 </div>
-
 <script>
 	(function() {
 		var $albumArt = $('#albumArt');

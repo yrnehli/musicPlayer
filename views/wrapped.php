@@ -1,7 +1,5 @@
-<link rel="stylesheet" href="/public/css/wrapped.css">
-<div id="root" class="px-4 d-flex" data-simplebar>
-	<?= $searchResults ?>
-	<div id="wrapped" style="visibility: hidden;">
+<link rel="stylesheet" href="/public/css/wrapped.css"><div id="root" class="px-4 d-flex" data-simplebar>
+		<div id="wrapped" style="visibility: hidden;">
 		<div class="row">
 			<div class="col-6 d-flex">
 				<div class="ml-auto">

@@ -1,9 +1,7 @@
 <link rel="stylesheet" href="/public/css/home.css">
-
 <div id="root" class="pt-2 pb-4 px-2 d-flex" data-simplebar>
 	<div class="mx-4">
-		<?= $searchResults ?>
-	</div>
+			</div>
 	<div id="albums" class="mx-auto centre">
 		<?php foreach ($albums as $album): ?>
 			<div class="album-container mx-2 my-2" data-album-id="<?= $album['id'] ?>" data-context-menu-actions="PLAY_NEXT,PLAY_LAST,GO_TO_ALBUM">
@@ -18,7 +16,6 @@
 		<?php endforeach; ?>
 	</div>
 </div>
-
 <script>
 	(function() {
 		$(function() {

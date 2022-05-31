@@ -1,8 +1,6 @@
 <link rel="stylesheet" href="/public/css/saved.css">
-
 <div id="root" class="px-4 pb-4" data-simplebar>
-	<?= $searchResults ?>
-	<div class="d-flex pt-3">
+		<div class="d-flex pt-3">
 		<h1 class="mx-3 my-0" id="saved">
 			SAVED
 		</h1>
@@ -61,7 +59,6 @@
 		<?php endforeach; ?>
 	</div>
 </div>
-
 <script>
 	(function() {
 		var $tracklistRows = $('.tracklist-row');

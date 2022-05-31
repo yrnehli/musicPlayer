@@ -1,7 +1,5 @@
 <link rel="stylesheet" href="/public/css/album.css">
-
 <div id="root" class="px-4 pb-4" data-simplebar>
-	<?= $searchResults ?>
 	<div class="d-flex pt-3">
 		<img id="albumArtLarge" class="mx-3" src="<?= $album['artUrl'] ?>">		
 		<div class="d-flex mx-2">
@@ -104,7 +102,6 @@
 		<?php endforeach; ?>
 	</div>
 </div>
-
 <script>
 	(function() {
 		var $playAlbumButton = $('#playAlbumButton');

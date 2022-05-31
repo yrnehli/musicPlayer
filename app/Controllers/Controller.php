@@ -9,8 +9,6 @@ use PDO;
 
 class Controller {
 	protected function view($name, $data = []) {
-		Flight::render('searchResults', [], 'searchResults');
-
 		if (filter_var(Flight::request()->query->partial, FILTER_VALIDATE_BOOLEAN)) {
 			Flight::render($name, $data);
 			return;

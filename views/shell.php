@@ -18,15 +18,13 @@
 		<script src="/public/js/SearchHandler.js"></script>
 		<script src="/public/js/FontAwesome.js"></script>
 		<script src="/public/js/app.js"></script>
-		<link rel="stylesheet" href="https://code.jquery.com/git/ui/jquery-ui-git.css">
-		<link rel="stylesheet" href="/public/css/global.css">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.css">
-		<link rel="manifest" href="/manifest.webmanifest">
+		<link rel="stylesheet" href="https://code.jquery.com/git/ui/jquery-ui-git.css">		<link rel="stylesheet" href="/public/css/global.css">		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@5.3.0/dist/simplebar.css">		<link rel="manifest" href="/manifest.webmanifest">
 		<link rel="icon" href="data:,">
 		<title>Music</title>
 	</head>
 	<body>
 		<?= $windowControlsOverlay ?>
+		<div id="searchResults" style="display: none; left: <?= ($os['os_family'] === 'macintosh') ? '6rem' : '1rem' ?>"></div>
 		<div id="partial">
 			<?= $partial ?>
 		</div>

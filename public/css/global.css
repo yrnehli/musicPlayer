@@ -426,6 +426,32 @@ input[type="text"]:focus {
 	font-size: 14px;
 }
 
+#searchResults {
+	position: absolute;
+	background: rgba(18, 18, 18, 0.75);
+	border-radius: 9px;
+	width: 300px;
+	backdrop-filter: blur(60px) saturate(210%);
+	border: 1px solid hsla(0, 0%, 100%, .1);
+	top: 68px;
+	overflow: auto;
+	text-overflow: ellipsis;
+	padding: 0px;
+	z-index: 9999;
+	max-height: calc(100vh - 150px);
+}
+
+.result-row {
+	grid-template-columns: none;
+    height: 100%;
+	padding: 10px 19px;
+	border-radius: 0px;
+}
+
+.result-row:not(:last-child) {
+    border-bottom: 1px solid hsla(0, 0%, 100%, .1);
+}
+
 h1 {
 	font-weight: 900;
 	letter-spacing: -.04em;

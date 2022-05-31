@@ -20,9 +20,10 @@ $(function() {
 	var $partial = $('#partial');
 	var $contextMenu = $('#contextMenu');
 	var $searchBar = $('#searchBar');
+	var $searchResults = $('#searchResults');
 	var $clearSearchBarButton = $('#clearSearchBarButton');
 
-	new SearchHandler($searchBar, $clearSearchBarButton);
+	new SearchHandler($searchBar, $searchResults, $clearSearchBarButton);
 	new PartialManager($partial, '.simplebar-content-wrapper');
 	new CustomContextMenu(
 		$contextMenu,

@@ -1,7 +1,5 @@
-<link rel="stylesheet" href="/public/css/lyrics.css">
-<div id="root" class="px-4 pb-4" data-simplebar>
-	<?= $searchResults ?>
-	<div class="my-3 mx-4">
+<link rel="stylesheet" href="/public/css/lyrics.css"><div id="root" class="px-4 pb-4" data-simplebar>
+		<div class="my-3 mx-4">
 		<div class="mb-4">
 			<h1 class="mb-0">
 				<?= $song['songName'] ?>
