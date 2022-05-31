@@ -82,7 +82,7 @@
 						}
 	
 						setTimeout(() => {
-							if (Music.sharedInstance.playing()) {
+							if (Music.sharedInstance.playing() || !Music.sharedInstance.songId()) {
 								$activeLyric.removeClass('active');
 							}
 						}, $activeLyric.data('duration') + 1000);
