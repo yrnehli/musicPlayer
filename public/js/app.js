@@ -181,8 +181,7 @@ $(function() {
 			}
 		}
 	);
-		
-	PartialManager.sharedInstance.on('preupdate', e =>  SearchHandler.sharedInstance.reset());
+	
 	PartialManager.sharedInstance.on('pathchange', e => {
 		if (window.location.pathname !== `/album/${MusicControl.sharedInstance.albumId()}`) {
 			if (window.location.pathname !== `/lyrics/${Music.sharedInstance.songId()}`) {

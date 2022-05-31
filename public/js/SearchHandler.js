@@ -16,15 +16,12 @@ class SearchHandler {
 	}
 
 	_initEvents() {
-		this._$searchBar.keyup(e => this._search());
 		this._$clearSearchBarButton.click(e => this.reset());
-		this._$searchBar.focus(e => {
-			MusicControl.sharedInstance.elements().$nowPlayingButton.removeClass('active');
-			this._search();
-		});
+		this._$searchBar.keyup(e => this._search());
+		this._$searchBar.focus(e => this._search());
 		$(document).click(e => {
 			if (!$(e.target).closest(this._$searchBar).length && !$(e.target).closest(this._$searchResults).length) {
-				this._$searchResults.hide();
+				this._$searchResults.fadeOut(100);
 			}
 		});
 	}
@@ -40,7 +37,7 @@ class SearchHandler {
 	
 				if (term.trim() === "") {
 					this._$clearSearchBarButton.hide();
-					this._$searchResults.hide();
+					this._$searchResults.fadeOut(100);
 					return;
 				}
 	
@@ -54,7 +51,7 @@ class SearchHandler {
 					.append(res.data.albums.map(album => this._createResultRow('album', album.id, album.id, album.name, album.artist, album.duration, album.artFilepath, album.explicit)))
 				;
 	
-				(res.data.songs.length > 0 || res.data.albums.length > 0) ? this._$searchResults.show() : this._$searchResults.hide();
+				(res.data.songs.length > 0 || res.data.albums.length > 0) ? this._$searchResults.show() : this._$searchResults.fadeOut(100);
 			},
 			100
 		);

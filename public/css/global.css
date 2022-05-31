@@ -327,10 +327,6 @@ input[type="text"]:focus {
 	-webkit-app-region: drag;
 }
 
-#searchResults {
-	margin-top: -1rem;
-}
-
 #searchBar {
 	z-index: 1;
 	background-color: hsla(0, 0%, 100%, .1);
@@ -433,6 +429,7 @@ input[type="text"]:focus {
 	width: 300px;
 	backdrop-filter: blur(60px) saturate(210%);
 	border: 1px solid hsla(0, 0%, 100%, .1);
+	margin-top: -1rem;
 	top: 68px;
 	overflow: auto;
 	text-overflow: ellipsis;

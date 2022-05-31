@@ -258,8 +258,6 @@
 				$nowPlayingButton.toggleClass('active');
 
 				if ($nowPlayingButton.hasClass('active')) {
-					SearchHandler.sharedInstance.reset();
-
 					if (Music.sharedInstance.playing() && $lyricsButton.hasClass('active')) {
 						PartialManager.sharedInstance.loadPartial('/lyrics/' + Music.sharedInstance.songId())
 					} else if (MusicControl.sharedInstance.albumId()) {
