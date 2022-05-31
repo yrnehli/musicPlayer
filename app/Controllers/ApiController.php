@@ -36,6 +36,7 @@ class ApiController extends Controller {
 
 		$song = array_merge(
 			[
+				'songId' => $songId,
 				'isDeezer' => true,
 				'isSaved' => $db->isSongSaved($songId)
 			],
@@ -51,6 +52,7 @@ class ApiController extends Controller {
 		
 		$stmt = $conn->prepare(
 			"SELECT
+				`songs`.`id` AS 'songId',
 				`songs`.`name` AS 'songName',
 				`songs`.`artist` AS 'songArtist',
 				`songs`.`duration` AS 'songDuration',
