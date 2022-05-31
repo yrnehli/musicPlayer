@@ -196,9 +196,7 @@
 				.sharedInstance.on('updateauto', e => onUpdate())
 				.on('updatemanual', e => {
 					clearTimeout(timeout);
-					if ($nowPlayingButton.hasClass('active')) {
-						timeout = setTimeout(onUpdate, 3000);
-					}
+					timeout = setTimeout(onUpdate, 3000);
 				})
 				.on('disable', e => localStorage.clear())
 			;
