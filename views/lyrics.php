@@ -86,7 +86,7 @@
 							if (Music.sharedInstance.playing()) {
 								$activeLyric.removeClass('active');
 							}
-						}, $activeLyric.data('duration') + 1000);
+						}, $activeLyric.data('duration') + 3000);
 					}
 				}
 
