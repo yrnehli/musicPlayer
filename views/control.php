@@ -184,24 +184,24 @@
 		function initEvents() {
 			var timeout;
 
-			MusicControl.sharedInstance.on('updateauto', e => {
-				if ($nowPlayingButton.hasClass('active')) {
+			const onUpdate = () => {
+				if ($lyricsButton.hasClass('active')) {
+					PartialManager.sharedInstance.loadPartial(`/lyrics/${Music.sharedInstance.songId()}`);
+				} else if ($nowPlayingButton.hasClass('active')) {
 					PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`);
 				}
-			}).on('updatemanual', e => {
-				clearTimeout(timeout);
+			};
 
-				if ($nowPlayingButton.hasClass('active')) {
-					timeout = setTimeout(
-						() => { 
-							if ($nowPlayingButton.hasClass('active')) {
-								PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`)
-							}
-						},
-						3000
-					);
-				}
-			}).on('disable', e => localStorage.clear());
+			MusicControl
+				.sharedInstance.on('updateauto', e => onUpdate())
+				.on('updatemanual', e => {
+					clearTimeout(timeout);
+					if ($nowPlayingButton.hasClass('active')) {
+						timeout = setTimeout(onUpdate, 3000);
+					}
+				})
+				.on('disable', e => localStorage.clear())
+			;
 
 			PartialManager.sharedInstance.on('pathchange', e => {
 				window.location.pathname === '/queue' ? $queueButton.addClass('active') : $queueButton.removeClass('active');
