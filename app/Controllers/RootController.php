@@ -61,7 +61,7 @@ class RootController extends Controller {
 		if (!empty($songId)) {
 			$deezerPrivateApi = new DeezerPrivateApi();
 			$res = $deezerPrivateApi->getSong($songId);
-			$lyrics = property_exists($res->results, 'LYRICS') ? $res->results->LYRICS->LYRICS_SYNC_JSON : [];
+			$lyrics = property_exists($res->results, 'LYRICS_SYNC_JSON') ? $res->results->LYRICS->LYRICS_SYNC_JSON : [];
 			$albumArt = "https://cdns-images.dzcdn.net/images/cover/{$res->results->DATA->ALB_PICTURE}/500x500.jpg";
 		}
 
