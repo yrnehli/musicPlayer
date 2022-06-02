@@ -67,10 +67,15 @@ class SearchHandler {
 			$('<div class="d-flex"></div>').html((`${(type === 'song') ? "Song" : "Album"}<div class="dot"></div>${artist}`))
 		]);
 
-		$resultRow.dblclick(() => (type === 'song') ? this._playSong($resultRow) : this._playAlbum($resultRow));
-		$resultRow.append(
-			$('<div></div>').append([$artwork, $details])
-		);
+		$resultRow
+			.dblclick(() => {
+				(type === 'song') ? this._playSong($resultRow) : this._playAlbum($resultRow);
+				SearchHandler.sharedInstance.reset();
+			})
+			.append(
+				$('<div></div>').append([$artwork, $details])
+			)
+		;
 
 		return $resultRow;
 	}
