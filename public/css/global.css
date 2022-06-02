@@ -424,7 +424,7 @@ input[type="text"]:focus {
 
 #searchResults {
 	position: absolute;
-	background: rgba(18, 18, 18, 0.75);
+	background: rgba(18, 18, 18, 0.5);
 	border-radius: 9px;
 	width: 300px;
 	backdrop-filter: blur(60px) saturate(210%);
