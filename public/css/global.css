@@ -449,6 +449,14 @@ input[type="text"]:focus {
     border-bottom: 1px solid hsla(0, 0%, 100%, .1);
 }
 
+
+.result-row .details .artist {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 172px;
+}
+
 h1 {
 	font-weight: 900;
 	letter-spacing: -.04em;

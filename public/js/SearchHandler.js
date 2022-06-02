@@ -64,7 +64,11 @@ class SearchHandler {
 		var $name = $('<div></div>').text(name);
 		var $details = $('<div class="details"></div>').append([
 			(explicit === true) ? $name.append('<div class="explicit">E</div>') : $name,
-			$('<div class="d-flex"></div>').html((`${(type === 'song') ? "Song" : "Album"}<div class="dot"></div>${artist}`))
+			$('<div class="d-flex"></div>').html(
+				`<span>${(type === 'song') ? "Song" : "Album"}</span>
+				<div class="dot"></div>
+				<span class="artist">${artist}</span>`
+			)
 		]);
 
 		$resultRow
