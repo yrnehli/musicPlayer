@@ -51,6 +51,10 @@ $(function() {
 								.forEach(songId => Music.sharedInstance.queue().unshift(songId))
 							;
 						}
+
+						if ($target.hasClass('result-row')) {
+							SearchHandler.sharedInstance.reset();
+						}
 					});
 
 					if (Music.sharedInstance.disabled()) {
@@ -81,6 +85,10 @@ $(function() {
 								.forEach(songId => Music.sharedInstance.queue().push(songId))
 							;
 						}
+
+						if ($target.hasClass('result-row')) {
+							SearchHandler.sharedInstance.reset();
+						}
 					});
 
 					if (Music.sharedInstance.disabled()) {
@@ -97,6 +105,10 @@ $(function() {
 				`,
 				callback: function($target) {
 					PartialManager.sharedInstance.loadPartial(`/album/${$target.data('album-id')}`);
+
+					if ($target.hasClass('result-row')) {
+						SearchHandler.sharedInstance.reset();
+					}
 				}
 			},
 			REMOVE_FROM_QUEUE: {
