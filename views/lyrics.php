@@ -32,6 +32,7 @@
 			<?php if ($accentColour): ?>
 				updateBodyColour('<?= $accentColour ?>');
 			<?php endif; ?>
+			$lyrics.find('.active').removeClass('active');
 			initEvents();
 		});
 
