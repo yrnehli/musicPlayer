@@ -75,7 +75,6 @@ class SearchHandler {
 	}
 
 	_createResultRow(type, id, albumId, name, artist, duration, artFilepath, explicit) {
-		console.log(`data-${type}-id="${id}"] [data-album-id="${albumId}"]`);
 		if (this._$searchResults.find(`[data-${type}-id="${id}"][data-album-id="${albumId}"]`).length) {
 			return;
 		}
