@@ -44,9 +44,10 @@ class SearchHandler {
 				this._$clearSearchBarButton.show();
 	
 				var res = await $.get('/api/search', { term: term });
+
+				this._clearOldResults(res.data.songs, res.data.albums);
 	
 				this._$searchResults
-					.empty()
 					.append(res.data.songs.map(song => this._createResultRow('song', song.id, song.albumId, song.name, song.artist, song.duration, song.artFilepath, song.explicit)))
 					.append(res.data.albums.map(album => this._createResultRow('album', album.id, album.id, album.name, album.artist, album.duration, album.artFilepath, album.explicit)))
 				;
@@ -57,7 +58,28 @@ class SearchHandler {
 		);
 	}
 
+	_clearOldResults(songs, albums) {
+		this._$searchResults.children().each(function() {
+			const $this = $(this);
+
+			if ($this.data('song-id')) {
+				if (!songs.some(song => song.id == $this.data('song-id'))) {
+					$this.remove();
+				}
+			} else {
+				if (!albums.some(album => album.id == $this.data('album-id'))) {
+					$this.remove();
+				}
+			}
+		});
+	}
+
 	_createResultRow(type, id, albumId, name, artist, duration, artFilepath, explicit) {
+		console.log(`data-${type}-id="${id}"] [data-album-id="${albumId}"]`);
+		if (this._$searchResults.find(`[data-${type}-id="${id}"][data-album-id="${albumId}"]`).length) {
+			return;
+		}
+
 		var $resultRow = $(`<div class="music-row result-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="PLAY_NEXT,PLAY_LAST,GO_TO_ALBUM" data-activable></div>`);
 		var $img = $('<img>').prop('src', artFilepath);
 		var $artwork = $('<div class="artwork"></div>').append($img);
