@@ -75,8 +75,14 @@ class SearchHandler {
 	}
 
 	_createResultRow(type, id, albumId, name, artist, duration, artFilepath, explicit) {
-		if (this._$searchResults.find(`[data-${type}-id="${id}"][data-album-id="${albumId}"]`).length) {
-			return;
+		if (type === 'song') {
+			if (this._$searchResults.find(`[data-song-id="${id}"]`).length) {
+				return;
+			}
+		} else {
+			if (this._$searchResults.find(`[data-album-id="${id}"]`).not('[data-song-id]').length) {
+				return;
+			}
 		}
 
 		var $resultRow = $(`<div class="music-row result-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="PLAY_NEXT,PLAY_LAST,GO_TO_ALBUM" data-activable></div>`);

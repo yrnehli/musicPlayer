@@ -150,7 +150,7 @@ class ApiController extends Controller {
 			WHERE REGEXP_REPLACE(CONCAT(`name`, `artist`), '[$ignoreRegex]', '') LIKE :term
 			OR REGEXP_REPLACE(CONCAT(`artist`, `name`), '[$ignoreRegex]', '') LIKE :term
 			ORDER BY CHAR_LENGTH(`name`)
-			LIMIT 5"
+			LIMIT 15"
 		);
 		$stmt->bindParam(":term", $term);
 		$stmt->execute();
@@ -164,7 +164,7 @@ class ApiController extends Controller {
 			WHERE REGEXP_REPLACE(CONCAT(`songs`.`name`, `songs`.`artist`), '[$ignoreRegex]', '') LIKE :term
 			OR REGEXP_REPLACE(CONCAT(`songs`.`artist`, `songs`.`name`), '[$ignoreRegex]', '') LIKE :term
 			ORDER BY CHAR_LENGTH(`songs`.`name`)
-			LIMIT 5"
+			LIMIT 15"
 		);
 		$stmt->bindParam(":term", $term);
 		$stmt->execute();
