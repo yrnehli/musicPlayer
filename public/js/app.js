@@ -161,6 +161,8 @@ $(function() {
 							CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
 							$target.data(CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX).replace("FLAG", "UNFLAG")
 						);
+
+						PartialManager.sharedInstance.updateCurrentState();
 					});
 
 					showToastNotification(true, "Marked as Flagged");

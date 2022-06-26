@@ -173,7 +173,7 @@
 
 				showToastNotification(true, res.message);
 				
-				if (songId.toString() === Music.sharedInstance.songId().toString()) {
+				if (songId.toString() === Music.sharedInstance.songId()?.toString()) {
 					switch (action) {
 						case 'PUT':
 							MusicControl.sharedInstance.elements().$saveButton.addClass('active');
@@ -183,6 +183,8 @@
 							break;
 					}
 				}
+
+				PartialManager.sharedInstance.updateCurrentState();
 			});
 		}
 
