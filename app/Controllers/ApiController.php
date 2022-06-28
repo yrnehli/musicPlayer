@@ -132,24 +132,23 @@ class ApiController extends Controller {
 	}
 
 	private function searchLocal($term) {
-		$term = "%" . str_replace(
-			[" ", "s"],
-			["%", '_'],
+		$term = "%" . preg_replace(
+			["/[^\w\s]/", "/ /", "/s/",],
+			['', "%", '_'],
 			$term
 		) . "%";
 		
 		$db = new MusicDatabase();
 		$conn = $db->getConn();
 
-		$ignoreRegex = "^A-Za-zÀ-ÖØ-öø-ÿ0-9 ";
+		$ignoreRegex = "[^A-Za-zÀ-ÖØ-öø-ÿ0-9 ]";
 
 		$stmt = $conn->prepare(
 			"SELECT `id`, `name`, `artist`, `duration`, `albumDetails`.`duration`, `artFilepath`, 0 AS `explicit`
 			FROM `albums`
 			INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
-			WHERE REGEXP_REPLACE(CONCAT(`name`, `artist`), '[$ignoreRegex]', '') LIKE :term
-			OR REGEXP_REPLACE(CONCAT(`artist`, `name`), '[$ignoreRegex]', '') LIKE :term
-			ORDER BY CHAR_LENGTH(`name`)
+			WHERE REGEXP_REPLACE(CONCAT(`name`, `artist`), '$ignoreRegex', '') LIKE :term
+			OR REGEXP_REPLACE(CONCAT(`artist`, `name`), '$ignoreRegex', '') LIKE :term
 			LIMIT 15"
 		);
 		$stmt->bindParam(":term", $term);
@@ -161,9 +160,8 @@ class ApiController extends Controller {
 			FROM `songs`
 			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
 			INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
-			WHERE REGEXP_REPLACE(CONCAT(`songs`.`name`, `songs`.`artist`), '[$ignoreRegex]', '') LIKE :term
-			OR REGEXP_REPLACE(CONCAT(`songs`.`artist`, `songs`.`name`), '[$ignoreRegex]', '') LIKE :term
-			ORDER BY CHAR_LENGTH(`songs`.`name`)
+			WHERE REGEXP_REPLACE(CONCAT(`songs`.`name`, `songs`.`artist`), '$ignoreRegex', '') LIKE :term
+			OR REGEXP_REPLACE(CONCAT(`songs`.`artist`, `songs`.`name`), '$ignoreRegex', '') LIKE :term
 			LIMIT 15"
 		);
 		$stmt->bindParam(":term", $term);
