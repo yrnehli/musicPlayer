@@ -82,10 +82,12 @@ You should receive a JSON response that looks like this:
 | Hotkey | Action |
 | ----------- | ----------- |
 | `Esc` | Home Page |
-| `Ctrl + F` | Search |
-| `Ctrl + D` | Saved Songs |
-| `Ctrl + S` | Shuffle All Songs |
-| `Ctrl + W` | Last.fm “Wrapped” |
+| `Meta + F` | Search |
+| `Meta + D` | Saved Songs |
+| `Meta + S` | Shuffle All Songs |
+| `Meta + W` | Last.fm “Wrapped” |
+
+Where `Meta` is either `Ctrl` or `Cmd (⌘)`.
 
 # Features
 - Search and stream from Deezer by prefixing your search query with `e: `, for example `e: 24K Magic`.
