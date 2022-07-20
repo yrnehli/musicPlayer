@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Ace SQL dump
-# Version 20025
+# Version 20033
 #
 # https://sequel-ace.com/
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
-# Host: 127.0.0.1 (MySQL 8.0.27)
+# Host: 127.0.0.1 (MySQL 8.0.28)
 # Database: musicPlayer
-# Generation Time: 2022-01-26 11:24:56 PM +0000
+# Generation Time: 2022-07-20 10:35:06 PM +0000
 # ************************************************************
 
 
@@ -19,17 +19,6 @@ SET NAMES utf8mb4;
 /*!40101 SET @OLD_SQL_MODE='NO_AUTO_VALUE_ON_ZERO', SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
-# Dump of table albumDetails
-# ------------------------------------------------------------
-
-DROP VIEW IF EXISTS `albumDetails`;
-
-CREATE TABLE `albumDetails` (
-   `albumId` INT NOT NULL,
-   `length` BIGINT NOT NULL DEFAULT '0',
-   `duration` DECIMAL(32,0) NULL
-) ENGINE=MyISAM;
 
 
 
@@ -56,9 +45,12 @@ CREATE TABLE `albums` (
 DROP TABLE IF EXISTS `savedSongs`;
 
 CREATE TABLE `savedSongs` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `songId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `active` bit(1) NOT NULL DEFAULT b'1',
   `flagged` bit(1) NOT NULL DEFAULT b'0',
-  PRIMARY KEY (`songId`)
+  `dateUpdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -117,17 +109,16 @@ CREATE TABLE `songs` (
 
 
 
-
-
-# Replace placeholder table for albumDetails with correct view syntax
+# Dump of view albumDetails
 # ------------------------------------------------------------
 
-DROP TABLE `albumDetails`;
+DROP TABLE IF EXISTS `albumDetails`; DROP VIEW IF EXISTS `albumDetails`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `albumDetails`
 AS SELECT
    `song-album`.`albumId` AS `albumId`,count(0) AS `length`,sum(`songs`.`duration`) AS `duration`
 FROM (`songs` join `song-album` on((`songs`.`id` = `song-album`.`songId`))) group by `song-album`.`albumId`;
+
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

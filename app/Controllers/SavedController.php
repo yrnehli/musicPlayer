@@ -71,7 +71,7 @@ class SavedController extends Controller {
 		$db = new MusicDatabase();
 		$conn = $db->getConn();
 
-		$stmt = $conn->prepare("SELECT * FROM `savedSongs`");
+		$stmt = $conn->prepare("SELECT * FROM `savedSongs` WHERE `active` = 1");
 		$stmt->execute();
 		$savedSongs = $stmt->fetchAll();
 

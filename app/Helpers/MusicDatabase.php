@@ -97,7 +97,8 @@ class MusicDatabase {
 		$stmt = $this->conn->prepare(
 			"SELECT *
 			FROM `savedSongs`
-			WHERE `songId` = :songId"
+			WHERE `songId` = :songId
+			AND `active` = 1"
 		);
 		$stmt->bindParam(":songId", $songId);
 		$stmt->execute();
