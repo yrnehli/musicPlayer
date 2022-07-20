@@ -153,7 +153,7 @@ $(function() {
 						$target.find('.heart-button').addClass('active');
 						$target.find('.flag-icon').addClass('active');
 						
-						if (songId.toString() === Music.sharedInstance.songId().toString()) {
+						if (songId.toString() === Music.sharedInstance.songId()?.toString()) {
 							MusicControl.sharedInstance.elements().$saveButton.addClass('active');
 						}
 		
