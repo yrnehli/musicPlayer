@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Helpers\MusicDatabase;
 use App\Helpers\DeezerApi;
 use App\Helpers\DeezerPrivateApi;
-use App\Helpers\SpotifyApi;
 use App\Helpers\LastFmApi;
 use App\Helpers\Utilities;
 use Exception;
@@ -28,11 +27,9 @@ class RootController extends Controller {
 
 	public function auth() {
 		$deezerPrivateApi = new DeezerPrivateApi();
-		$spotifyApi = new SpotifyApi();
 		
 		try {
 			$deezerPrivateApi->authTest();
-			$spotifyApi->authTest();
 		} catch (Exception $e) {
 			$this->responseHandler(false, $e->getMessage());
 		}

@@ -6,12 +6,6 @@
 		</h1>
 	</div>
 	<div class="d-flex my-3 mx-3">
-		<button id="spotifyExportButton" class="btn-spotify mr-2">
-			<span class="my-auto mr-2">
-				<i class="fal fa-arrow-up"></i>
-			</span>
-			Spotify Export
-		</button>
 		<button id="clearButton" class="btn-spotify mr-2">
 			<span class="my-auto mr-2">
 				<i class="fal fa-times"></i>
@@ -62,7 +56,6 @@
 <script>
 	(function() {
 		var $tracklistRows = $('.tracklist-row');
-		var $spotifyExportButton = $('#spotifyExportButton');
 		var $clearButton = $('#clearButton');
 
 		$(function() {
@@ -144,13 +137,6 @@
 			Music.sharedInstance.off('play.album').on('play.album', () => {
 				$tracklistRows.removeClass('playing');
 				$tracklistRows.filter(`[data-song-id="${Music.sharedInstance.songId()}"]`).addClass('playing');
-			});
-
-			$spotifyExportButton.click(async () => {
-				$spotifyExportButton.prop('disabled', true);
-				var res = await $.get('/saved/export');
-				$spotifyExportButton.prop('disabled', false);
-				showToastNotification(true, res.message);
 			});
 
 			$clearButton.click(() => {

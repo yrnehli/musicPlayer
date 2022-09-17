@@ -37,7 +37,6 @@ cd musicPlayer && composer install
 | `DB_PASSWORD` | The password for the MySQL user defined in `DB_USERNAME`. | Yes |
 | `DB_DBNAME` | The name of the schema you imported `database.sql` to. | Yes |
 | `MUSIC_DIRECTORY` | The full directory of where your local MP3 files are stored. | No |
-| `SPOTIFY_SP_DC` | Your Spotify `sp_dc` cookie obtained from logging into Spotify's web player. | No |
 | `DEEZER_ARL` | Your Deezer `arl` cookie obtained from logging into Deezer's web player. | No |
 | `LASTFM_API_KEY` | Your Last.fm API key. | No |
 | `LASTFM_API_SECRET` | Your Last.fm API secret. | No |
@@ -92,7 +91,6 @@ Where `Meta` is either `Ctrl` or `Cmd (⌘)`.
 # Features
 - Search and stream from Deezer by prefixing your search query with `e: `, for example `e: 24K Magic`.
 - Save songs from Deezer by pressing the heart icon on the track.
-- Export your saved songs to your Spotify liked songs by using the `Spotify Export` button on the `Saved Songs` page `(Ctrl + D)`.
 - Automatically scrobbles songs to Last.fm when a track finishes playing.
 
 # PWA Support

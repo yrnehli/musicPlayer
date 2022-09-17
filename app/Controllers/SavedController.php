@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Helpers\MusicDatabase;
 use App\Helpers\DeezerApi;
-use App\Helpers\SpotifyApi;
 use App\Helpers\Utilities;
 use Exception;
 
@@ -39,27 +38,6 @@ class SavedController extends Controller {
 		}
 
 		$this->view('saved', compact('savedSongs'));
-	}
-
-	public function export() {
-		$spotifyApi = new SpotifyApi();
-		$deezerApi = new DeezerApi();
-
-		try {
-			foreach ($this->getSavedSongs() as $savedSong) {
-				$spotifyId = $spotifyApi->getSpotifyId(
-					$deezerApi->getSong(
-						DeezerApi::removePrefix($savedSong['songId'])
-					)['isrc']
-				);
-	
-				$spotifyApi->saveTrack($spotifyId);
-			}
-		} catch (Exception $e) {
-			$this->responseHandler(false, $e->getMessage());
-		}
-		
-		$this->responseHandler(true, "Successfully exported to Spotify");
 	}
 
 	public function clear() {
