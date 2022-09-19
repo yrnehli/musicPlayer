@@ -309,26 +309,34 @@
 				}
 			}
 
-			if (e.metaKey && e.code === 'KeyW') {
+			if ((e.metaKey || e.ctrlKey) && e.code === 'KeyW') {
 				e.preventDefault();
 				PartialManager.sharedInstance.loadPartial('/wrapped');
 			}
 
-			if (e.metaKey && e.code === 'KeyS') {
+			if ((e.metaKey || e.ctrlKey) && e.code === 'KeyS') {
 				e.preventDefault();
-				Music.sharedInstance.history([]);
-				Music.sharedInstance.queue(
-					shuffle([<?= implode(", ", $songIds) ?>])
-				);
-				Music.sharedInstance.skip(true);
+				if (!e.shiftKey) {
+					Music.sharedInstance.history([]);
+					Music.sharedInstance.queue(
+						shuffle([<?= implode(", ", $songIds) ?>])
+					);
+					Music.sharedInstance.skip(true);
+				} else {
+					for (songId of shuffle([<?= implode(", ", $songIds) ?>])) {
+						Music.sharedInstance.queue().push(songId);
+					}
+
+					showToastNotification(true, "Playing Last");
+				}
 			}
 
-			if (e.metaKey && e.code === 'KeyD') {
+			if ((e.metaKey || e.ctrlKey) && e.code === 'KeyD') {
 				e.preventDefault();
 				PartialManager.sharedInstance.loadPartial('/saved');
 			}
 
-			if (e.metaKey && e.code === 'KeyF') {
+			if ((e.metaKey || e.ctrlKey) && e.code === 'KeyF') {
 				e.preventDefault();
 				SearchHandler.sharedInstance.focus();
 			}
@@ -339,19 +347,19 @@
 				e.preventDefault();
 			}
 
-			if (e.metaKey && e.code === 'KeyW') {
+			if ((e.metaKey || e.ctrlKey) && e.code === 'KeyW') {
 				e.preventDefault();
 			}
 			
-			if (e.metaKey && e.code === 'KeyS') {
+			if ((e.metaKey || e.ctrlKey) && e.code === 'KeyS') {
 				e.preventDefault();
 			}
 
-			if (e.metaKey && e.code === 'KeyD') {
+			if ((e.metaKey || e.ctrlKey) && e.code === 'KeyD') {
 				e.preventDefault();
 			}
 
-			if (e.metaKey && e.code === 'KeyF') {
+			if ((e.metaKey || e.ctrlKey) && e.code === 'KeyF') {
 				e.preventDefault();
 			}
 		}

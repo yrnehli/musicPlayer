@@ -95,7 +95,7 @@ $(function() {
 						Music.sharedInstance.skip();
 					}
 					
-					showToastNotification(true, "Playing Last");					
+					showToastNotification(true, "Playing Last");				
 				}
 			},
 			GO_TO_ALBUM: {
