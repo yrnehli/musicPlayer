@@ -30,7 +30,15 @@ class MusicDatabase {
 	public function insertSong($name, $artist, $trackNumber, $discNumber, $duration, $filepath) {
 		$stmt = $this->conn->prepare(
 			"INSERT INTO `songs` (`name`, `artist`, `trackNumber`, `discNumber`, `duration`, `filepath`)
-			VALUES (:name, :artist, :trackNumber, :discNumber, :duration, :filepath)"
+			VALUES (:name, :artist, :trackNumber, :discNumber, :duration, :filepath)
+			ON DUPLICATE KEY UPDATE
+				`name` = :name,
+				`artist` = :artist,
+				`trackNumber` = :trackNumber,
+				`discNumber` = :discNumber,
+				`duration` = :duration,
+				`filepath` = :filepath
+			"
 		);
 		$stmt->bindParam(":name", $name);
 		$stmt->bindParam(":artist", $artist);
@@ -46,7 +54,14 @@ class MusicDatabase {
 	public function insertAlbum($name, $artist, $genre, $year, $artFilepath) {
 		$stmt = $this->conn->prepare(
 			"INSERT INTO `albums` (`name`, `artist`, `genre`, `year`, `artFilepath`)
-			VALUES (:name, :artist, :genre, :year, :artFilepath)"
+			VALUES (:name, :artist, :genre, :year, :artFilepath)
+			ON DUPLICATE KEY UPDATE
+				`name` = :name,
+				`artist` = :artist,
+				`genre` = :genre,
+				`year` = :year,
+				`artFilepath` = :artFilepath
+			"
 		);
 		$stmt->bindParam(":name", $name);
 		$stmt->bindParam(":artist", $artist);
@@ -60,7 +75,7 @@ class MusicDatabase {
 
 	public function insertSongAlbumMapping($songId, $albumId) {
 		$stmt = $this->conn->prepare(
-			"INSERT INTO `song-album` (`songId`, `albumId`)
+			"INSERT IGNORE INTO `song-album` (`songId`, `albumId`)
 			VALUES (:songId, :albumId)"
 		);
 		$stmt->bindParam(":songId", $songId);
@@ -118,6 +133,23 @@ class MusicDatabase {
 		$res = $stmt->fetch(PDO::FETCH_COLUMN);
 
 		return ($res === "1");
+	}
+
+	public function getSongs() {
+		$stmt = $this->conn->prepare("SELECT * FROM `songs`");
+		$stmt->execute();
+		$res = $stmt->fetchAll();
+
+		return $res;
+	}
+
+	public function deleteSong($songId) {
+		$stmt = $this->conn->prepare(
+			"DELETE FROM `songs`
+			WHERE `id` = :id"
+		);
+		$stmt->bindParam(":id", $songId);
+		$stmt->execute();
 	}
 
 	public function getConn() {

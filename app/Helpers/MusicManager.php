@@ -9,9 +9,8 @@ use getID3;
 
 class MusicManager {
 	public static function updateDatabase() {
-		$getId3 = new getID3;
+		$getId3 = new getID3();
 		$musicDatabase = new MusicDatabase();
-		$musicDatabase->resetDatabase();
 		
 		$mp3s = [];
 		$albumRelations = [];
@@ -84,6 +83,12 @@ class MusicManager {
 		foreach ($albumRelations as $albumRelation) {
 			foreach ($albumRelation['songIds'] as $songId) {
 				$musicDatabase->insertSongAlbumMapping($songId, $albumRelation['albumId']);
+			}
+		}
+
+		foreach ($musicDatabase->getSongs() as $song) {
+			if (!file_exists($song['filepath'])) {
+				$musicDatabase->deleteSong($song['id']);
 			}
 		}
 	}

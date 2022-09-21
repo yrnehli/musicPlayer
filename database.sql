@@ -5,9 +5,9 @@
 # https://sequel-ace.com/
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
-# Host: 127.0.0.1 (MySQL 8.0.28)
+# Host: 127.0.0.1 (MySQL 8.0.29)
 # Database: musicPlayer
-# Generation Time: 2022-07-20 10:35:06 PM +0000
+# Generation Time: 2022-09-21 7:49:13 PM +0000
 # ************************************************************
 
 
@@ -34,7 +34,8 @@ CREATE TABLE `albums` (
   `genre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `year` int DEFAULT NULL,
   `artFilepath` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `artist` (`artist`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -83,6 +84,7 @@ CREATE TABLE `song-album` (
   `songId` int NOT NULL,
   `albumId` int NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `songId` (`songId`,`albumId`),
   KEY `song-album_songs_id_fk` (`songId`),
   KEY `song-album_albums_id_fk` (`albumId`),
   CONSTRAINT `song-album_albums_id_fk` FOREIGN KEY (`albumId`) REFERENCES `albums` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -104,7 +106,8 @@ CREATE TABLE `songs` (
   `discNumber` int DEFAULT NULL,
   `duration` int NOT NULL,
   `filepath` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `filepath` (`filepath`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
