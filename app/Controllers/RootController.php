@@ -54,6 +54,7 @@ class RootController extends Controller {
 				substr($song['albumArtUrl'], 1)
 			);
 		} else {
+			$songId = DeezerApi::removePrefix($songId);
 			$filepath = "public/userData/cache/song/$songId";
 			
 			if (!file_exists($filepath)) {
@@ -66,7 +67,8 @@ class RootController extends Controller {
 		}
 
 		if (!empty($songId)) {
-			$filepath = "public/userData/cache/song/$songId-private";
+			$songId = DeezerApi::removePrefix($songId);
+			$filepath = "public/userData/cache/song/$songId-PRIVATE";
 			
 			if (!file_exists($filepath)) {
 				$deezerPrivateApi = new DeezerPrivateApi();
