@@ -30,9 +30,17 @@ class ApiController extends Controller {
 	}
 
 	private function getDeezerSong($songId) {
-		$songId = DeezerApi::removePrefix($songId);
-		$deezerApi = new DeezerApi();
 		$db = new MusicDatabase();
+		$songId = DeezerApi::removePrefix($songId);
+		$filepath = "public/userData/cache/song/$songId";
+		
+		if (!file_exists($filepath)) {
+			$deezerApi = new DeezerApi();
+			$song =	$deezerApi->getSong($songId);
+			file_put_contents($filepath, serialize($song));
+		} else {
+			$song = unserialize(file_get_contents($filepath));
+		}
 
 		$song = array_merge(
 			[
@@ -40,7 +48,7 @@ class ApiController extends Controller {
 				'isDeezer' => true,
 				'isSaved' => $db->isSongSaved($songId)
 			],
-			$deezerApi->getSong($songId)
+			$song
 		);
 
 		return $song;
@@ -89,10 +97,17 @@ class ApiController extends Controller {
 
 	private function getDeezerAlbum($albumId) {
 		$albumId = DeezerApi::removePrefix($albumId);
-		$deezerApi = new DeezerApi();
-		$res = $deezerApi->getAlbum($albumId);
+		$filepath = "public/userData/cache/album/$albumId";
+		
+		if (!file_exists($filepath)) {
+			$deezerApi = new DeezerApi();
+			$album = $deezerApi->getAlbum($albumId);
+			file_put_contents($filepath, serialize($album));
+		} else {
+			$album = unserialize(file_get_contents($filepath));
+		}
 
-		return ['songIds' => array_column($res['songs'], "id")];
+		return ['songIds' => array_column($album['songs'], "id")];
 	}
 
 	private function getLocalAlbum($albumId) {

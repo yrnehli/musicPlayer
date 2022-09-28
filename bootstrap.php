@@ -8,14 +8,15 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 $directories = [
-	'public/userData',
 	'public/userData/albumArt',
-	'public/userData/deezer'
+	'public/userData/cache/mp3',
+	'public/userData/cache/album',
+	'public/userData/cache/song'
 ];
 
 foreach ($directories as $directory) {
 	if (!file_exists($directory)) {
-		mkdir($directory);
+		mkdir($directory, 0655, true);
 	}
 }
 
@@ -25,7 +26,7 @@ spl_autoload_register(function($className) {
 	if (file_exists($filepath)) {
 		require_once $filepath;
 	} else {
-		throw new Exception("Could not find class $className at $filepath!");
+		throw new Exception("Autoload failure: could not find class `$className` at `$filepath`!");
 	}
 });
 
