@@ -54,13 +54,30 @@ class RootController extends Controller {
 				substr($song['albumArtUrl'], 1)
 			);
 		} else {
-			$song = $deezerApi->getSong($songId);
+			$filepath = "public/userData/cache/song/$songId";
+			
+			if (!file_exists($filepath)) {
+				$deezerApi = new DeezerApi();
+				$song =	$deezerApi->getSong($songId);
+				file_put_contents($filepath, serialize($song));
+			} else {
+				$song = unserialize(file_get_contents($filepath));
+			}
 		}
 
 		if (!empty($songId)) {
-			$deezerPrivateApi = new DeezerPrivateApi();
-			$res = $deezerPrivateApi->getSong($songId);
+			$filepath = "public/userData/cache/song/$songId-private";
+			
+			if (!file_exists($filepath)) {
+				$deezerPrivateApi = new DeezerPrivateApi();
+				$res = $deezerPrivateApi->getSong($songId);
+				file_put_contents($filepath, serialize($res));
+			} else {
+				$res = unserialize(file_get_contents($filepath));
+			}
+
 			$lyrics = (property_exists($res->results, 'LYRICS') && property_exists($res->results->LYRICS, 'LYRICS_SYNC_JSON')) ? $res->results->LYRICS->LYRICS_SYNC_JSON : [];
+			
 			if (!isset($accentColour)) {
 				$accentColour = Utilities::getAccentColour(
 					"https://cdns-images.dzcdn.net/images/cover/{$res->results->DATA->ALB_PICTURE}/500x500.jpg"
