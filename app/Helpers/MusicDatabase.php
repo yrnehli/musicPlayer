@@ -37,7 +37,8 @@ class MusicDatabase {
 				`trackNumber` = :trackNumber,
 				`discNumber` = :discNumber,
 				`duration` = :duration,
-				`filepath` = :filepath
+				`filepath` = :filepath,
+				`id` = LAST_INSERT_ID(`id`)
 			"
 		);
 		$stmt->bindParam(":name", $name);
@@ -60,7 +61,8 @@ class MusicDatabase {
 				`artist` = :artist,
 				`genre` = :genre,
 				`year` = :year,
-				`artFilepath` = :artFilepath
+				`artFilepath` = :artFilepath,
+				`id` = LAST_INSERT_ID(`id`)
 			"
 		);
 		$stmt->bindParam(":name", $name);
