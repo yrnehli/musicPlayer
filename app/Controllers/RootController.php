@@ -7,6 +7,7 @@ use App\Helpers\DeezerApi;
 use App\Helpers\DeezerPrivateApi;
 use App\Helpers\LastFmApi;
 use App\Helpers\Utilities;
+use App\Helpers\GeniusApi;
 use Exception;
 
 class RootController extends Controller {
@@ -78,7 +79,12 @@ class RootController extends Controller {
 				$res = unserialize(file_get_contents($filepath));
 			}
 
-			$lyrics = (property_exists($res->results, 'LYRICS') && property_exists($res->results->LYRICS, 'LYRICS_SYNC_JSON')) ? $res->results->LYRICS->LYRICS_SYNC_JSON : [];
+			$geniusApi = new GeniusApi();
+
+			$lyrics = (property_exists($res->results, 'LYRICS') && property_exists($res->results->LYRICS, 'LYRICS_SYNC_JSON'))
+				? $res->results->LYRICS->LYRICS_SYNC_JSON
+				: $geniusApi->getLyrics()
+			;
 			
 			if (!isset($accentColour)) {
 				$accentColour = Utilities::getAccentColour(
