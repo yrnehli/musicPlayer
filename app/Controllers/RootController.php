@@ -30,6 +30,7 @@ class RootController extends Controller {
 		$deezerPrivateApi = new DeezerPrivateApi();
 		
 		try {
+			GeniusApi::authTest();
 			$deezerPrivateApi->authTest();
 		} catch (Exception $e) {
 			$this->responseHandler(false, $e->getMessage());
@@ -79,11 +80,9 @@ class RootController extends Controller {
 				$res = unserialize(file_get_contents($filepath));
 			}
 
-			$geniusApi = new GeniusApi();
-
 			$lyrics = (property_exists($res->results, 'LYRICS') && property_exists($res->results->LYRICS, 'LYRICS_SYNC_JSON'))
 				? $res->results->LYRICS->LYRICS_SYNC_JSON
-				: $geniusApi->getLyrics()
+				: GeniusApi::getLyrics(implode(" ", [$song['songName'], $song['songArtist']]))
 			;
 			
 			if (!isset($accentColour)) {
