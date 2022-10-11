@@ -74,24 +74,24 @@ class RootController extends Controller {
 			
 			if (!file_exists($filepath)) {
 				$deezerPrivateApi = new DeezerPrivateApi();
-				$res = $deezerPrivateApi->getSong($songId);
+				$deezerSong = $deezerPrivateApi->getSong($songId);
 				file_put_contents($filepath, serialize($res));
 			} else {
-				$res = unserialize(file_get_contents($filepath));
+				$deezerSong = unserialize(file_get_contents($filepath));
 			}
 
-			$lyrics = (property_exists($res->results, 'LYRICS') && property_exists($res->results->LYRICS, 'LYRICS_SYNC_JSON'))
-				? $res->results->LYRICS->LYRICS_SYNC_JSON
-				: GeniusApi::getLyrics(implode(" ", [$song['songName'], $song['songArtist']]))
-			;
-			
 			if (!isset($accentColour)) {
 				$accentColour = Utilities::getAccentColour(
-					"https://cdns-images.dzcdn.net/images/cover/{$res->results->DATA->ALB_PICTURE}/500x500.jpg"
+					"https://cdns-images.dzcdn.net/images/cover/{$deezerSong->results->DATA->ALB_PICTURE}/500x500.jpg"
 				);
 			}
 		}
 
+		$lyrics = (isset($deezerSong) && property_exists($deezerSong->results, 'LYRICS') && property_exists($deezerSong->results->LYRICS, 'LYRICS_SYNC_JSON'))
+			? $deezerSong->results->LYRICS->LYRICS_SYNC_JSON
+			: GeniusApi::getLyrics(implode(" ", [$song['songName'], $song['songArtist']]))
+		;
+			
 		$this->view('lyrics', [
 			'song' => $song,
 			'lyrics' => $lyrics,
