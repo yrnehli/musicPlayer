@@ -75,7 +75,7 @@ class RootController extends Controller {
 			if (!file_exists($filepath)) {
 				$deezerPrivateApi = new DeezerPrivateApi();
 				$deezerSong = $deezerPrivateApi->getSong($songId);
-				file_put_contents($filepath, serialize($res));
+				file_put_contents($filepath, serialize($deezerSong));
 			} else {
 				$deezerSong = unserialize(file_get_contents($filepath));
 			}
