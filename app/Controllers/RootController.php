@@ -68,12 +68,13 @@ class RootController extends Controller {
 			}
 		}
 
+		$deezerPrivateApi = new DeezerPrivateApi();
+
 		if (!empty($songId)) {
 			$songId = DeezerApi::removePrefix($songId);
 			$filepath = "public/userData/cache/song/$songId-PRIVATE";
 			
 			if (!file_exists($filepath)) {
-				$deezerPrivateApi = new DeezerPrivateApi();
 				$deezerSong = $deezerPrivateApi->getSong($songId);
 				file_put_contents($filepath, serialize($deezerSong));
 			} else {
@@ -87,10 +88,13 @@ class RootController extends Controller {
 			}
 		}
 
-		$lyrics = (isset($deezerSong) && property_exists($deezerSong->results, 'LYRICS') && property_exists($deezerSong->results->LYRICS, 'LYRICS_SYNC_JSON'))
-			? $deezerSong->results->LYRICS->LYRICS_SYNC_JSON
-			: GeniusApi::getLyrics(implode(" ", [$song['songName'], $song['songArtist']]))
-		;
+		if (isset($deezerSong) && property_exists($deezerSong->results, 'LYRICS') && property_exists($deezerSong->results->LYRICS, 'LYRICS_SYNC_JSON')) {
+			$lyrics = $deezerSong->results->LYRICS->LYRICS_SYNC_JSON;
+		} else {
+			$lyrics = GeniusApi::getLyrics(implode(" ", [$song['songName'], $song['songArtist']]));
+			$deezerSong = $deezerPrivateApi->getSong($songId);
+			file_put_contents($filepath, serialize($deezerSong));
+		}
 			
 		$this->view('lyrics', [
 			'song' => $song,
