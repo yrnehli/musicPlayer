@@ -18,7 +18,7 @@ class RootController extends Controller {
 		$stmt = $conn->prepare(
 			"SELECT *
 			FROM `albums`
-			ORDER BY RAND()"
+			ORDER BY `id` DESC"
 		);
 		$stmt->execute();
 		$albums = $stmt->fetchAll();
