@@ -16,7 +16,7 @@ $directories = [
 
 foreach ($directories as $directory) {
 	if (!file_exists($directory)) {
-		mkdir($directory, 0655, true);
+		mkdir($directory, 0755, true);
 	}
 }
 
