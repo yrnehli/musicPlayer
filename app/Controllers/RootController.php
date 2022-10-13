@@ -69,10 +69,10 @@ class RootController extends Controller {
 		}
 
 		$deezerPrivateApi = new DeezerPrivateApi();
+		$filepath = "public/userData/cache/song/$songId-PRIVATE";
 
 		if (!empty($songId)) {
 			$songId = DeezerApi::removePrefix($songId);
-			$filepath = "public/userData/cache/song/$songId-PRIVATE";
 			
 			if (!file_exists($filepath)) {
 				$deezerSong = $deezerPrivateApi->getSong($songId);
