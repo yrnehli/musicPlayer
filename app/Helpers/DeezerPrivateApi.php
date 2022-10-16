@@ -176,7 +176,7 @@ class DeezerPrivateApi {
 
 		if ($res->results->USER->USER_ID === 0) {
 			throw new Exception("Deezer Private API: Unauthorised");
-		} else if ($res->results->USER->OPTIONS->web_hq) {
+		} else if (!$res->results->USER->OPTIONS->web_hq) {
 			throw new Exception("Deezer Private API: Audio will be limited to 128kbps");
 		}
 		
