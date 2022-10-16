@@ -29,7 +29,8 @@ class DeezerPrivateApi {
 			)
 		);
 
-		if ($encryptedSong === false) {			
+		if ($encryptedSong === false) {
+			error_log("Deezer 128k Fallback: " . print_r($song, true));
 			$encryptedSong = file_get_contents(
 				$this->getSongUrl(
 					$songId,
@@ -172,9 +173,11 @@ class DeezerPrivateApi {
 
 	private function getApiToken() {
 		$res = $this->request("deezer.getUserData");
-		
+
 		if ($res->results->USER->USER_ID === 0) {
 			throw new Exception("Deezer Private API: Unauthorised");
+		} else if ($res->results->USER->OPTIONS->web_hq) {
+			throw new Exception("Deezer Private API: Audio will be limited to 128kbps");
 		}
 		
 		return $res->results->checkForm;
