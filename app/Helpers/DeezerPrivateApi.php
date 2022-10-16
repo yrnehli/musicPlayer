@@ -6,40 +6,25 @@ use Exception;
 
 class DeezerPrivateApi {
 	private const API_BASE = "http://www.deezer.com/ajax/gw-light.php";
+	private $cookies = [];
 	private $arl;
-	private $sid;
 	
 	public function __construct() {
 		$this->arl = $_ENV['DEEZER_ARL'];
 	}
 
 	public function authTest() {
-		$this->getApiToken();
+		$this->getUser();
 	}
 
 	public function getSongMp3($songId) {
 		$songId = DeezerApi::removePrefix($songId);
 		$song = $this->getSong($songId);
-		$encryptedSong = @file_get_contents(
+		$encryptedSong = file_get_contents(
 			$this->getSongUrl(
-				$songId,
-				$song->results->DATA->MD5_ORIGIN,
-				$song->results->DATA->MEDIA_VERSION,
-				3 // 320 kbps
+				$song->results->DATA->TRACK_TOKEN
 			)
 		);
-
-		if ($encryptedSong === false) {
-			error_log("Deezer 128k Fallback: " . print_r($song, true));
-			$encryptedSong = file_get_contents(
-				$this->getSongUrl(
-					$songId,
-					$song->results->DATA->MD5_ORIGIN,
-					$song->results->DATA->MEDIA_VERSION,
-					1 // Fallback to 128kbps
-				)
-			);
-		}
 
 		return $this->decryptSong($songId, $encryptedSong);
 	}
@@ -52,43 +37,27 @@ class DeezerPrivateApi {
 		return $this->request("deezer.pageAlbum", json_encode(['alb_id' => $albumId, 'LANG' => 'en']));
 	}
 
-	private function getSongUrl($songId, $md5, $mediaVersion, $format) {
-		$blockSize = 16;
-		$key = "jo6aey6haid2Teih";
-	
-		$urlPart = implode(
-			"a4",
-			[
-				$this->str2hex($md5),
-				$this->str2hex($format),
-				$this->str2hex($songId),
-				$this->str2hex($mediaVersion),
-			]
-		);
-		$urlPartMd5 = md5(hex2bin($urlPart));
-		$urlPart = $this->str2hex($urlPartMd5) . "a4" . $urlPart . "a4";
-		$padLength = ceil(strlen($urlPart) / 2 / $blockSize) * $blockSize * 2;
-		$urlPart = bin2hex(
-			openssl_encrypt(
-				hex2bin(
-					str_pad(
-						$urlPart,
-						$padLength,
-						str_pad(
-							dechex(($padLength - strlen($urlPart)) / 2),
-							2,
-							"0",
-							STR_PAD_LEFT
-						)
-					)
-				),
-				"AES-128-ECB",
-				$key,
-				OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING
-			)
-		);
-	
-		return "https://e-cdns-proxy-" . $md5[0] . ".dzcdn.net/mobile/1/$urlPart";
+	private function getSongUrl($songToken) {
+		$formats = ['MP3_320', 'MP3_128'];
+
+		do {
+			$res = json_decode(
+				$this->curlRequest(
+					"POST",
+					"https://media.deezer.com/v1/get_url",
+					[],
+					json_encode([
+						'license_token' => $this->getUser()->USER->OPTIONS->license_token,
+						'media' => [[
+							'type' => 'FULL', 'formats' => [['cipher' => 'BF_CBC_STRIPE', 'format' => array_shift($formats)]]
+						]],
+						'track_tokens' => [$songToken]
+					])
+				)
+			);
+		} while (property_exists($res, 'errors'));
+
+		return $res->data[0]->media[0]->sources[0]->url;
 	}
 
 	private function decryptSong($songId, $data) {
@@ -141,7 +110,7 @@ class DeezerPrivateApi {
 	}
 
 	private function request($method, $payload = "") {
-		$apiToken = ($method === "deezer.getUserData") ? "null" : $this->getApiToken();
+		$apiToken = ($method === "deezer.getUserData") ? "null" : $this->getUser()->checkForm;
 		$res = $this->curlRequest(
 			"POST",
 			self::API_BASE . "?api_version=1.0&api_token=$apiToken&input=3&method=$method",
@@ -160,8 +129,8 @@ class DeezerPrivateApi {
 		$cookie = "";
 		$cookies = ["arl" => $this->arl];
 
-		if ($this->sid) {
-			$cookies['sid'] = $this->sid;
+		foreach ($this->cookies as $k => $v) {
+			$cookies[$k] = $v;
 		}
 		
 		foreach ($cookies as $k => $v) {			
@@ -171,7 +140,7 @@ class DeezerPrivateApi {
 		return $cookie;
 	}
 
-	private function getApiToken() {
+	private function getUser() {
 		$res = $this->request("deezer.getUserData");
 
 		if ($res->results->USER->USER_ID === 0) {
@@ -180,7 +149,7 @@ class DeezerPrivateApi {
 			throw new Exception("Deezer Private API: Audio will be limited to 128kbps");
 		}
 		
-		return $res->results->checkForm;
+		return $res->results;
 	}
 
 	private function curlRequest($requestType, $url, $headers = [], $payload = "") {
@@ -208,16 +177,10 @@ class DeezerPrivateApi {
 	}
 
 	private function processHeader($curl, $header) {
-		if (preg_match("/Set-Cookie: sid=(.*?);/", $header, $matches)) {
-			$this->sid = $matches[1];
+		if (preg_match("/Set-Cookie: (.*?)=(.*?);/", $header, $matches)) {
+			$this->cookies[$matches[1]] = $matches[2];
 		}
 
 		return strlen($header);
-	}
-
-	private function str2hex($string) {	
-		return implode(
-			unpack("H*", strval($string))
-		);
 	}
 }
