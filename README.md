@@ -42,6 +42,7 @@ cd musicPlayer && composer install
 | `LASTFM_API_SECRET` | Your Last.fm API secret. | No |
 | `LASTFM_SESSION_KEY` | Your Last.fm session key. | No |
 | `LASTFM_USERNAME` | Your Last.fm username. | No |
+| `GENIUS_TOKEN` | Your Genius API token. | No |
 
 5. Setup an Apache VirtualHost for the repo. Example:
 ```
