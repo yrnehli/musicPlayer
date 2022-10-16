@@ -21,9 +21,7 @@ class DeezerPrivateApi {
 		$songId = DeezerApi::removePrefix($songId);
 		$song = $this->getSong($songId);
 		$encryptedSong = file_get_contents(
-			$this->getSongUrl(
-				$song->results->DATA->TRACK_TOKEN
-			)
+			$this->getSongUrl($song->results->DATA->TRACK_TOKEN)
 		);
 
 		return $this->decryptSong($songId, $encryptedSong);
@@ -49,7 +47,10 @@ class DeezerPrivateApi {
 					json_encode([
 						'license_token' => $this->getUser()->USER->OPTIONS->license_token,
 						'media' => [[
-							'type' => 'FULL', 'formats' => [['cipher' => 'BF_CBC_STRIPE', 'format' => array_shift($formats)]]
+							'type' => 'FULL',
+							'formats' => [
+								['cipher' => 'BF_CBC_STRIPE', 'format' => array_shift($formats)]
+							]
 						]],
 						'track_tokens' => [$songToken]
 					])
