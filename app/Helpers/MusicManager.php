@@ -8,6 +8,11 @@ use RecursiveDirectoryIterator;
 use getID3;
 
 class MusicManager {
+	public static function resetDatabase() {
+		$musicDatabase = new MusicDatabase();
+		$musicDatabase->resetDatabase();
+	}
+
 	public static function updateDatabase() {
 		$getId3 = new getID3();
 		$musicDatabase = new MusicDatabase();

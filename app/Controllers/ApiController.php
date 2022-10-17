@@ -14,6 +14,11 @@ use PDO;
 class ApiController extends Controller {
 	private const DEEZER_SEARCH_PREFIX = "e: ";
 
+	public function reset() {
+		MusicManager::resetDatabase();
+		$this->responseHandler(true);
+	}
+
 	public function update() {
 		MusicManager::updateDatabase();
 		$this->responseHandler(true);
