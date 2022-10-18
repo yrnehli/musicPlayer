@@ -77,8 +77,9 @@ class MusicDatabase {
 
 	public function insertSongAlbumMapping($songId, $albumId) {
 		$stmt = $this->conn->prepare(
-			"INSERT IGNORE INTO `song-album` (`songId`, `albumId`)
-			VALUES (:songId, :albumId)"
+			"INSERT INTO `song-album` (`songId`, `albumId`)
+			VALUES (:songId, :albumId)
+			ON DUPLICATE KEY UPDATE `albumId` = :albumId"
 		);
 		$stmt->bindParam(":songId", $songId);
 		$stmt->bindParam(":albumId", $albumId);

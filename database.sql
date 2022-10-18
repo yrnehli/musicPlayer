@@ -5,9 +5,9 @@
 # https://sequel-ace.com/
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
-# Host: 127.0.0.1 (MySQL 8.0.29)
+# Host: 127.0.0.1 (MySQL 8.0.30)
 # Database: musicPlayer
-# Generation Time: 2022-09-21 7:49:13 PM +0000
+# Generation Time: 2022-10-18 2:24:17 PM +0000
 # ************************************************************
 
 
@@ -50,8 +50,8 @@ CREATE TABLE `savedSongs` (
   `songId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `active` bit(1) NOT NULL DEFAULT b'1',
   `flagged` bit(1) NOT NULL DEFAULT b'0',
-  `dateUpdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `songId` (`songId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -84,7 +84,7 @@ CREATE TABLE `song-album` (
   `songId` int NOT NULL,
   `albumId` int NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `songId` (`songId`,`albumId`),
+  UNIQUE KEY `songId` (`songId`),
   KEY `song-album_songs_id_fk` (`songId`),
   KEY `song-album_albums_id_fk` (`albumId`),
   CONSTRAINT `song-album_albums_id_fk` FOREIGN KEY (`albumId`) REFERENCES `albums` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -112,12 +112,12 @@ CREATE TABLE `songs` (
 
 
 
-# Dump of view albumDetails
+# Dump of view albumdetails
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `albumDetails`; DROP VIEW IF EXISTS `albumDetails`;
+DROP TABLE IF EXISTS `albumdetails`; DROP VIEW IF EXISTS `albumdetails`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `albumDetails`
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `albumdetails`
 AS SELECT
    `song-album`.`albumId` AS `albumId`,count(0) AS `length`,sum(`songs`.`duration`) AS `duration`
 FROM (`songs` join `song-album` on((`songs`.`id` = `song-album`.`songId`))) group by `song-album`.`albumId`;
