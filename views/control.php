@@ -185,7 +185,9 @@
 			var timeout;
 
 			const onUpdate = () => {
-				if ($lyricsButton.hasClass('active')) {
+				if (window.location.pathname === '/queue') {
+					return;
+				} else if ($lyricsButton.hasClass('active')) {
 					PartialManager.sharedInstance.loadPartial(`/lyrics/${Music.sharedInstance.songId()}`);
 				} else if ($nowPlayingButton.hasClass('active')) {
 					PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`);

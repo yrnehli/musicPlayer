@@ -198,7 +198,7 @@ $(function() {
 	
 	PartialManager.sharedInstance.on('pathchange', e => {
 		if (window.location.pathname !== `/album/${MusicControl.sharedInstance.albumId()}`) {
-			if (window.location.pathname !== `/lyrics/${Music.sharedInstance.songId()}`) {
+			if (![`/lyrics/${Music.sharedInstance.songId()}`, `/queue`].includes(window.location.pathname)) {
 				MusicControl.sharedInstance.elements().$nowPlayingButton.removeClass('active');
 				MusicControl.sharedInstance.elements().$lyricsButton.removeClass('active');
 			}
