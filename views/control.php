@@ -282,7 +282,7 @@
 
 			$volumeSlider.slider(
 				"value",
-				(e.originalEvent.wheelDelta > 0) ? volume + 10 : volume - 10
+				(e.originalEvent.wheelDelta > 0) ? volume + 5 : volume - 5
 			);
 		}
 
