@@ -36,7 +36,6 @@ class ApiController extends Controller {
 
 	private function getDeezerSong($songId) {
 		$db = new MusicDatabase();
-		$songId = DeezerApi::removePrefix($songId);
 		$filepath = "public/userData/cache/song/$songId";
 		
 		if (!file_exists($filepath)) {

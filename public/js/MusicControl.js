@@ -124,12 +124,7 @@ class MusicControl extends EventEmitter {
 		this._metadata.title = res.data.songName;
 		this._metadata.artist = res.data.songArtist;
 		this._metadata.album = res.data.albumName;
-		this._metadata.artwork = [{ src: res.data.albumArtUrl, sizes: '512x512', type: 'image/png' }];
-
-		(res.data.isSaved)
-			? this._elements.$saveButton.addClass('active')
-			: this._elements.$saveButton.removeClass('active')
-		;
+		this._metadata.artwork = [{ src: res.data.albumArtUrl, sizes: '512x512', type: 'image/png' }];	
 
 		if (
 			window.Notification &&
@@ -160,7 +155,10 @@ class MusicControl extends EventEmitter {
 
 		if (res.data.isDeezer) {
 			this._elements.$saveButton.show();
-			(res.data.isSaved) ? this._elements.$saveButton.addClass('active') : this._elements.$saveButton.removeClass('active')
+			(res.data.isSaved) 
+				? this._elements.$saveButton.addClass('active')
+				: this._elements.$saveButton.removeClass('active')
+			;
 		} else {
 			this._elements.$saveButton.hide();
 		}
