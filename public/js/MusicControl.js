@@ -126,6 +126,11 @@ class MusicControl extends EventEmitter {
 		this._metadata.album = res.data.albumName;
 		this._metadata.artwork = [{ src: res.data.albumArtUrl, sizes: '512x512', type: 'image/png' }];
 
+		(res.data.isSaved)
+			? this._elements.$saveButton.addClass('active')
+			: this._elements.$saveButton.removeClass('active')
+		;
+
 		if (
 			window.Notification &&
 			Notification.permission === "granted" &&
