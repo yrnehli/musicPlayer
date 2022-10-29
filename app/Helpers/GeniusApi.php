@@ -12,7 +12,7 @@ class GeniusApi {
 
 	public static function authTest() {
 		try {
-			file_get_contents(self::API_BASE . "/search?" . http_build_query([
+			self::curlRequest("GET", self::API_BASE . "/search?" . http_build_query([
 				'access_token' => $_ENV['GENIUS_TOKEN']
 			]));
 		} catch (Exception $e) {
@@ -22,7 +22,7 @@ class GeniusApi {
 
 	public static function search($q) {
 		$res = json_decode(
-			file_get_contents(self::API_BASE . "/search?" . http_build_query([
+			self::curlRequest("GET", self::API_BASE . "/search?" . http_build_query([
 				'q' => $q, 'access_token' => $_ENV['GENIUS_TOKEN']
 			]))
 		);
@@ -55,8 +55,6 @@ class GeniusApi {
 			$lyrics
 		);
 
-		// var_dump(array_slice(explode("\n", $lyrics), 1)); die();
-
 		$lyrics = array_map(function($lyric) {
 			$obj = new stdClass();
 			$obj->line = !empty(trim($lyric)) ? $lyric : null;
@@ -66,5 +64,34 @@ class GeniusApi {
 		},  array_slice(explode("\n", $lyrics), 1));
 
 		return $lyrics;
+	}
+	
+	private static function curlRequest($requestType, $url, $headers = [], $payload = "") {
+		$curl = curl_init();
+	
+		curl_setopt_array($curl, [
+			CURLOPT_URL => $url,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_CUSTOMREQUEST => $requestType,
+			CURLOPT_HTTPHEADER => $headers,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_USERAGENT => 'curl/7.39.0'
+		]);
+	
+		if ($requestType === 'POST') {
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $payload);
+		}
+	
+		$res = curl_exec($curl);
+		$info = curl_getinfo($curl);
+
+		curl_close($curl);
+
+		if ($info['http_code'] !== 200) {
+			throw new Exception("cURL $url failed with HTTP status " . $info['http_code']);
+		}
+	
+		return $res;
 	}
 }
