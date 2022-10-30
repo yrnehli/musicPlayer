@@ -3,7 +3,7 @@
 foreach ($songs as $song) {
 	print "
 		<div class='song' data-song-id='{$song['id']}'>
-			{$song['songName']}
+			{$song['name']}
 		</div>
 	";
 }

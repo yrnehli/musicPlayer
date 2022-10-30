@@ -3,7 +3,7 @@
 foreach ($albums as $album) {
 	print "
 		<div class='album' data-album-id='{$album['id']}'>
-			{$album['albumName']}
+			{$album['name']}
 		</div>
 	";
 }
