@@ -97,7 +97,7 @@ class DeezerPrivateApi {
 
 	private function getBlowfishKey($songId) {
 		$songId = DeezerApi::removePrefix($songId);
-		$secret = "g4el58wc0zvf9na1";
+		$secret = base64_decode("ZzRlbDU4d2MwenZmOW5hMQ==");
 		$songIdMd5 = md5($songId);
 		$blowfishKey = "";
 	
