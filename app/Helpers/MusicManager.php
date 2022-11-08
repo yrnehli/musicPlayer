@@ -26,7 +26,7 @@ class MusicManager {
 		);
 
 		foreach ($files as $file) {
-			if (str_ends_with($file->getFilename(), ".mp3")) {
+			if (str_ends_with(strtolower($file->getFilename()), ".mp3")) {
 				$mp3s[] = $file->getPathname();
 			}
 		}
