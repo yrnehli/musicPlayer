@@ -91,6 +91,7 @@
 				$nowPlayingButton: $nowPlayingButton,
 				$lyricsButton: $lyricsButton
 			},
+			[<?= implode(", ", $songIds) ?>],
 			state
 		);
 
@@ -321,11 +322,11 @@
 				if (!e.shiftKey) {
 					Music.sharedInstance.history([]);
 					Music.sharedInstance.queue(
-						shuffle([<?= implode(", ", $songIds) ?>])
+						shuffle(MusicControl.sharedInstance.songIds())
 					);
 					Music.sharedInstance.skip(true);
 				} else {
-					for (songId of shuffle([<?= implode(", ", $songIds) ?>])) {
+					for (songId of shuffle(MusicControl.sharedInstance.songIds())) {
 						Music.sharedInstance.queue().push(songId);
 					}
 

@@ -22,8 +22,9 @@ class RootController extends Controller {
 		);
 		$stmt->execute();
 		$albums = $stmt->fetchAll();
+		$songIds = $this->getSongIds();
 
-		$this->view('home', compact('albums'));
+		$this->view('home', compact('albums', 'songIds'));
 	}
 
 	public function auth() {

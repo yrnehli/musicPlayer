@@ -1,7 +1,7 @@
 class MusicControl extends EventEmitter {
 	static sharedInstance;
 
-	constructor(elements, state) {
+	constructor(elements, songIds, state) {
 		if (MusicControl.sharedInstance) {
 			return MusicControl.sharedInstance;
 		}
@@ -10,6 +10,7 @@ class MusicControl extends EventEmitter {
 		
 		this._music = new Music(state.volume);
 		this._elements = elements;
+		this._songIds = songIds;
 		this._metadata = navigator.mediaSession.metadata = new MediaMetadata();
 
 		navigator.mediaSession.setActionHandler('play', e => this._music.togglePlay());
@@ -178,5 +179,13 @@ class MusicControl extends EventEmitter {
 
 	elements() {
 		return this._elements;
+	}
+
+	songIds(songIds) {
+		if (songIds === undefined) {
+			return this._songIds;
+		} else {
+			this._songIds = songIds;
+		}
 	}
 }

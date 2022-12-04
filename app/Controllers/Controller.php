@@ -23,7 +23,7 @@ class Controller {
 		Flight::render('shell', ['os' => $os]);
 	}
 
-	private function getSongIds() {
+	protected function getSongIds() {
 		$db = new MusicDatabase();
 		$conn = $db->getConn();
 		

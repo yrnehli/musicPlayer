@@ -23,6 +23,7 @@
 			updateBodyColour('#121212', false);
 			auth();
 			initEvents();
+			MusicControl.sharedInstance.songIds([<?= implode(", ", $songIds) ?>]);
 		});
 
 		function initEvents() {
