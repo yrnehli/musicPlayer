@@ -240,7 +240,7 @@
 		function scaleAlbumNameText() {
 			var fontSize = 96;
 			var $albumName = $('#albumName');
-			var maxWidth = $(window).width() - 312;
+			var maxWidth = $(window).width() - 367;
 
 			$albumName.css({
 				"font-size": `${fontSize}px`,
