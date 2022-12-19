@@ -14,7 +14,11 @@ class DeezerPrivateApi {
 	}
 
 	public function authTest() {
-		$this->getUser();
+		$res = $this->getUser();
+
+		if (!$res->USER->OPTIONS->web_hq) {
+			throw new Exception("Deezer Private API: Audio will be limited to 128kbps");
+		}
 	}
 
 	public function getSongMp3($songId) {
@@ -146,8 +150,6 @@ class DeezerPrivateApi {
 
 		if ($res->results->USER->USER_ID === 0) {
 			throw new Exception("Deezer Private API: Unauthorised");
-		} else if (!$res->results->USER->OPTIONS->web_hq) {
-			throw new Exception("Deezer Private API: Audio will be limited to 128kbps");
 		}
 		
 		return $res->results;
