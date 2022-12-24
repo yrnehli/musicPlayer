@@ -96,5 +96,7 @@ class MusicManager {
 				$musicDatabase->deleteSong($song['id']);
 			}
 		}
+
+		$musicDatabase->deleteInvalidAlbums();
 	}
 }

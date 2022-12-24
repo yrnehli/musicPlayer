@@ -146,6 +146,27 @@ class MusicDatabase {
 		return $res;
 	}
 
+	public function deleteInvalidAlbums() {
+		$stmt = $this->conn->prepare(
+			"DELETE FROM `albums`
+			WHERE `id` IN (
+				SELECT `aId`
+				FROM (
+					SELECT `albums`.`id` AS `aId`
+					FROM `albums`
+					WHERE `albums`.`id` NOT IN (
+						SELECT `albumId`
+						FROM `song-album`
+					)
+				) AS `a`
+			)"
+		);
+		$stmt->execute();
+		$res = $stmt->fetchAll();
+
+		return $res;
+	}
+
 	public function deleteSong($songId) {
 		$stmt = $this->conn->prepare(
 			"DELETE FROM `songs`
