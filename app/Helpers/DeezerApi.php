@@ -151,6 +151,18 @@ class DeezerApi {
 		return $res;
 	}
 
+	public function getArtistAlbums($artistId) {
+		$artistId = DeezerApi::removePrefix($artistId);
+		$res = json_decode(
+			$this->curlRequest(
+				"GET",
+				self::API_BASE . "/artist/$artistId/albums"
+			)
+		);
+
+		return $res->data;
+	}
+
 	public static function removePrefix($songId) {
 		return str_replace(DeezerApi::DEEZER_ID_PREFIX, "", $songId);
 	}
