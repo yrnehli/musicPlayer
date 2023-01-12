@@ -170,6 +170,10 @@ class DeezerApi {
 			)
 		);
 
+		usort($res->data, function($a, $b) {
+			return strtotime($a->release_date) < strtotime($b->release_date);
+		});
+
 		return $res->data;
 	}
 
