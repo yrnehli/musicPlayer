@@ -13,8 +13,8 @@ class ArtistController extends Controller {
 		$isDeezerArtist = str_starts_with($artist, DeezerApi::DEEZER_ID_PREFIX);
 
 		if (!$isDeezerArtist) {
-			$search = $deezerApi->search("artist:\"$artist\"");
 			$albums = $this->getArtistAlbums($artist);
+			$search = $deezerApi->search("artist:\"$artist\" album:\"{$albums[0]['name']}\"");
 			$deezerArtistId = !empty($search['songs']) ? $search['songs'][0]['artistId'] : null;
 		} else {
 			$deezerArtistId = $artist;
