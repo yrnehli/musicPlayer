@@ -189,7 +189,22 @@ class ApiController extends Controller {
 		$stmt->execute();
 		$songs = $stmt->fetchAll();
 
-		return compact('albums', 'songs');
+		$stmt = $conn->prepare(
+			"SELECT
+				`artist` AS `key`,
+				`artist` AS `id`,
+				`artist` AS `name`,
+				`artFilepath`
+			FROM `albums`
+			WHERE REGEXP_REPLACE(`artist`, '$ignoreRegex', '') LIKE :term
+			ORDER BY CHAR_LENGTH(`artist`)
+			LIMIT 15"
+		);
+		$stmt->bindParam(":term", $term);
+		$stmt->execute();
+		$artists = array_values($stmt->fetchAll(PDO::FETCH_UNIQUE));
+
+		return compact('albums', 'songs', 'artists');
 	}
 
 	public function saved($songId) {

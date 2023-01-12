@@ -5,11 +5,11 @@
 			<img id="art" class="mx-3" src="<?= $art ?>">		
 		<?php endif; ?>
 		<div class="d-flex row mx-3 my-auto">
-			<div class="col-12">
-				<div id="album">
+			<div class="col-12 mb-2">
+				<div id="artist">
 					ARTIST
 				</div>
-				<h1 id="artist" style="visibility: hidden;">
+				<h1 id="artistNameBig" style="visibility: hidden;">
 					<?= $artistName ?>
 				</h1>
 			</div>
@@ -62,11 +62,9 @@
 		var $tracklistRows = $('.tracklist-row');
 
 		$(function() {
-			<?php if (isset($accentColour)): ?>
-				updateBodyColour('<?= $accentColour ?>');
-			<?php endif; ?>
 			new LazyLoad({});
-			scaleArtistText();
+			updateBodyColour('<?= $accentColour ?>');
+			scaleArtistNameText();
 			initEvents();
 		});
 
@@ -130,12 +128,12 @@
 				showToastNotification(true, "Playing Last");
 			});
 
-			$(window).resize(() => scaleArtistText());
+			$(window).resize(() => scaleArtistNameText());
 		}
 		
-		function scaleArtistText() {
+		function scaleArtistNameText() {
 			var fontSize = 96;
-			var $artist = $('#artist');
+			var $artist = $('#artistNameBig');
 			var maxWidth = $(window).width() - 367;
 
 			$artist.css({

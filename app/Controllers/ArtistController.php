@@ -22,9 +22,11 @@ class ArtistController extends Controller {
 
 		if ($deezerArtistId) {
 			$data = $deezerApi->getArtist($deezerArtistId);
-			$artistName = $data->name;
+			$artistName = ($isDeezerArtist) ? $data->name : $artist;
 			$art = $data->picture_big;
 			$accentColour = Utilities::getAccentColour($art);
+		} else {
+			$accentColour = '#121212';
 		}
 
 		if ($isDeezerArtist) {

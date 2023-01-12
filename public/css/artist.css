@@ -5,14 +5,14 @@
 	border-radius: 100%;
 }
 
-#album {
+#artist {
 	display: flex;
 	font-size: 12px;
 	font-weight: 700;
 	color: white;
 }
 
-#artist {
+#artistNameBig {
 	font-weight: 700;
 	color: white;
 	margin-bottom: 0px;

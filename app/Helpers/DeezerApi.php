@@ -9,9 +9,10 @@ class DeezerApi {
 	public function search($term, $limit = 5) {
 		$songs = [];
 		$albums = [];
+		$artists = [];
 
 		if (empty($term)) {
-			return compact('songs', 'albums');
+			return compact('songs', 'albums', 'artists');
 		}
 
 		$res = json_decode(
@@ -46,11 +47,20 @@ class DeezerApi {
 					"explicit" => $song->explicit_lyrics
 				];
 			}
+
+			if (count($artists) < $limit && !array_key_exists($song->artist->id, $artists)) {
+				$artists[$song->artist->id] = [
+					"id" => self::DEEZER_ID_PREFIX . $song->artist->id,
+					"name" => $song->artist->name,
+					"artFilepath" => $song->artist->picture_small
+				];
+			}
 		}
 
 		$albums = array_values($albums);
+		$artists = array_values($artists);
 
-		return compact('songs', 'albums');
+		return compact('songs', 'albums', 'artists');
 	}
 
 	public function getSong($songId) {

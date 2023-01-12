@@ -48,8 +48,9 @@ class SearchHandler {
 				this._clearOldResults(res.data.songs, res.data.albums);
 	
 				this._$searchResults
-					.append(res.data.songs.map(song => this._createResultRow('song', song.id, song.albumId, song.name, song.artist, song.duration, song.artFilepath, song.explicit)))
-					.append(res.data.albums.map(album => this._createResultRow('album', album.id, album.id, album.name, album.artist, album.duration, album.artFilepath, album.explicit)))
+					.append(res.data.songs.map(song => this._createResultRow('song', song.id, song.albumId, song.name, song.artist, song.artFilepath, song.explicit)))
+					.append(res.data.albums.map(album => this._createResultRow('album', album.id, album.id, album.name, album.artist, album.artFilepath, album.explicit)))
+					.append(res.data.artists.map(artist => this._createResultRow('artist', artist.id, null, artist.name, artist.name, artist.artFilepath, false)))
 				;
 	
 				(res.data.songs.length > 0 || res.data.albums.length > 0) ? this._$searchResults.show() : this._$searchResults.fadeOut(100);
@@ -74,39 +75,59 @@ class SearchHandler {
 		});
 	}
 
-	_createResultRow(type, id, albumId, name, artist, duration, artFilepath, explicit) {
+	_createResultRow(type, id, albumId, name, artist, artFilepath, explicit) {
 		if (type === 'song') {
 			if (this._$searchResults.find(`[data-song-id="${id}"]`).length) {
 				return;
 			}
-		} else {
+		} else if (type ==="album") {
 			if (this._$searchResults.find(`[data-album-id="${id}"]`).not('[data-song-id]').length) {
+				return;
+			}
+		} else  {
+			if (this._$searchResults.find(`[data-artist-id="${id}"]`).not('[data-artist-id]').length) {
 				return;
 			}
 		}
 
-		var $resultRow = $(`<div class="music-row result-row" data-${type}-id=${id} data-album-id=${albumId} data-context-menu-actions="PLAY_NEXT,PLAY_LAST,GO_TO_ALBUM" data-activable></div>`);
+		var $resultRow = $(
+			`<div
+				class="music-row result-row"
+				data-${type}-id=${id}
+				data-activable
+			>
+			</div>
+		`);
+
+		if (['song', 'album'].includes(type)) {
+			$resultRow.attr('data-album-id', albumId);
+			$resultRow.attr('data-context-menu-actions', "PLAY_NEXT,PLAY_LAST,GO_TO_ALBUM");
+			$resultRow.dblclick(() => {
+				(type === 'song') ? this._playSong($resultRow) : this._playAlbum($resultRow);
+				SearchHandler.sharedInstance.reset();
+			});
+		} else {
+			$resultRow.dblclick(() => {
+				PartialManager.sharedInstance.loadPartial('/artist/' + id)
+				SearchHandler.sharedInstance.reset();
+			});
+		}
+
 		var $img = $('<img>').prop('src', artFilepath);
 		var $artwork = $('<div class="artwork"></div>').append($img);
 		var $name = $('<div></div>').text(name);
 		var $details = $('<div class="details"></div>').append([
 			(explicit === true) ? $name.append('<div class="explicit">E</div>') : $name,
 			$('<div class="d-flex"></div>').html(
-				`<span>${(type === 'song') ? "Song" : "Album"}</span>
+				`<span>${type[0].toUpperCase() + type.slice(1)}</span>
 				<div class="dot"></div>
 				<span class="artist">${artist}</span>`
 			)
-		]);
+		]);	
 
-		$resultRow
-			.dblclick(() => {
-				(type === 'song') ? this._playSong($resultRow) : this._playAlbum($resultRow);
-				SearchHandler.sharedInstance.reset();
-			})
-			.append(
-				$('<div></div>').append([$artwork, $details])
-			)
-		;
+		$resultRow.append(
+			$('<div></div>').append([$artwork, $details])
+		);
 
 		return $resultRow;
 	}
