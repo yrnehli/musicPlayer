@@ -9,6 +9,7 @@ Route::map("GET", "/wrapped", "RootController@wrapped");
 Route::map("GET", "/saved", "SavedController@index");
 Route::map("GET", "/saved/export", "SavedController@export");
 Route::map("GET", "/saved/clear", "SavedController@clear");
+Route::map("GET", "/artist/@artistId", "ArtistController@artist");
 Route::map("GET", "/album/@albumId", "AlbumController@album");
 Route::map("GET", "/mp3/@songId", "Mp3Controller@song");
 Route::map("GET", "/lyrics/@songId", "RootController@lyrics");

@@ -229,9 +229,9 @@
 					Music.sharedInstance.queue().push(
 						$(this).data('song-id')
 					);
-
-					showToastNotification(true, "Playing Last");
 				});
+				
+				showToastNotification(true, "Playing Last");
 			});
 
 			$(window).resize(() => scaleAlbumNameText());

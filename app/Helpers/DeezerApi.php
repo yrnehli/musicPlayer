@@ -27,6 +27,7 @@ class DeezerApi {
 					"id" => self::DEEZER_ID_PREFIX . $song->id,
 					"albumId" => self::DEEZER_ID_PREFIX . $song->album->id,
 					"name" => $song->title,
+					"artistId" => $song->artist->id,
 					"artist" => $song->artist->name,
 					"duration" => $song->duration,
 					"artFilepath" => "https://cdns-images.dzcdn.net/images/cover/$song->md5_image/500x500.jpg",
@@ -38,6 +39,7 @@ class DeezerApi {
 				$albums[$song->album->id] = [
 					"id" => self::DEEZER_ID_PREFIX . $song->album->id,
 					"name" => $song->album->title,
+					"artistId" => $song->artist->id,
 					"artist" => $song->artist->name,
 					"duration" => null,
 					"artFilepath" => "https://cdns-images.dzcdn.net/images/cover/$song->md5_image/500x500.jpg",
@@ -133,6 +135,18 @@ class DeezerApi {
 				$res->results->SONGS->data
 			)
 		];
+
+		return $res;
+	}
+
+	public function getArtist($artistId) {
+		$artistId = DeezerApi::removePrefix($artistId);
+		$res = json_decode(
+			$this->curlRequest(
+				"GET",
+				self::API_BASE . "/artist/$artistId"
+			)
+		);
 
 		return $res;
 	}

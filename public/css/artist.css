@@ -1,0 +1,39 @@
+#art {
+	height: 100%;
+	width: 247px;
+	box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+	border-radius: 100%;
+}
+
+#album {
+	display: flex;
+	font-size: 12px;
+	font-weight: 700;
+	color: white;
+}
+
+#artist {
+	font-weight: 700;
+	color: white;
+	margin-bottom: 0px;
+}
+
+.album-details {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 16px;
+	letter-spacing: normal;
+	text-transform: none;
+}
+
+.album-details div {
+	display: inline-block;
+}
+
+.album-container {
+	background-color: hsla(0, 0%, 100%, .1);
+}
+
+.album-container:hover {
+	background-color: hsla(0, 0%, 100%, .2);
+}
