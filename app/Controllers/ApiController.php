@@ -67,6 +67,7 @@ class ApiController extends Controller {
 				`songs`.`id` AS 'songId',
 				`songs`.`name` AS 'songName',
 				`songs`.`artist` AS 'songArtist',
+				`songs`.`artist` AS 'artistId',
 				`songs`.`duration` AS 'songDuration',
 				`albums`.`artFilepath` AS 'albumArtUrl',
 				`albums`.`name` AS 'albumName',

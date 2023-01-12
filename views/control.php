@@ -269,6 +269,7 @@
 
 			$albumArt.click(e => PartialManager.sharedInstance.loadPartial('/'));
 			$songName.click(e => PartialManager.sharedInstance.loadPartial(`/album/${MusicControl.sharedInstance.albumId()}`));
+			$artistName.click(e => PartialManager.sharedInstance.loadPartial(`/artist/${$artistName.data('artistId')}`));
 			$prevButton.click(e => Music.sharedInstance.previous());
 			$playButton.click(e => Music.sharedInstance.togglePlay());	
 			$skipButton.click(e => Music.sharedInstance.skip());

@@ -121,6 +121,7 @@ class MusicControl extends EventEmitter {
 		this._albumId = res.data.albumId;
 		this._elements.$songName.text(res.data.songName);
 		this._elements.$artistName.text(res.data.songArtist);
+		this._elements.$artistName.data('artistId', res.data.artistId);
 		this._elements.$albumArt.prop('src', res.data.albumArtUrl);
 		this._metadata.title = res.data.songName;
 		this._metadata.artist = res.data.songArtist;

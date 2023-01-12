@@ -43,6 +43,7 @@
 #artistName {
 	font-size: 11px;
 	white-space: nowrap;
+	cursor: pointer;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: calc(100%);

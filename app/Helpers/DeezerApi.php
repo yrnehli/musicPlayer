@@ -75,6 +75,7 @@ class DeezerApi {
 		$song = [
 			'songId' => DeezerApi::DEEZER_ID_PREFIX . $songId,
 			'songName' => $res->title,
+			'artistId' => $res->contributors[0]->id,
 			'songArtist' => implode(
 				", ",
 				array_map(
