@@ -14,7 +14,15 @@ class ArtistController extends Controller {
 
 		if (!$isDeezerArtist) {
 			$albums = $this->getArtistAlbums($artist);
-			$search = $deezerApi->search("artist:\"$artist\" album:\"{$albums[0]['name']}\"");
+
+			foreach ($albums as $album) {
+				$search = $deezerApi->search("artist:\"$artist\" album:\"{$album['name']}\"");
+				
+				if (!empty($search['songs'])) {
+					break;
+				}
+			}
+
 			$deezerArtistId = !empty($search['songs']) ? $search['songs'][0]['artistId'] : null;
 		} else {
 			$deezerArtistId = $artist;
@@ -22,10 +30,12 @@ class ArtistController extends Controller {
 
 		if ($deezerArtistId) {
 			$data = $deezerApi->getArtist($deezerArtistId);
-			$artistName = ($isDeezerArtist) ? $data->name : $artist;
+			$artistName = $data->name;
 			$art = $data->picture_big;
 			$accentColour = Utilities::getAccentColour($art);
 		} else {
+			$artistName = $artist;
+			$art = "";
 			$accentColour = '#121212';
 		}
 
