@@ -34,6 +34,13 @@ class PartialManager extends EventEmitter {
 			return;
 		}
 
+		try {
+			var partial = await $.get(url, { partial: true });
+		} catch (e) {
+			this.loadPartial("/");
+			return;
+		} 
+
 		CustomContextMenu.sharedInstance.hide();
 		
 		if (!this._initiatedHistory) {
@@ -41,16 +48,7 @@ class PartialManager extends EventEmitter {
 			this._initiatedHistory = true;
 		}
 	
-		this._updatePartial(
-			await $.ajax(
-				url,
-				{
-					data: { partial: true },
-					statusCode: { 404: () => window.location.href = "/" }
-				}
-			),
-			0
-		);
+		this._updatePartial(partial, 0);
 		
 		history.pushState(this._getCurrentState(), "", url);
 		this._emit('pathchange');
