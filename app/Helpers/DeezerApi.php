@@ -175,7 +175,19 @@ class DeezerApi {
 			return strtotime($a->release_date) < strtotime($b->release_date);
 		});
 
-		return $res->data;
+		$albums = [];
+
+		foreach ($res->data as $album) {
+			if (!array_key_exists($album->title, $albums)) {
+				$albums[$album->title] = $album;
+			} else {
+				if ($album->explicit_lyrics) {
+					$albums[$album->title] = $album;
+				}
+			}
+		}
+
+		return array_values($albums);
 	}
 
 	public static function removePrefix($songId) {
