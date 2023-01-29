@@ -13,6 +13,7 @@ class Music extends EventEmitter {
 		this._lastSongId = null;
 		this._songId = null;
 		this._disabled = true;
+		this._pausing = false;
 		this._queue = [];
 		this._history = [];
 		
@@ -67,7 +68,7 @@ class Music extends EventEmitter {
 		await this.play();
 		
 		if (!play) {
-			this.pause(false);
+			this.pause(0);
 		}
 
 		this._audio.onended = () => this._emit('end');
@@ -88,27 +89,26 @@ class Music extends EventEmitter {
 		this._emit('play');
 	}
 
-	pause(fadeOut = true) {
-		if (this._disabled) {
+	pause(fadeOutDuration = 300) {
+		if (this._disabled || this._pausing) {
 			return;
 		}
 
-		if (fadeOut) {
-			const originalVolume = this._audio.volume;
-	
-			$(this._audio).animate(
-				{ volume: 0 },
-				{
-					duration: 300,
-					done: () => {
-						this._audio.pause();
-						this._audio.volume = originalVolume;
-					}
+		this._pausing = true;
+		
+		const originalVolume = this._audio.volume;
+
+		$(this._audio).animate(
+			{ volume: 0 },
+			{
+				duration: fadeOutDuration,
+				done: () => {
+					this._audio.pause();
+					this._audio.volume = originalVolume;
+					this._pausing = false;
 				}
-			);
-		} else {
-			this._audio.pause();
-		}
+			}
+		);
 
 		this._emit('pause');
 	}
@@ -142,7 +142,7 @@ class Music extends EventEmitter {
 
 			this.changeSong(
 				this._queue.shift(),
-				(play || this.playing() || (this._queue.some(item => item.event === "play") && !this._queue.some(item => item.event === "pause"))),
+				(play || this.playing()),
 				auto
 			);
 		} else {
