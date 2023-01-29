@@ -67,7 +67,7 @@ class Music extends EventEmitter {
 		await this.play();
 		
 		if (!play) {
-			this.pause();
+			this.pause(false);
 		}
 
 		this._audio.onended = () => this._emit('end');
@@ -88,12 +88,28 @@ class Music extends EventEmitter {
 		this._emit('play');
 	}
 
-	pause() {
+	pause(fadeOut = true) {
 		if (this._disabled) {
 			return;
 		}
 
-		this._audio.pause();
+		if (fadeOut) {
+			const originalVolume = this._audio.volume;
+	
+			$(this._audio).animate(
+				{ volume: 0 },
+				{
+					duration: 300,
+					done: () => {
+						this._audio.pause();
+						this._audio.volume = originalVolume;
+					}
+				}
+			);
+		} else {
+			this._audio.pause();
+		}
+
 		this._emit('pause');
 	}
 
