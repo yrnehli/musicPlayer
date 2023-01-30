@@ -47,49 +47,8 @@ class MusicControl extends EventEmitter {
 
 	_initEvents() {
 		this._music.on('enable', e => this._elements.$progressSlider.slider('enable'));
-		this._music.on('play', async () => {
-			this._elements.$playButton.removeClass("paused")
-			
-			if ('wakeLock' in navigator) {
-				const obtainWakelock = async () => {
-					try {
-						return await navigator.wakeLock.request('screen');
-					} catch (e) {
-						return null;
-					}
-				};
-
-				this._wakeLock = await obtainWakelock();
-
-				if (!this._wakeLock) {
-					let interval = setInterval(async () => {
-						if (this._wakeLock = await obtainWakelock()) {
-							clearInterval(interval);
-						}
-					}, 5000);
-				} else {
-					this._wakeLock.addEventListener('release', () => {
-						let interval = setInterval(async () => {
-							if (this._wakeLock = await obtainWakelock()) {
-								clearInterval(interval);
-							}
-						}, 5000);
-					});
-				}
-			}
-		});
-		this._music.on('pause', async () => {
-			this._elements.$playButton.addClass("paused")
-			
-			if ('wakeLock' in navigator && this._wakeLock) {
-				this._wakeLock
-					.release()
-					.then(() => {
-						this._wakeLock = null;
-					})
-				;
-			}
-		});
+		this._music.on('play', async () => this._elements.$playButton.removeClass("paused"));
+		this._music.on('pause', async () => this._elements.$playButton.addClass("paused"));
 		this._music.on('songchange', e => {
 			$.get(`/api/now-playing/${this._music.songId()}`);
 
