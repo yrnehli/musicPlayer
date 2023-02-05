@@ -279,12 +279,16 @@
 			$(window).keyup(e => assignKeyup(e));
 		}
 
-		function adjustVolume(e) {
+		function adjustVolume(e, delta) {
 			var volume = $volumeSlider.slider("value");
+
+			if (e) {
+				delta = (e.originalEvent.wheelDelta > 0) ? 5 : -5;
+			}
 
 			$volumeSlider.slider(
 				"value",
-				(e.originalEvent.wheelDelta > 0) ? volume + 5 : volume - 5
+				volume + delta
 			);
 		}
 
@@ -311,6 +315,17 @@
 					e.preventDefault();
 					Music.sharedInstance.togglePlay();
 				}
+			}
+
+			if (e.code === 'ArrowDown') {
+				e.preventDefault();
+				adjustVolume(null, -5);
+			}
+
+			
+			if (e.code === 'ArrowUp') {
+				e.preventDefault();
+				adjustVolume(null, +5);
 			}
 
 			if ((e.metaKey || e.ctrlKey) && e.code === 'KeyW') {

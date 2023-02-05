@@ -82,6 +82,8 @@ You should receive a JSON response that looks like this:
 | Hotkey | Action |
 | ----------- | ----------- |
 | `Esc` | Home Page |
+| `Space` | Play/Pause |
+| `↑/↓` | Volume Up/Down |
 | `Meta + F` | Search |
 | `Meta + D` | Saved Songs |
 | `Meta + S` | Shuffle All Songs |
