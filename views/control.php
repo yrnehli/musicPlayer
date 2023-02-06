@@ -328,11 +328,6 @@
 				adjustVolume(null, +5);
 			}
 
-			if ((e.metaKey || e.ctrlKey) && e.code === 'KeyW') {
-				e.preventDefault();
-				PartialManager.sharedInstance.loadPartial('/wrapped');
-			}
-
 			if ((e.metaKey || e.ctrlKey) && e.code === 'KeyS') {
 				e.preventDefault();
 				if (!e.shiftKey) {
@@ -363,10 +358,6 @@
 
 		function assignKeyup(e) {
 			if (e.code === 'Escape') {
-				e.preventDefault();
-			}
-
-			if ((e.metaKey || e.ctrlKey) && e.code === 'KeyW') {
 				e.preventDefault();
 			}
 			

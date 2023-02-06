@@ -87,7 +87,6 @@ You should receive a JSON response that looks like this:
 | `Meta + F` | Search |
 | `Meta + D` | Saved Songs |
 | `Meta + S` | Shuffle All Songs |
-| `Meta + W` | Last.fm “Wrapped” |
 
 Where `Meta` is either `Ctrl` or `Cmd (⌘)`.
 
