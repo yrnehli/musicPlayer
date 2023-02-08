@@ -34,7 +34,7 @@ class Music extends EventEmitter {
 	}
 
 	disable() {
-		this.pause();
+		this.pause(0);
 		this._lastSongId = this._songId;
 		this._songId = null;
 		this._queue = [];
