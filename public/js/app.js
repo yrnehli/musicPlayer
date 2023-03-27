@@ -22,7 +22,8 @@ $(function() {
 	var $searchBar = $('#searchBar');
 	var $searchResults = $('#searchResults');
 	var $clearSearchBarButton = $('#clearSearchBarButton');
-
+	var $shuffleAllButton = $('#shuffleAllButton');
+	
 	new SearchHandler($searchBar, $searchResults, $clearSearchBarButton);
 	new PartialManager($partial, '.simplebar-content-wrapper');
 	new CustomContextMenu(
@@ -196,13 +197,31 @@ $(function() {
 		}
 	);
 	
+	if (window.location.pathname !== "/") {
+		$shuffleAllButton.hide();
+	}
+
 	PartialManager.sharedInstance.on('pathchange', e => {
+		if (window.location.pathname === "/") {
+			$shuffleAllButton.show();
+		} else {
+			$shuffleAllButton.hide();
+		}
+		
 		if (window.location.pathname !== `/album/${MusicControl.sharedInstance.albumId()}`) {
 			if (![`/lyrics/${Music.sharedInstance.songId()}`, `/queue`].includes(window.location.pathname)) {
 				MusicControl.sharedInstance.elements().$nowPlayingButton.removeClass('active');
 				MusicControl.sharedInstance.elements().$lyricsButton.removeClass('active');
 			}
 		}
+	});
+
+	$shuffleAllButton.click(() => {
+		Music.sharedInstance.history([]);
+		Music.sharedInstance.queue(
+			shuffle(MusicControl.sharedInstance.songIds())
+		);
+		Music.sharedInstance.skip(true);
 	});
 
 	$(window).keydown(e => {

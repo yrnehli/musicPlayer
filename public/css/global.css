@@ -681,3 +681,20 @@ h3 {
 .album-container .artist {
 	font-size: 14px;
 }
+
+#shuffleAllButton {
+	padding: .375rem .75rem;
+	background-color: transparent;
+	border-radius: 4px;
+	transition: color .3s ease;
+	cursor: pointer;
+	color: lightgrey;
+	border: 0px;
+	display: flex;
+	-webkit-app-region: no-drag;
+}
+
+#shuffleAllButton svg {
+	transition: fill .3s ease;
+	fill: lightgrey;
+}

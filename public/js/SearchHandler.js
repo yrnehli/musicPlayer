@@ -36,12 +36,12 @@ class SearchHandler {
 				this._$searchBar.attr('value', term);
 	
 				if (term.trim() === "") {
-					this._$clearSearchBarButton.hide();
+					this._$clearSearchBarButton.css('visibility', 'hidden');
 					this._$searchResults.fadeOut(100);
 					return;
 				}
 	
-				this._$clearSearchBarButton.show();
+				this._$clearSearchBarButton.css('visibility', 'visible');
 	
 				var res = await $.get('/api/search', { term: term });
 
