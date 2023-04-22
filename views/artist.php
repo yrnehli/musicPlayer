@@ -4,7 +4,7 @@
 		<?php if (isset($art)): ?>
 			<img id="art" class="mx-3" src="<?= $art ?>">		
 		<?php endif; ?>
-		<div class="d-flex row mx-3 my-auto">
+		<div class="d-flex row mx-1 mt-auto">
 			<div class="col-12 mb-2">
 				<div id="artist">
 					ARTIST
