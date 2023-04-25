@@ -40,9 +40,7 @@ class DeezerPrivateApi {
 	}
 
 	private function getSongUrl($songToken) {
-		$formats = ['MP3_320', 'MP3_128'];
-
-		do {
+		foreach (['MP3_320', 'MP3_128'] as $format) {
 			$res = json_decode(
 				$this->curlRequest(
 					"POST",
@@ -53,14 +51,20 @@ class DeezerPrivateApi {
 						'media' => [[
 							'type' => 'FULL',
 							'formats' => [
-								['cipher' => 'BF_CBC_STRIPE', 'format' => array_shift($formats)]
+								['cipher' => 'BF_CBC_STRIPE', 'format' => $format]
 							]
 						]],
 						'track_tokens' => [$songToken]
 					])
 				)
 			);
-		} while (property_exists($res, 'errors'));
+
+			if (property_exists($res->data[0], "errors")) {
+				throw new Exception(
+					var_export($res->data[0]->errors, true)
+				);
+			}
+		}
 
 		return $res->data[0]->media[0]->sources[0]->url;
 	}

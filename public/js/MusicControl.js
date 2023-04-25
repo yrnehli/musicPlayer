@@ -72,6 +72,10 @@ class MusicControl extends EventEmitter {
 				this._elements.$progressSlider.slider("disable");
 			}
 		});
+		this._music.on('error', () => {
+			this._music.disable();
+			showToastNotification(false, "Playback Error");
+		});
 	}
 
 	async _update(auto) {

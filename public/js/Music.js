@@ -19,6 +19,8 @@ class Music extends EventEmitter {
 		
 		this.volume(volume);
 		this.on('end', () => this.skip(true, true));
+		this._audio.addEventListener('error', () => this._emit('error'));
+		this._backup.addEventListener('error', () => this._emit('error'));
 	}
 
 	disabled() {
@@ -35,13 +37,9 @@ class Music extends EventEmitter {
 
 	disable() {
 		this.pause(0);
-		this._lastSongId = this._songId;
-		this._songId = null;
 		this._queue = [];
 		this._history = [];
 		this._disabled = true;
-		this._audio.src = '';
-		this._backup.src = '';
 		this._emit('disable');
 	}
 
