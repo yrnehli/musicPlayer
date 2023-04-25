@@ -73,8 +73,7 @@ class SpotifyApi {
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_CUSTOMREQUEST => $requestType,
-			CURLOPT_HTTPHEADER => $headers,
-			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1
+			CURLOPT_HTTPHEADER => $headers
 		]);
 	
 		if ($requestType === 'POST') {
