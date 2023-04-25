@@ -5,7 +5,7 @@ namespace App\Helpers;
 use Exception;
 
 class DeezerPrivateApi {
-	private const API_BASE = "http://www.deezer.com/ajax/gw-light.php";
+	private const API_BASE = "https://www.deezer.com/ajax/gw-light.php";
 	private $cookies = [];
 	private $arl;
 	
@@ -119,9 +119,10 @@ class DeezerPrivateApi {
 	}
 
 	private function request($method, $payload = "") {
-		$apiToken = ($method === "deezer.getUserData") ? "null" : $this->getUser()->checkForm;
+		$apiToken = (in_array($method, ["deezer.getUserData", "deezer.ping"])) ? "" : $this->getUser()->checkForm;
+		$requestType = (in_array($method, ["deezer.getUserData", "deezer.ping"])) ? "GET" : "POST";
 		$res = $this->curlRequest(
-			"POST",
+			$requestType,
 			self::API_BASE . "?api_version=1.0&api_token=$apiToken&input=3&method=$method",
 			[
 				"Cookie: " . $this->buildCookies(),
@@ -168,10 +169,9 @@ class DeezerPrivateApi {
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_CUSTOMREQUEST => $requestType,
 			CURLOPT_HTTPHEADER => $headers,
-			CURLOPT_HEADERFUNCTION => [$this, "processHeader"],
-			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1
+			CURLOPT_HEADERFUNCTION => [$this, "processHeader"]
 		]);
-	
+
 		if ($requestType === 'POST') {
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $payload);
 		}
@@ -184,7 +184,7 @@ class DeezerPrivateApi {
 	}
 
 	private function processHeader($curl, $header) {
-		if (preg_match("/Set-Cookie: (.*?)=(.*?);/", $header, $matches)) {
+		if (preg_match("/Set-Cookie: (.*?)=(.*?);/i", $header, $matches)) {
 			$this->cookies[$matches[1]] = $matches[2];
 		}
 
