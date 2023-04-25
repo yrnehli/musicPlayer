@@ -6,7 +6,7 @@ use Exception;
 
 class DeezerPrivateApi {
 	private const API_BASE = "https://www.deezer.com/ajax/gw-light.php";
-	private $cookies = [];
+	private const COOKIE_JAR = "DeezerPrivateApi.cookiejar";
 	private $arl;
 	
 	public function __construct() {
@@ -124,11 +124,7 @@ class DeezerPrivateApi {
 		$res = $this->curlRequest(
 			$requestType,
 			self::API_BASE . "?api_version=1.0&api_token=$apiToken&input=3&method=$method",
-			[
-				"Cookie: " . $this->buildCookies(),
-				"Content-Length: " . strlen($payload),
-				"Content-Type: application/json"
-			],
+			["Cookie: " . $this->buildCookies()],
 			$payload
 		);
 
@@ -139,10 +135,6 @@ class DeezerPrivateApi {
 		$cookie = "";
 		$cookies = ["arl" => $this->arl];
 
-		foreach ($this->cookies as $k => $v) {
-			$cookies[$k] = $v;
-		}
-		
 		foreach ($cookies as $k => $v) {			
 			$cookie .= "$k=$v;";
 		}
@@ -167,9 +159,11 @@ class DeezerPrivateApi {
 			CURLOPT_URL => $url,
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_ENCODING => '',
 			CURLOPT_CUSTOMREQUEST => $requestType,
 			CURLOPT_HTTPHEADER => $headers,
-			CURLOPT_HEADERFUNCTION => [$this, "processHeader"]
+			CURLOPT_COOKIEJAR => self::COOKIE_JAR,
+			CURLOPT_COOKIEFILE => self::COOKIE_JAR
 		]);
 
 		if ($requestType === 'POST') {
@@ -181,13 +175,5 @@ class DeezerPrivateApi {
 		curl_close($curl);
 	
 		return $res;
-	}
-
-	private function processHeader($curl, $header) {
-		if (preg_match("/Set-Cookie: (.*?)=(.*?);/i", $header, $matches)) {
-			$this->cookies[$matches[1]] = $matches[2];
-		}
-
-		return strlen($header);
 	}
 }
