@@ -40,7 +40,7 @@ class ArtistController extends Controller {
 		}
 
 		if ($isDeezerArtist) {
-			$albums = array_map(function($album) use ($artistName) {
+			$albums = array_map(function($album) {
 				return [
 					'id' => DeezerApi::DEEZER_ID_PREFIX . $album->id,
 					'artFilepath' => $album->cover_big,
