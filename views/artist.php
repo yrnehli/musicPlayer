@@ -47,7 +47,7 @@
 					<?= $album['name'] ?>
 				</div>
 				<div class="artist mb-2">
-					<?= $album['recordType'] ?>
+					<?= array_key_exists('recordType', $album) ? $album['recordType'] : $artistName ?>
 				</div>
 			</div>
 		<?php endforeach; ?>
