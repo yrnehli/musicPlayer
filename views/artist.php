@@ -47,7 +47,7 @@
 					<?= $album['name'] ?>
 				</div>
 				<div class="artist mb-2">
-					<?= $album['artist'] ?>
+					<?= $album['recordType'] ?>
 				</div>
 			</div>
 		<?php endforeach; ?>

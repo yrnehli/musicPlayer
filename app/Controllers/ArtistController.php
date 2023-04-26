@@ -45,7 +45,7 @@ class ArtistController extends Controller {
 					'id' => DeezerApi::DEEZER_ID_PREFIX . $album->id,
 					'artFilepath' => $album->cover_big,
 					'name' => $album->title,
-					'artist' => $artistName
+					'recordType' => ($album->record_type === "ep") ? "EP" : ucfirst($album->record_type)
 				];
 			}, $deezerApi->getArtistAlbums($deezerArtistId));
 		}
