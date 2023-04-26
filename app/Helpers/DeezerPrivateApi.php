@@ -23,9 +23,8 @@ class DeezerPrivateApi {
 
 	public function getSongMp3($songId) {
 		$songId = DeezerApi::removePrefix($songId);
-		$song = $this->getSong($songId);
 		$encryptedSong = file_get_contents(
-			$this->getSongUrl($song->results->DATA->TRACK_TOKEN)
+			$this->getSongUrl($songId)
 		);
 
 		return $this->decryptSong($songId, $encryptedSong);
@@ -39,7 +38,10 @@ class DeezerPrivateApi {
 		return $this->request("deezer.pageAlbum", json_encode(['alb_id' => $albumId, 'LANG' => 'en']));
 	}
 
-	private function getSongUrl($songToken) {
+	private function getSongUrl($songId) {
+		$songId = DeezerApi::removePrefix($songId);
+		$song = $this->getSong($songId);
+
 		foreach (['MP3_320', 'MP3_128'] as $format) {
 			$res = json_decode(
 				$this->curlRequest(
@@ -54,7 +56,7 @@ class DeezerPrivateApi {
 								['cipher' => 'BF_CBC_STRIPE', 'format' => $format]
 							]
 						]],
-						'track_tokens' => [$songToken]
+						'track_tokens' => [$song->results->DATA->TRACK_TOKEN]
 					])
 				)
 			);
