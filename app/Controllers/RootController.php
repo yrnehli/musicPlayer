@@ -80,7 +80,6 @@ class RootController extends Controller {
 		} else {
 			$lyrics = GeniusApi::getLyrics(implode(" ", [$song['songName'], $song['songArtist']]));
 			$deezerSong = $deezerPrivateApi->getSong($songId);
-			file_put_contents($filepath, serialize($deezerSong));
 		}
 			
 		$this->view('lyrics', [
