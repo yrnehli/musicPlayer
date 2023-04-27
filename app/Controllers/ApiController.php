@@ -294,10 +294,12 @@ class ApiController extends Controller {
 			$scrobble['track'],
 			$scrobble['album'],
 			$scrobble['duration'],
-			$scrobble['timestamp'],
 			$success
 		);
 
-		$this->responseHandler($success);
+		$this->responseHandler(
+			$success,
+			isset($e) ? $e->getMessage() : ""
+		);
 	}
 }
