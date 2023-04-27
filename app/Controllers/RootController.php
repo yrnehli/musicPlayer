@@ -58,30 +58,16 @@ class RootController extends Controller {
 			);
 		} else {
 			$songId = DeezerApi::removePrefix($songId);
-			$filepath = "public/userData/cache/song/$songId";
-			
-			if (!file_exists($filepath)) {
-				$deezerApi = new DeezerApi();
-				$song =	$deezerApi->getSong($songId);
-				file_put_contents($filepath, serialize($song));
-			} else {
-				$song = unserialize(file_get_contents($filepath));
-			}
+			$deezerApi = new DeezerApi();
+			$song =	$deezerApi->getSong($songId);
 		}
 
 		$deezerPrivateApi = new DeezerPrivateApi();
-		$filepath = "public/userData/cache/song/$songId-PRIVATE";
 
 		if (!empty($songId)) {
 			$songId = DeezerApi::removePrefix($songId);
+			$deezerSong = $deezerPrivateApi->getSong($songId);
 			
-			if (!file_exists($filepath)) {
-				$deezerSong = $deezerPrivateApi->getSong($songId);
-				file_put_contents($filepath, serialize($deezerSong));
-			} else {
-				$deezerSong = unserialize(file_get_contents($filepath));
-			}
-
 			if (!isset($accentColour)) {
 				$accentColour = Utilities::getAccentColour(
 					"https://cdns-images.dzcdn.net/images/cover/{$deezerSong->results->DATA->ALB_PICTURE}/500x500.jpg"

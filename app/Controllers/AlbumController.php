@@ -32,16 +32,9 @@ class AlbumController extends Controller {
 	}
 
 	private function getDeezerAlbum($albumId) {
-		$albumId = DeezerApi::removePrefix($albumId);
-		$filepath = "public/userData/cache/album/$albumId";
-		
-		if (!file_exists($filepath)) {
-			$deezerApi = new DeezerApi();
-			$album = $deezerApi->getAlbum($albumId);
-			file_put_contents($filepath, serialize($album));
-		} else {
-			$album = unserialize(file_get_contents($filepath));
-		}
+		$albumId = DeezerApi::removePrefix($albumId);		
+		$deezerApi = new DeezerApi();
+		$album = $deezerApi->getAlbum($albumId);
 
 		return [
 			'album' => $album['album'],
