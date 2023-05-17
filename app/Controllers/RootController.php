@@ -16,12 +16,13 @@ class RootController extends Controller {
 		$conn = $db->getConn();
 		
 		$stmt = $conn->prepare(
-			"SELECT *
+			"SELECT `albums`.*
 			FROM `albums`
-			ORDER BY `id` DESC"
+			INNER JOIN `song-album` ON `albums`.`id` = `song-album`.`albumId`
+			ORDER BY `song-album`.`id` DESC"
 		);
 		$stmt->execute();
-		$albums = $stmt->fetchAll();
+		$albums = array_unique($stmt->fetchAll(), SORT_REGULAR);
 		$songIds = $this->getSongIds();
 
 		$this->view('home', compact('albums', 'songIds'));
