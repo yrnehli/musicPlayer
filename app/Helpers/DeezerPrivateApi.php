@@ -14,6 +14,8 @@ class DeezerPrivateApi {
 	}
 
 	public function authTest() {
+		unlink(DeezerPrivateApi::COOKIE_JAR);
+		
 		$res = $this->getUser();
 
 		if (!$res->USER->OPTIONS->web_hq) {
