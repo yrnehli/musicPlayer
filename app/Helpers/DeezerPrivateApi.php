@@ -63,11 +63,13 @@ class DeezerPrivateApi {
 				)
 			);
 
-			if ($format === "MP3_128" && property_exists($res->data[0], "errors")) {
-				throw new Exception(
-					var_export($res->data[0]->errors, true)
-				);
+			if ($format === "MP3_320" && !property_exists($res->data[0], "errors")) {
+				break;
 			}
+
+			throw new Exception(
+				var_export($res->data[0]->errors, true)
+			);
 		}
 
 		return $res->data[0]->media[0]->sources[0]->url;
