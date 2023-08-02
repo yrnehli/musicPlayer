@@ -6,7 +6,7 @@ A music player built on the LAMP stack which can play local MP3 files and stream
 </p>
 
 # Requirements
-- PHP 7.2
+- PHP 7
 - MySQL 8
 - Apache
 
@@ -101,7 +101,29 @@ This can be installed as a Progressive Web App (PWA). For the best experience, e
 - `#enable-desktop-pwas-window-controls-overlay`
 
 # Troubleshooting
-In the case that images take a long time to load, try turning Apache's `KeepAlive` directive to `Off`.
+- In the case that images take a long time to load, try turning Apache's `KeepAlive` directive to `Off`.
+- If you are receiving a playback error whilst streaming from Deezer ensure that OpenSSL's legacy provider has been enabled (see below).
+
+# Enabling OpenSSL's Legacy Provider
+This may be needed in order to stream music as the `BF-CBC` cipher has been deprecated since OpenSSL 3.0 and needs to be manually enabled. In your `openssl.cnf` file:
+
+At the `[default_sect]` section change it to the following:
+
+```
+[default_sect]
+activate = 1
+[legacy_sect]
+activate = 1
+```
+
+Then find the `[provider_sect]` and change it to the following:
+
+```
+[provider_sect]
+default = default_sect
+legacy = legacy_sect
+```
+
 
 # Disclaimer
 This repository is for educational/research purposes only, the use of this code is your responsibility.
