@@ -3,7 +3,6 @@
 namespace App\Helpers;
 
 use Exception;
-use App\Helpers\Blowfish;
 
 class DeezerPrivateApi {
 	private const API_BASE = "https://www.deezer.com/ajax/gw-light.php";
@@ -81,7 +80,6 @@ class DeezerPrivateApi {
 		$key = $this->getBlowfishKey($songId);
 		$iv = hex2bin("0001020304050607");
 		$temp = fopen('php://temp', 'r+');
-		$bf = new Blowfish($key, Blowfish::BLOWFISH_MODE_CBC, Blowfish::BLOWFISH_PADDING_ZERO, $iv);
 	
 		fwrite($temp, $data);
 		rewind($temp);
@@ -93,12 +91,12 @@ class DeezerPrivateApi {
 				break;
 			}
 		
-			if ($i % 3 === 0 && strlen($chunk) === 2048) {
-				$chunk = $bf->decrypt(
+			if ($i % 3 == 0 && strlen($chunk) == 2048) {
+				$chunk = openssl_decrypt(
 					$chunk,
+					'BF-CBC',
 					$key,
-					Blowfish::BLOWFISH_MODE_CBC,
-					Blowfish::BLOWFISH_PADDING_ZERO,
+					OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING,
 					$iv
 				);
 			}
