@@ -161,9 +161,6 @@ class MusicDatabase {
 			)"
 		);
 		$stmt->execute();
-		$res = $stmt->fetchAll();
-
-		return $res;
 	}
 
 	public function deleteSong($songId) {
