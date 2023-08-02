@@ -107,7 +107,7 @@ This can be installed as a Progressive Web App (PWA). For the best experience, e
 # Enabling OpenSSL's Legacy Provider
 This may be needed in order to stream music as the `BF-CBC` cipher has been deprecated since OpenSSL 3.0 and needs to be manually enabled. In your `openssl.cnf` file:
 
-At the `[default_sect]` section change it to the following:
+- At the `[default_sect]` section change it to the following:
 
 ```
 [default_sect]
@@ -116,7 +116,7 @@ activate = 1
 activate = 1
 ```
 
-Then find the `[provider_sect]` and change it to the following:
+- Then find the `[provider_sect]` and change it to the following:
 
 ```
 [provider_sect]
@@ -124,6 +124,7 @@ default = default_sect
 legacy = legacy_sect
 ```
 
+- Apache may need to be **restarted** after this change.
 
 # Disclaimer
 This repository is for educational/research purposes only, the use of this code is your responsibility.
