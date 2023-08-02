@@ -30,7 +30,6 @@ class Blowfish {
   private $blockSize;
   private $IV;
   private $P;
-  private $S;
 
   function __construct($key, $mode, $padding, $iv=NULL) {
     $this->mode = $mode;
@@ -91,7 +90,7 @@ class Blowfish {
    * @return string Returns the plaintext string.
    * @author Matt Harris
    **/
-  static function decrypt($ciphertext, $key, $mode=Blowfish::BLOWFISH_MODE_CBC, $padding=Blowfish::BLOWFISH_PADDING_RFC, $iv=NULL) {
+  function decrypt($ciphertext, $key, $mode=Blowfish::BLOWFISH_MODE_CBC, $padding=Blowfish::BLOWFISH_PADDING_RFC, $iv=NULL) {
     if ( $mode == Blowfish::BLOWFISH_MODE_CBC and empty($iv) ) {
       throw new Exception('CBC Mode requires an IV key');
       return;

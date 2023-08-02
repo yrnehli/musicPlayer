@@ -81,6 +81,7 @@ class DeezerPrivateApi {
 		$key = $this->getBlowfishKey($songId);
 		$iv = hex2bin("0001020304050607");
 		$temp = fopen('php://temp', 'r+');
+		$bf = new Blowfish($key, Blowfish::BLOWFISH_MODE_CBC, Blowfish::BLOWFISH_PADDING_ZERO, $iv);
 	
 		fwrite($temp, $data);
 		rewind($temp);
@@ -93,7 +94,7 @@ class DeezerPrivateApi {
 			}
 		
 			if ($i % 3 === 0 && strlen($chunk) === 2048) {
-				$chunk = Blowfish::decrypt(
+				$chunk = $bf->decrypt(
 					$chunk,
 					$key,
 					Blowfish::BLOWFISH_MODE_CBC,
