@@ -164,7 +164,7 @@ class ApiController extends Controller {
 		$ignoreRegex = "[^A-Za-zÀ-ÖØ-öø-ÿ0-9 ]";
 
 		$stmt = $conn->prepare(
-			"SELECT `id`, `name`, `artist`, `duration`, `albumDetails`.`duration`, `artFilepath`, 0 AS `explicit`
+			"SELECT `id`, `name`, `artist`, `duration`, `albumDetails`.`duration`, `artFilepath`, 0 AS `explicit`, `artist` AS `artistId`
 			FROM `albums`
 			INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
 			WHERE REGEXP_REPLACE(CONCAT(`name`, `artist`), '$ignoreRegex', '') LIKE :term
@@ -177,7 +177,7 @@ class ApiController extends Controller {
 		$albums = $stmt->fetchAll();
 	
 		$stmt = $conn->prepare(
-			"SELECT `songs`.`id`, `songs`.`name`, `songs`.`artist`, `songs`.`duration`, `albums`.`artFilepath`, `albums`.`id` AS `albumId`, 0 AS `explicit`
+			"SELECT `songs`.`id`, `songs`.`name`, `songs`.`artist`, `songs`.`duration`, `albums`.`artFilepath`, `albums`.`id` AS `albumId`, 0 AS `explicit`, `songs`.`artist` AS `artistId`
 			FROM `songs`
 			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
 			INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`

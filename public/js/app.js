@@ -112,6 +112,19 @@ $(function() {
 					}
 				}
 			},
+			GO_TO_ARTIST: {
+				html: `
+					<i class="fal fa-user fa-fw mr-1"></i>
+					Go to Artist
+				`,
+				callback: function($target) {
+					PartialManager.sharedInstance.loadPartial(`/artist/${$target.data('artist-id')}`);
+
+					if ($target.hasClass('result-row')) {
+						SearchHandler.sharedInstance.reset();
+					}
+				}
+			},
 			REMOVE_FROM_QUEUE: {
 				html: `
 					<i class="fal fa-times fa-fw mr-1"></i>

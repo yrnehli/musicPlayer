@@ -48,9 +48,9 @@ class SearchHandler {
 				this._clearOldResults(res.data.songs, res.data.albums);
 	
 				this._$searchResults
-					.append(res.data.songs.map(song => this._createResultRow('song', song.id, song.albumId, song.name, song.artist, song.artFilepath, song.explicit)))
-					.append(res.data.albums.map(album => this._createResultRow('album', album.id, album.id, album.name, album.artist, album.artFilepath, album.explicit)))
-					.append(res.data.artists.map(artist => this._createResultRow('artist', artist.id, null, artist.name, artist.name, artist.artFilepath, false)))
+					.append(res.data.songs.map(song => this._createResultRow('song', song.id, song.albumId, song.name, song.artist, song.artistId, song.artFilepath, song.explicit)))
+					.append(res.data.albums.map(album => this._createResultRow('album', album.id, album.id, album.name, album.artist, album.artistId, album.artFilepath, album.explicit)))
+					.append(res.data.artists.map(artist => this._createResultRow('artist', artist.id, null, artist.name, artist.name, artist.id, artist.artFilepath, false)))
 				;
 	
 				(res.data.songs.length > 0 || res.data.albums.length > 0) ? this._$searchResults.show() : this._$searchResults.fadeOut(100);
@@ -75,7 +75,7 @@ class SearchHandler {
 		});
 	}
 
-	_createResultRow(type, id, albumId, name, artist, artFilepath, explicit) {
+	_createResultRow(type, id, albumId, name, artist, artistId, artFilepath, explicit) {
 		if (type === 'song') {
 			if (this._$searchResults.find(`[data-song-id="${id}"]`).length) {
 				return;
@@ -101,7 +101,8 @@ class SearchHandler {
 
 		if (['song', 'album'].includes(type)) {
 			$resultRow.attr('data-album-id', albumId);
-			$resultRow.attr('data-context-menu-actions', "PLAY_NEXT,PLAY_LAST,GO_TO_ALBUM");
+			$resultRow.attr('data-artist-id', artistId);
+			$resultRow.attr('data-context-menu-actions', "PLAY_NEXT,PLAY_LAST,GO_TO_ALBUM,GO_TO_ARTIST");
 			$resultRow.dblclick(() => {
 				(type === 'song') ? this._playSong($resultRow) : this._playAlbum($resultRow);
 				SearchHandler.sharedInstance.reset();
@@ -111,6 +112,7 @@ class SearchHandler {
 				PartialManager.sharedInstance.loadPartial('/artist/' + id)
 				SearchHandler.sharedInstance.reset();
 			});
+			$resultRow.attr('data-context-menu-actions', "GO_TO_ARTIST");
 		}
 
 		var $img = $('<img>').prop('src', artFilepath);
