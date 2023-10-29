@@ -12,7 +12,7 @@
 					<?= $album['name'] ?>
 				</h1>
 				<div class="album-details">
-					<div id="albumArtist">
+					<div id="albumArtist" data-artist-id="<?= $album['artistId'] ?>">
 						<?= $album['artist'] ?>
 					</div>
 					<div class="dot"></div>
@@ -104,6 +104,7 @@
 </div>
 <script>
 	(function() {
+		var $albumArtist = $('#albumArtist');
 		var $playAlbumButton = $('#playAlbumButton');
 		var $shuffleAlbumButton = $('#shuffleAlbumButton');
 		var $playNextButton = $('#playNextButton');
@@ -193,6 +194,10 @@
 			Music.sharedInstance.off('play.album').on('play.album', () => {
 				$tracklistRows.removeClass('playing');
 				$tracklistRows.filter(`[data-song-id="${Music.sharedInstance.songId()}"]`).addClass('playing');
+			});
+
+			$albumArtist.click(() => {
+				PartialManager.sharedInstance.loadPartial(`/artist/${$albumArtist.data('artist-id')}`);
 			});
 
 			$playAlbumButton.click(() => {

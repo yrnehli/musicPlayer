@@ -55,7 +55,7 @@ class AlbumController extends Controller {
 		$conn = $db->getConn();
 
 		$stmt = $conn->prepare(
-			"SELECT `albums`.*, `albums`.`artFilePath` AS 'artUrl', `albumDetails`.*
+			"SELECT `albums`.*, `albums`.`artFilePath` AS 'artUrl', `albumDetails`.*, `albums`.`artist` AS `artistId`
 			FROM `albums`
 			INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
 			WHERE `id` = :id"

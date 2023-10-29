@@ -113,6 +113,7 @@ class DeezerApi {
 						$res->results->DATA->ARTISTS
 					)
 				),
+				"artistId" => self::DEEZER_ID_PREFIX . $res->results->DATA->ARTISTS[0]->ART_ID,
 				"year" => substr($res->results->DATA->DIGITAL_RELEASE_DATE, 0, 4),
 				"length" => count($res->results->SONGS->data),
 				"duration" => array_sum(
