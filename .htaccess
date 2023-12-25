@@ -1,6 +1,15 @@
+<!-- IP Whitelist -->
+Order Allow,Deny
+Allow from 127.0.0.1
+Allow from localhost
+Allow from ::1
+Allow from 192.168.4.50
+
+<!-- Routing -->
 RewriteEngine On
 RewriteCond %{REQUEST_URI} !^/manifest.webmanifest
 RewriteCond %{REQUEST_URI} !^/service-worker.js
 RewriteRule ^(.*)$ bootstrap.php [QSA,L]
 
+<!-- Disable caching -->
 Header always set Cache-Control "no-store"
