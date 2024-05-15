@@ -15,5 +15,5 @@ RewriteRule ^(.*)$ bootstrap.php [QSA,L]
 Header always set Cache-Control "no-store"
 
 # PHP Overrides
-php_value max_execution_time 0
+php_value max_execution_time -1
 php_value memory_limit -1
