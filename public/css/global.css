@@ -209,6 +209,10 @@ button:focus {
 	background-color: hsla(0, 0%, 100%, .5) !important;
 }
 
+#partial {
+	user-select: none;
+}
+
 #partial #root {
 	height: calc(100vh - 150px);
 }
