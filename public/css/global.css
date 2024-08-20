@@ -193,6 +193,10 @@ button:focus {
 	width: 0px;
 }
 
+:focus-visible {
+	outline: 0px;
+}
+
 .simplebar-scrollbar::before {
 	background-color: hsla(0, 0%, 100%, .3) !important;
 	opacity: 1 !important;
