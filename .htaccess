@@ -9,7 +9,7 @@ Allow from 192.168.4.50
 RewriteEngine On
 RewriteCond %{REQUEST_URI} !^/manifest.webmanifest
 RewriteCond %{REQUEST_URI} !^/service-worker.js
-RewriteRule ^(.*)$ bootstrap.php [QSA,L]
+RewriteRule ^(.*)$ index.php [QSA,L]
 
 # Disable caching
 Header always set Cache-Control "no-store"
