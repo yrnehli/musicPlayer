@@ -105,13 +105,13 @@ class MusicControl extends EventEmitter {
 					icon: res.data.albumArtUrl,
 					actions: [
 						{
+							action: "skip-action",
+							title: "Skip ⏭️"
+						},
+						{
 							action: "previous-action",
 							title: "Previous"
 						},
-						{
-							action: "skip-action",
-							title: "Skip"
-						}
 					],
 					silent: true
 				}

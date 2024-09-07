@@ -5,7 +5,7 @@ if ('serviceWorker' in navigator) {
 			case 'previous-action':
 				Music.sharedInstance.previous(true);
 				break;
-			default:
+			case 'skip-action':
 				Music.sharedInstance.skip();
 				break;
 		}
