@@ -93,7 +93,8 @@ class MusicControl extends EventEmitter {
 
 		if (
 			window.Notification &&
-			Notification.permission === "granted"
+			Notification.permission === "granted" &&
+			!document.hasFocus()
 		) {
 			new Notification("Now Playing", {
 				body: [res.data.songArtist, res.data.songName].join("\n"),
