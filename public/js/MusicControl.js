@@ -97,7 +97,7 @@ class MusicControl extends EventEmitter {
 			!document.hasFocus()
 		) {
 			new Notification("Now Playing", {
-				body: [res.data.songArtist, res.data.songName].join("\n"),
+				body: [res.data.songName, res.data.songArtist].join("\n"),
 				icon: res.data.albumArtUrl,
 				requireInteraction: false,
 				silent: true
