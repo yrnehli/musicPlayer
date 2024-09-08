@@ -93,29 +93,14 @@ class MusicControl extends EventEmitter {
 
 		if (
 			window.Notification &&
-			Notification.permission === "granted" &&
-			'serviceWorker' in navigator
+			Notification.permission === "granted"
 		) {
-			const sw = await navigator.serviceWorker.getRegistration('/');
-
-			sw.showNotification(
-				res.data.songName,
-				{
-					body: res.data.songArtist,
-					icon: res.data.albumArtUrl,
-					actions: [
-						{
-							action: "skip-action",
-							title: "Skip ⏭️"
-						},
-						{
-							action: "previous-action",
-							title: "Previous"
-						},
-					],
-					silent: true
-				}
-			);
+			new Notification("Now Playing", {
+				body: [res.data.songArtist, res.data.songName].join("\n"),
+				icon: res.data.albumArtUrl,
+				requireInteraction: false,
+				silent: true
+			});
 		}
 
 		if (res.data.isDeezer) {

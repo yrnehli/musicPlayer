@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta name="theme-color" content="#121212">
+		<link rel="icon" type="image/x-icon" href="public/img/music-mac.png">
 		<link rel="stylesheet" href="/public/css/bootstrap.min.css" crossorigin="anonymous">
 		<script src="/public/js/jquery-3.4.1.js" crossorigin="anonymous"></script>
 		<script src="/public/js/popper.min.js" crossorigin="anonymous"></script>
