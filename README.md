@@ -3,7 +3,7 @@
 A music player built on the LAMP stack which can play local MP3 files and stream music from Deezer.
 
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/44710606/168400496-d2fd5397-36e7-4ccf-9dd8-94574f0a3334.png" />
+    <img src="https://github.com/user-attachments/assets/23573ed0-45fc-4809-8821-3a0a1b5de9e3" />
 </p>
 
 # Requirements
