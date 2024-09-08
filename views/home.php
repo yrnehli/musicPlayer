@@ -32,7 +32,7 @@
 		}
 
 		async function auth() {
-			var res = await $.get('/auth');
+			let res = await $.get('/auth');
 
 			if (!res.success) {
 				showToastNotification(res.success, res.message);

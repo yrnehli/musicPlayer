@@ -55,8 +55,8 @@
 </div>
 <script>
 	(function() {
-		var $tracklistRows = $('.tracklist-row');
-		var $clearButton = $('#clearButton');
+		let $tracklistRows = $('.tracklist-row');
+		let $clearButton = $('#clearButton');
 
 		$(function() {
 			updateBodyColour('#121212', false);
@@ -72,17 +72,17 @@
 			}
 			
 			$tracklistRows.dblclick(function() {
-				var $self = $(this);
-				var queue = [];
-				var history = [];
-				var positionFound = false;
+				let $self = $(this);
+				let queue = [];
+				let history = [];
+				let positionFound = false;
 
 				$tracklistRows.each(function(i) {
 					if ($(this).is($self)) {
 						positionFound = true;
 					}
 
-					var songId = $(this).data('song-id');
+					let songId = $(this).data('song-id');
 
 					if (positionFound) {
 						queue.push(songId);
@@ -100,15 +100,15 @@
 			});
 
 			$tracklistRows.find('.heart-button').click(async function() {
-				var songId = $(this).parents('[data-song-id]').data('song-id');
-				var action = $(this).hasClass('active') ? 'DELETE' : 'PUT';
+				let songId = $(this).parents('[data-song-id]').data('song-id');
+				let action = $(this).hasClass('active') ? 'DELETE' : 'PUT';
 
-				var res = await $.ajax({
+				let res = await $.ajax({
 					type: action,
 					url: `/api/saved/${songId}`
 				});
 
-				var $parent = $(this).parents(`[data-${CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX}]`);
+				let $parent = $(this).parents(`[data-${CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX}]`);
 
 				$parent.data(
 					CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,

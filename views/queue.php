@@ -25,10 +25,10 @@
 	</div>
 </div>
 <script>
-	var $queueRowsContainer = $('#queueRowsContainer');
-	var $nowPlaying = $('#nowPlaying');
-	var $nextUp = $('#nextUp');
-	var $clearQueueButton = $('#clearQueueButton');
+	let $queueRowsContainer = $('#queueRowsContainer');
+	let $nowPlaying = $('#nowPlaying');
+	let $nextUp = $('#nextUp');
+	let $clearQueueButton = $('#clearQueueButton');
 
 	$(async function() {
 		$queueRowsContainer.empty();
@@ -42,19 +42,19 @@
 			return;
 		}
 
-		var songIds = Music.sharedInstance.queue();
-		var queueRowSongIds = $queueRowsContainer.children().get().map(queueRow => String(queueRow.dataset.songId));
+		let songIds = Music.sharedInstance.queue();
+		let queueRowSongIds = $queueRowsContainer.children().get().map(queueRow => String(queueRow.dataset.songId));
 
 		if (songIds.length > 50) {
 			songIds = songIds.slice(0, 49);
 		}
 
-		var $queueRows = await Promise.all(
+		let $queueRows = await Promise.all(
 			songIds.filter(x => !queueRowSongIds.includes(String(x))).map(songId => createQueueRow(songId))
 		);
 
 		$queueRows.forEach($queueRow => {
-			var queueRow = $queueRow.get()[0];
+			let queueRow = $queueRow.get()[0];
 			queueRow.addEventListener('dragstart', handleDragStart, false);
 			queueRow.addEventListener('dragend', handleDragEnd, false);
 			queueRow.addEventListener('dragover', handleDragOver, false);
@@ -97,8 +97,8 @@
 			return;
 		}
 
-		var res = await $.get(`/api/song/${Music.sharedInstance.songId()}`);
-		var $musicRow = $nowPlaying.find('.music-row');
+		let res = await $.get(`/api/song/${Music.sharedInstance.songId()}`);
+		let $musicRow = $nowPlaying.find('.music-row');
 
 		$musicRow.find('.artwork img').attr('src', res.data.albumArtUrl);
 		$musicRow.find('.details').children().eq(0).text(res.data.songName);
@@ -113,12 +113,12 @@
 		this.classList.add('active');
 
 		const DRAG_GHOST_ID = 'dragGhost';
-		var songName = $(this).find('.details').children().eq(0).text();
-		var artistName = $(this).find('.details').children().eq(1).text();
+		let songName = $(this).find('.details').children().eq(0).text();
+		let artistName = $(this).find('.details').children().eq(1).text();
 
 		document.getElementById(DRAG_GHOST_ID)?.remove();
 
-		var dragGhost = $('<div></div>')
+		let dragGhost = $('<div></div>')
 			.attr('id', DRAG_GHOST_ID)
 			.html(`${songName} · ${artistName}`)
 			.css({
@@ -156,8 +156,8 @@
 	}
 
 	function handleDragEnter(e) {
-		var self = this;
-		var thisIndex, dragSourceIndex;
+		let self = this;
+		let thisIndex, dragSourceIndex;
 
 		$queueRowsContainer.children().each(function(i) {
 			if (this === self) {
@@ -177,11 +177,11 @@
 	function handleDrop(e) {
 		e.stopPropagation();
 
-		var self = this;
-		var queue = Music.sharedInstance.queue();
-		var queueRows = $queueRowsContainer.children().get();
-		var queueRowsToShift = [];
-		var thisIndex, dragSourceIndex, temp;
+		let self = this;
+		let queue = Music.sharedInstance.queue();
+		let queueRows = $queueRowsContainer.children().get();
+		let queueRowsToShift = [];
+		let thisIndex, dragSourceIndex, temp;
 
 		if (dragSource !== self) {
 			queueRows.forEach((tracklistRow, i) => {
@@ -197,34 +197,34 @@
 			queue[thisIndex] = temp;
 
 			if (thisIndex > dragSourceIndex) {
-				for (var i = dragSourceIndex + 1; i <= thisIndex; i++) {
+				for (let i = dragSourceIndex + 1; i <= thisIndex; i++) {
 					queueRowsToShift.push({
 						html: queueRows[i].innerHTML,
 						songId: queueRows[i].getAttribute('data-song-id')
 					});
 				}
 
-				for (var i = dragSourceIndex, j = 0; i < thisIndex; i++, j++) {
+				for (let i = dragSourceIndex, j = 0; i < thisIndex; i++, j++) {
 					queue[i] = queueRowsToShift[j].songId;
 					queueRows[i].innerHTML = queueRowsToShift[j].html;
 					queueRows[i].setAttribute('data-song-id', queueRowsToShift[j].songId);
 				}
 			} else {
-				for (var i = thisIndex; i < dragSourceIndex; i++) {
+				for (let i = thisIndex; i < dragSourceIndex; i++) {
 					queueRowsToShift.push({
 						html: queueRows[i].innerHTML,
 						songId: queueRows[i].getAttribute('data-song-id')
 					});
 				}
 
-				for (var i = thisIndex + 1, j = 0; i <= dragSourceIndex; i++, j++) {
+				for (let i = thisIndex + 1, j = 0; i <= dragSourceIndex; i++, j++) {
 					queue[i] = queueRowsToShift[j].songId;
 					queueRows[i].innerHTML = queueRowsToShift[j].html;
 					queueRows[i].setAttribute('data-song-id', queueRowsToShift[j].songId);
 				}
 			}
 
-			var data = JSON.parse(e.dataTransfer.getData('text/plain'));
+			let data = JSON.parse(e.dataTransfer.getData('text/plain'));
 			this.setAttribute('data-song-id', data.songId);
 			this.innerHTML = data.html;
 		}
@@ -233,12 +233,12 @@
 	}
 
 	async function createQueueRow(songId) {
-		var res = await $.get(`/api/song/${songId}`);
-		var $queueRow = $(`<div class="music-row" draggable="true" data-song-id=${songId} data-album-id=${res.data.albumId} data-context-menu-actions="REMOVE_FROM_QUEUE,GO_TO_ALBUM" data-activable></div>`);
-		var $img = $('<img class="lazy">').attr('data-src', res.data.albumArtUrl);
-		var $artwork = $('<div class="artwork"></div>').append($img);
-		var $totalTime = $('<div class="total-time"></div>').text(secondsToTimeString(res.data.songDuration));
-		var $details = $('<div class="details"></div>').append([
+		let res = await $.get(`/api/song/${songId}`);
+		let $queueRow = $(`<div class="music-row" draggable="true" data-song-id=${songId} data-album-id=${res.data.albumId} data-context-menu-actions="REMOVE_FROM_QUEUE,GO_TO_ALBUM" data-activable></div>`);
+		let $img = $('<img class="lazy">').attr('data-src', res.data.albumArtUrl);
+		let $artwork = $('<div class="artwork"></div>').append($img);
+		let $totalTime = $('<div class="total-time"></div>').text(secondsToTimeString(res.data.songDuration));
+		let $details = $('<div class="details"></div>').append([
 			$('<div></div>').text(res.data.songName),
 			$('<div></div>').text(res.data.songArtist),
 		]);

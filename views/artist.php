@@ -55,11 +55,11 @@
 </div>
 <script>
 	(function() {
-		var $playArtistButtom = $('#playArtistButtom');
-		var $shuffleArtistButton = $('#shuffleArtistButton');
-		var $playNextButton = $('#playNextButton');
-		var $playLastButton = $('#playLastButton');
-		var $tracklistRows = $('.tracklist-row');
+		let $playArtistButtom = $('#playArtistButtom');
+		let $shuffleArtistButton = $('#shuffleArtistButton');
+		let $playNextButton = $('#playNextButton');
+		let $playLastButton = $('#playLastButton');
+		let $tracklistRows = $('.tracklist-row');
 
 		$(function() {
 			new LazyLoad({});
@@ -69,10 +69,10 @@
 		});
 
 		async function getSongIds(albumIds) {
-			var songIds = [];
+			let songIds = [];
 
 			for (const albumId of albumIds) {
-				var res = await $.get('/api/album/' + albumId);
+				let res = await $.get('/api/album/' + albumId);
 
 				for (const songId of res.data.songIds) {
 					songIds.push(songId);
@@ -88,7 +88,7 @@
 			});
 
 			$playArtistButtom.click(async () => {
-				var songIds = await getSongIds(
+				let songIds = await getSongIds(
 					$('.album-container').get().map(albumContainer => $(albumContainer).data('album-id'))
 				);
 
@@ -97,7 +97,7 @@
 			});
 
 			$shuffleArtistButton.click(async () => {
-				var songIds = await getSongIds(
+				let songIds = await getSongIds(
 					$('.album-container').get().map(albumContainer => $(albumContainer).data('album-id'))
 				);
 
@@ -106,7 +106,7 @@
 			});
 
 			$playNextButton.click(async () => {
-				var songIds = await getSongIds(
+				let songIds = await getSongIds(
 					$('.album-container').get().map(albumContainer => $(albumContainer).data('album-id'))
 				);
 
@@ -119,7 +119,7 @@
 			});
 
 			$playLastButton.click(async () => {
-				var songIds = await getSongIds(
+				let songIds = await getSongIds(
 					$('.album-container').get().map(albumContainer => $(albumContainer).data('album-id'))
 				);
 					
@@ -132,9 +132,9 @@
 		}
 		
 		function scaleArtistNameText() {
-			var fontSize = 96;
-			var $artist = $('#artistNameBig');
-			var maxWidth = $(window).width() - 367;
+			let fontSize = 96;
+			let $artist = $('#artistNameBig');
+			let maxWidth = $(window).width() - 367;
 
 			$artist.css({
 				"font-size": `${fontSize}px`,
