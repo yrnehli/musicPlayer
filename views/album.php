@@ -104,12 +104,12 @@
 </div>
 <script>
 	(function() {
-		let $albumArtist = $('#albumArtist');
-		let $playAlbumButton = $('#playAlbumButton');
-		let $shuffleAlbumButton = $('#shuffleAlbumButton');
-		let $playNextButton = $('#playNextButton');
-		let $playLastButton = $('#playLastButton');
-		let $tracklistRows = $('.tracklist-row');
+		var $albumArtist = $('#albumArtist');
+		var $playAlbumButton = $('#playAlbumButton');
+		var $shuffleAlbumButton = $('#shuffleAlbumButton');
+		var $playNextButton = $('#playNextButton');
+		var $playLastButton = $('#playLastButton');
+		var $tracklistRows = $('.tracklist-row');
 
 		$(function() {
 			updateBodyColour('<?= $accentColour ?>');
@@ -126,17 +126,17 @@
 			}
 
 			$tracklistRows.dblclick(function() {
-				let $self = $(this);
-				let queue = [];
-				let history = [];
-				let positionFound = false;
+				var $self = $(this);
+				var queue = [];
+				var history = [];
+				var positionFound = false;
 
 				$tracklistRows.each(function(i) {
 					if ($(this).is($self)) {
 						positionFound = true;
 					}
 
-					let songId = $(this).data('song-id');
+					var songId = $(this).data('song-id');
 
 					if (positionFound) {
 						queue.push(songId);
@@ -154,15 +154,15 @@
 			});
 
 			$tracklistRows.find('.heart-button').click(async function() {
-				let songId = $(this).parents('[data-song-id]').data('song-id');
-				let action = $(this).hasClass('active') ? 'DELETE' : 'PUT';
+				var songId = $(this).parents('[data-song-id]').data('song-id');
+				var action = $(this).hasClass('active') ? 'DELETE' : 'PUT';
 
-				let res = await $.ajax({
+				var res = await $.ajax({
 					type: action,
 					url: `/api/saved/${songId}`
 				});
 
-				let $parent = $(this).parents(`[data-${CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX}]`);
+				var $parent = $(this).parents(`[data-${CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX}]`);
 
 				$parent.data(
 					CustomContextMenu.CONTEXT_MENU_ACTIONS_DATA_SUFFIX,
@@ -243,9 +243,9 @@
 		}
 		
 		function scaleAlbumNameText() {
-			let fontSize = 96;
-			let $albumName = $('#albumName');
-			let maxWidth = $(window).width() - 367;
+			var fontSize = 96;
+			var $albumName = $('#albumName');
+			var maxWidth = $(window).width() - 367;
 
 			$albumName.css({
 				"font-size": `${fontSize}px`,

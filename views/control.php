@@ -57,23 +57,23 @@
 </div>
 <script>
 	(function() {
-		let $albumArt = $('#albumArt');
-		let $songName = $('#songName');
-		let $artistName = $('#artistName');
-		let $prevButton = $('#prevButton');
-		let $playButton = $('#playButton');
-		let $skipButton = $('#skipButton');
-		let $saveButton = $('#saveButton');
-		let $lyricsButton = $('#lyricsButton');
-		let $queueButton = $('#queueButton');
-		let $nowPlayingButton = $('#nowPlayingButton');
-		let $volumeSlider = $('#volumeSlider');
-		let $volumeButton = $('#volumeButton');
-		let $control = $('#control');
-		let $progressSlider = $('#progressSlider');
-		let $elapsedTime = $('#elapsedTime');
-		let $endTime = $('#endTime');
-		let state = JSON.parse(localStorage.getItem("state")) || {};
+		var $albumArt = $('#albumArt');
+		var $songName = $('#songName');
+		var $artistName = $('#artistName');
+		var $prevButton = $('#prevButton');
+		var $playButton = $('#playButton');
+		var $skipButton = $('#skipButton');
+		var $saveButton = $('#saveButton');
+		var $lyricsButton = $('#lyricsButton');
+		var $queueButton = $('#queueButton');
+		var $nowPlayingButton = $('#nowPlayingButton');
+		var $volumeSlider = $('#volumeSlider');
+		var $volumeButton = $('#volumeButton');
+		var $control = $('#control');
+		var $progressSlider = $('#progressSlider');
+		var $elapsedTime = $('#elapsedTime');
+		var $endTime = $('#endTime');
+		var state = JSON.parse(localStorage.getItem("state")) || {};
 		
 		new MusicControl(
 			{
@@ -123,8 +123,8 @@
 		function initSliders() {
 			const PROGRESS_INTERVAL_TIMEOUT = 100;
 
-			let updateVolume = function(e, ui) {
-				let volume = Math.pow(ui.value / 100, 4);
+			var updateVolume = function(e, ui) {
+				var volume = Math.pow(ui.value / 100, 4);
 
 				$volumeButton.removeClass('mute low-volume medium-volume high-volume');
 			
@@ -141,20 +141,20 @@
 				Music.sharedInstance.volume(volume);
 			}
 
-			let progressIntervalCallback = function() {
+			var progressIntervalCallback = function() {
 				if (Music.sharedInstance.disabled()) {
 					return;
 				}
 
-				let duration = Music.sharedInstance.duration();
-				let progress = Music.sharedInstance.seek() / duration || 0;
-				let elapsedSeconds = progress * duration;
+				var duration = Music.sharedInstance.duration();
+				var progress = Music.sharedInstance.seek() / duration || 0;
+				var elapsedSeconds = progress * duration;
 
 				$elapsedTime.text(secondsToTimeString(elapsedSeconds));
 				$progressSlider.slider("value", progress * 100);
 			};
 
-			let progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
+			var progressInterval = setInterval(progressIntervalCallback, PROGRESS_INTERVAL_TIMEOUT);
 
 			initSlider(
 				$volumeSlider,
@@ -183,7 +183,7 @@
 		}
 
 		function initEvents() {
-			let timeout;
+			var timeout;
 
 			const onUpdate = () => {
 				if (window.location.pathname === '/queue') {
@@ -210,15 +210,15 @@
 			});
 
 			$saveButton.click(async () => {
-				let $tracklistRow = $(`.tracklist-row[data-song-id="${Music.sharedInstance.songId()}"]`);
-				let action = $saveButton.hasClass('active') ? 'DELETE' : 'PUT';
-				let res = await $.ajax({
+				var $tracklistRow = $(`.tracklist-row[data-song-id="${Music.sharedInstance.songId()}"]`);
+				var action = $saveButton.hasClass('active') ? 'DELETE' : 'PUT';
+				var res = await $.ajax({
 					type: action,
 					url: `/api/saved/${Music.sharedInstance.songId()}`
 				});
 				
 				if ($tracklistRow.length) {
-					let $heartButton = $tracklistRow.find('.heart-button');
+					var $heartButton = $tracklistRow.find('.heart-button');
 
 					if (action === 'DELETE') {
 						$heartButton.removeClass('active');
@@ -280,7 +280,7 @@
 		}
 
 		function adjustVolume(e, delta) {
-			let volume = $volumeSlider.slider("value");
+			var volume = $volumeSlider.slider("value");
 
 			if (e) {
 				delta = (e.originalEvent.wheelDelta > 0) ? 5 : -5;
@@ -293,7 +293,7 @@
 		}
 
 		function updateVolumeButton() {
-			let volume = $volumeSlider.slider("value");
+			var volume = $volumeSlider.slider("value");
 
 			if (volume === 0) {
 				$volumeSlider.slider("value", $volumeSlider.data("volume") || 10);
