@@ -116,7 +116,9 @@ This can be installed as a Progressive Web App (PWA). For the best experience, e
 This can also be installed as a standalone Electron app using [Nativefier](https://github.com/nativefier/nativefier). For example:
 
 ```sh
-nativefier 'http://localhost:8080' --title-bar-style 'hiddenInset' --icon '~/Repos/musicPlayer/public/img/music-mac.png'
+nativefier 'http://localhost:8080'
+	--title-bar-style 'hiddenInset'
+	--icon '<PATH_TO_ICON>'
 ```
 
 # Troubleshooting
