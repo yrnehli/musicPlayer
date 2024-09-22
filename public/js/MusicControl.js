@@ -100,7 +100,7 @@ class MusicControl extends EventEmitter {
 				body: [res.data.songName, res.data.songArtist].join("\n"),
 				icon: res.data.albumArtUrl,
 				requireInteraction: false,
-				silent: false
+				silent: true
 			});
 		}
 
