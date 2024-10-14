@@ -18,8 +18,8 @@ class RootController extends Controller {
 		$stmt = $conn->prepare(
 			"SELECT `albums`.*
 			FROM `albums`
-			INNER JOIN `song-album` ON `albums`.`id` = `song-album`.`albumId`
-			ORDER BY `song-album`.`id` DESC"
+			INNER JOIN `song_album` ON `albums`.`id` = `song_album`.`albumId`
+			ORDER BY `song_album`.`id` DESC"
 		);
 		$stmt->execute();
 		$albums = array_unique($stmt->fetchAll(), SORT_REGULAR);

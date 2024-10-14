@@ -73,8 +73,8 @@ class AlbumController extends Controller {
 		$stmt = $conn->prepare(
 			"SELECT `songs`.*
 			FROM `songs`
-			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
-			WHERE `song-album`.`albumId` = :albumId
+			INNER JOIN `song_album` ON `songs`.`id` = `song_album`.`songId`
+			WHERE `song_album`.`albumId` = :albumId
 			ORDER BY `songs`.`discNumber`, `songs`.`trackNumber`"
 		);
 		$stmt->bindParam(":albumId", $albumId);

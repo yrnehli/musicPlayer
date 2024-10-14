@@ -8,9 +8,12 @@ class MusicDatabase {
 	private $conn;
 
 	public function __construct() {
-		$this->conn = new PDO("mysql:host={$_ENV['DB_SERVERNAME']};dbname={$_ENV['DB_DBNAME']};charset=utf8mb4", $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD']);
+		$this->conn = new PDO("sqlite:db.sqlite3");
 		$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+		$this->conn->sqliteCreateFunction('REGEXP_REPLACE', function ($string, $pattern, $replacement) {
+            return preg_replace($pattern, $replacement, $string);
+        }, 3);
 	}
 
 	public function insertScrobble($artist, $track, $album, $duration, $success) {
@@ -28,17 +31,8 @@ class MusicDatabase {
 
 	public function insertSong($name, $artist, $trackNumber, $discNumber, $duration, $filepath) {
 		$stmt = $this->conn->prepare(
-			"INSERT INTO `songs` (`name`, `artist`, `trackNumber`, `discNumber`, `duration`, `filepath`)
-			VALUES (:name, :artist, :trackNumber, :discNumber, :duration, :filepath)
-			ON DUPLICATE KEY UPDATE
-				`name` = :name,
-				`artist` = :artist,
-				`trackNumber` = :trackNumber,
-				`discNumber` = :discNumber,
-				`duration` = :duration,
-				`filepath` = :filepath,
-				`id` = LAST_INSERT_ID(`id`)
-			"
+			"INSERT OR REPLACE INTO `songs` (`name`, `artist`, `trackNumber`, `discNumber`, `duration`, `filepath`)
+			VALUES (:name, :artist, :trackNumber, :discNumber, :duration, :filepath)"
 		);
 		$stmt->bindParam(":name", $name);
 		$stmt->bindParam(":artist", $artist);
@@ -53,16 +47,8 @@ class MusicDatabase {
 
 	public function insertAlbum($name, $artist, $genre, $year, $artFilepath) {
 		$stmt = $this->conn->prepare(
-			"INSERT INTO `albums` (`name`, `artist`, `genre`, `year`, `artFilepath`)
-			VALUES (:name, :artist, :genre, :year, :artFilepath)
-			ON DUPLICATE KEY UPDATE
-				`name` = :name,
-				`artist` = :artist,
-				`genre` = :genre,
-				`year` = :year,
-				`artFilepath` = :artFilepath,
-				`id` = LAST_INSERT_ID(`id`)
-			"
+			"INSERT OR REPLACE INTO `albums` (`name`, `artist`, `genre`, `year`, `artFilepath`)
+			VALUES (:name, :artist, :genre, :year, :artFilepath)"
 		);
 		$stmt->bindParam(":name", $name);
 		$stmt->bindParam(":artist", $artist);
@@ -76,9 +62,8 @@ class MusicDatabase {
 
 	public function insertSongAlbumMapping($songId, $albumId) {
 		$stmt = $this->conn->prepare(
-			"INSERT INTO `song-album` (`songId`, `albumId`)
-			VALUES (:songId, :albumId)
-			ON DUPLICATE KEY UPDATE `albumId` = :albumId"
+			"INSERT OR REPLACE INTO `song_album` (`songId`, `albumId`)
+			VALUES (:songId, :albumId)"
 		);
 		$stmt->bindParam(":songId", $songId);
 		$stmt->bindParam(":albumId", $albumId);
@@ -92,9 +77,8 @@ class MusicDatabase {
 
 	public function insertSavedSong($songId, $flagged = false) {
 		$stmt = $this->conn->prepare(
-			"INSERT INTO `savedSongs` (`songId`, `flagged`)
-			VALUES (:songId, :flagged)
-			ON DUPLICATE KEY UPDATE `flagged` = :flagged"
+			"INSERT OR REPLACE INTO `savedSongs` (`songId`, `flagged`)
+			VALUES (:songId, :flagged)"
 		);
 		$stmt->bindParam(":songId", $songId);
 		$stmt->bindParam(":flagged", $flagged, PDO::PARAM_INT);
@@ -155,7 +139,7 @@ class MusicDatabase {
 					FROM `albums`
 					WHERE `albums`.`id` NOT IN (
 						SELECT `albumId`
-						FROM `song-album`
+						FROM `song_album`
 					)
 				) AS `a`
 			)"

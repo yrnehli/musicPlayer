@@ -47,7 +47,7 @@ class MusicManager {
 			$song['discNumber'] = (array_key_exists('part_of_a_set', $tags)) ? intval($tags['part_of_a_set'][0]) : 1;
 			$song['year'] = $tags['year'][0];
 			$song['genre'] = implode("/", $tags['genre']);
-			$song['duration'] = $mp3Info['playtime_seconds'];
+			$song['duration'] = intval($mp3Info['playtime_seconds']);
 			$song['filepath'] = $mp3Info['filenamepath'];
 
 			$songId = $musicDatabase->insertSong(
