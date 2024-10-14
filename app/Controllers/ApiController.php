@@ -73,8 +73,8 @@ class ApiController extends Controller {
 				`albums`.`name` AS 'albumName',
 				`albums`.`id` AS 'albumId'
 			FROM `songs`
-			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
-			INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
+			INNER JOIN `song_album` ON `songs`.`id` = `song_album`.`songId`
+			INNER JOIN `albums` ON `song_album`.`albumId` = `albums`.`id`
 			WHERE `songs`.`id` = :id"
 		);
 		$stmt->bindParam(":id", $songId);
@@ -121,8 +121,8 @@ class ApiController extends Controller {
 		$stmt = $conn->prepare(
 			"SELECT `songs`.`id`
 			FROM `songs`
-			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
-			WHERE `song-album`.`albumId` = :albumId
+			INNER JOIN `song_album` ON `songs`.`id` = `song_album`.`songId`
+			WHERE `song_album`.`albumId` = :albumId
 			ORDER BY `songs`.`discNumber`, `songs`.`trackNumber`"
 		);
 		$stmt->bindParam(":albumId", $albumId);
@@ -169,7 +169,7 @@ class ApiController extends Controller {
 			INNER JOIN `albumDetails` ON `albums`.`id` = `albumDetails`.`albumId`
 			WHERE REGEXP_REPLACE(CONCAT(`name`, `artist`), '$ignoreRegex', '') LIKE :term
 			OR REGEXP_REPLACE(CONCAT(`artist`, `name`), '$ignoreRegex', '') LIKE :term
-			ORDER BY CHAR_LENGTH(`name`)
+			ORDER BY LENGTH(`name`)
 			LIMIT 15"
 		);
 		$stmt->bindParam(":term", $term);
@@ -179,11 +179,11 @@ class ApiController extends Controller {
 		$stmt = $conn->prepare(
 			"SELECT `songs`.`id`, `songs`.`name`, `songs`.`artist`, `songs`.`duration`, `albums`.`artFilepath`, `albums`.`id` AS `albumId`, 0 AS `explicit`, `songs`.`artist` AS `artistId`
 			FROM `songs`
-			INNER JOIN `song-album` ON `songs`.`id` = `song-album`.`songId`
-			INNER JOIN `albums` ON `song-album`.`albumId` = `albums`.`id`
+			INNER JOIN `song_album` ON `songs`.`id` = `song_album`.`songId`
+			INNER JOIN `albums` ON `song_album`.`albumId` = `albums`.`id`
 			WHERE REGEXP_REPLACE(CONCAT(`songs`.`name`, `songs`.`artist`), '$ignoreRegex', '') LIKE :term
 			OR REGEXP_REPLACE(CONCAT(`songs`.`artist`, `songs`.`name`), '$ignoreRegex', '') LIKE :term
-			ORDER BY CHAR_LENGTH(`songs`.`name`)
+			ORDER BY LENGTH(`songs`.`name`)
 			LIMIT 15"
 		);
 		$stmt->bindParam(":term", $term);
@@ -198,7 +198,7 @@ class ApiController extends Controller {
 				`artFilepath`
 			FROM `albums`
 			WHERE REGEXP_REPLACE(`artist`, '$ignoreRegex', '') LIKE :term
-			ORDER BY CHAR_LENGTH(`artist`)
+			ORDER BY LENGTH(`artist`)
 			LIMIT 15"
 		);
 		$stmt->bindParam(":term", $term);
