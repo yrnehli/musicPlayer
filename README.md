@@ -9,7 +9,7 @@ A music player built on the LAMP stack which can play local MP3 files and stream
 # Requirements
 
 - PHP 7
-- MySQL 8
+- SQLite 3
 - Apache
 
 _Other versions of PHP may work, but is not guaranteed._
@@ -28,7 +28,7 @@ git clone https://github.com/henryli17/musicPlayer.git
 cd musicPlayer && composer install
 ```
 
-3. Import `database.sql` to a schema in your MySQL database.
+3. Run `sqlite3 db.sqlite3 < database.sql`
 
 4. Setup environment variables.
 
@@ -37,10 +37,6 @@ cd musicPlayer && composer install
 
 | Key                  | Value                                                                    | Required |
 | -------------------- | ------------------------------------------------------------------------ | -------- |
-| `DB_SERVERNAME`      | The server name or IP of your MySQL database.                            | Yes      |
-| `DB_USERNAME`        | The username for your MySQL database.                                    | Yes      |
-| `DB_PASSWORD`        | The password for the MySQL user defined in `DB_USERNAME`.                | Yes      |
-| `DB_DBNAME`          | The name of the schema you imported `database.sql` to.                   | Yes      |
 | `MUSIC_DIRECTORY`    | The full directory of where your local MP3 files are stored.             | No       |
 | `DEEZER_ARL`         | Your Deezer `arl` cookie obtained from logging into Deezer's web player. | No       |
 | `LASTFM_API_KEY`     | Your Last.fm API key.                                                    | No       |
