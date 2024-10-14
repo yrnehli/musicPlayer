@@ -20,10 +20,7 @@ class MusicManager {
 		$mp3s = [];
 		$albumRelations = [];
 
-		$files = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator($_ENV["MUSIC_DIRECTORY"]),
-			RecursiveIteratorIterator::SELF_FIRST
-		);
+		$files = MusicManager::getFilesByCreationDate($_ENV["MUSIC_DIRECTORY"]);
 
 		foreach ($files as $file) {
 			if (str_ends_with(strtolower($file->getFilename()), ".mp3")) {
@@ -98,5 +95,29 @@ class MusicManager {
 		}
 
 		$musicDatabase->deleteInvalidAlbums();
+	}
+
+	private static function getFilesByCreationDate($directory) {
+		$files = [];
+	
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($directory),
+			RecursiveIteratorIterator::SELF_FIRST
+		);
+	
+		foreach ($iterator as $file) {
+			if (!$file->isFile()) {
+				continue;
+			}
+
+			$files[$file->getRealPath()] = [
+				'file' => $file,
+				'creationDate' => $file->getCTime()
+			];
+		}
+	
+		asort($files);
+	
+		return array_column($files, 'file');
 	}
 }
