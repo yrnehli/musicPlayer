@@ -31,8 +31,16 @@ class MusicDatabase {
 
 	public function insertSong($name, $artist, $trackNumber, $discNumber, $duration, $filepath) {
 		$stmt = $this->conn->prepare(
-			"INSERT OR REPLACE INTO `songs` (`name`, `artist`, `trackNumber`, `discNumber`, `duration`, `filepath`)
-			VALUES (:name, :artist, :trackNumber, :discNumber, :duration, :filepath)"
+			"INSERT INTO `songs` (`name`, `artist`, `trackNumber`, `discNumber`, `duration`, `filepath`)
+			VALUES (:name, :artist, :trackNumber, :discNumber, :duration, :filepath)
+			ON CONFLICT DO UPDATE SET
+				`name` = :name,
+				`artist` = :artist,
+				`trackNumber` = :trackNumber,
+				`discNumber` = :discNumber,
+				`duration` = :duration,
+				`filepath` = :filepath
+			"
 		);
 		$stmt->bindParam(":name", $name);
 		$stmt->bindParam(":artist", $artist);
@@ -47,8 +55,15 @@ class MusicDatabase {
 
 	public function insertAlbum($name, $artist, $genre, $year, $artFilepath) {
 		$stmt = $this->conn->prepare(
-			"INSERT OR REPLACE INTO `albums` (`name`, `artist`, `genre`, `year`, `artFilepath`)
-			VALUES (:name, :artist, :genre, :year, :artFilepath)"
+			"INSERT INTO `albums` (`name`, `artist`, `genre`, `year`, `artFilepath`)
+			VALUES (:name, :artist, :genre, :year, :artFilepath)
+			ON CONFLICT DO UPDATE SET
+				`name` = :name,
+				`artist` = :artist,
+				`genre` = :genre,
+				`year` = :year,
+				`artFilepath` = :artFilepath
+			"
 		);
 		$stmt->bindParam(":name", $name);
 		$stmt->bindParam(":artist", $artist);
@@ -62,8 +77,9 @@ class MusicDatabase {
 
 	public function insertSongAlbumMapping($songId, $albumId) {
 		$stmt = $this->conn->prepare(
-			"INSERT OR REPLACE INTO `song_album` (`songId`, `albumId`)
-			VALUES (:songId, :albumId)"
+			"INSERT INTO `song_album` (`songId`, `albumId`)
+			VALUES (:songId, :albumId)
+			ON CONFLICT DO UPDATE SET `albumId` = :albumId"
 		);
 		$stmt->bindParam(":songId", $songId);
 		$stmt->bindParam(":albumId", $albumId);
@@ -77,8 +93,9 @@ class MusicDatabase {
 
 	public function insertSavedSong($songId, $flagged = false) {
 		$stmt = $this->conn->prepare(
-			"INSERT OR REPLACE INTO `savedSongs` (`songId`, `flagged`)
-			VALUES (:songId, :flagged)"
+			"INSERT INTO `savedSongs` (`songId`, `flagged`)
+			VALUES (:songId, :flagged)
+			ON CONFLICT DO UPDATE SET `flagged` = :flagged"
 		);
 		$stmt->bindParam(":songId", $songId);
 		$stmt->bindParam(":flagged", $flagged, PDO::PARAM_INT);
