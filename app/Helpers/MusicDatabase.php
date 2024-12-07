@@ -40,6 +40,7 @@ class MusicDatabase {
 				`discNumber` = :discNumber,
 				`duration` = :duration,
 				`filepath` = :filepath
+			RETURNING `id`
 			"
 		);
 		$stmt->bindParam(":name", $name);
@@ -50,7 +51,9 @@ class MusicDatabase {
 		$stmt->bindParam(":filepath", $filepath);
 		$stmt->execute();
 		
-		return $this->conn->lastInsertId();
+		$id = $stmt->fetchColumn();
+		
+		return $id;
 	}
 
 	public function insertAlbum($name, $artist, $genre, $year, $artFilepath) {
@@ -63,6 +66,7 @@ class MusicDatabase {
 				`genre` = :genre,
 				`year` = :year,
 				`artFilepath` = :artFilepath
+			RETURNING `id`
 			"
 		);
 		$stmt->bindParam(":name", $name);
@@ -72,7 +76,9 @@ class MusicDatabase {
 		$stmt->bindParam(":artFilepath", $artFilepath);
 		$stmt->execute();
 
-		return $this->conn->lastInsertId();
+		$id = $stmt->fetchColumn();
+		
+		return $id;
 	}
 
 	public function insertSongAlbumMapping($songId, $albumId) {
