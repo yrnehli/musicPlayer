@@ -8,7 +8,7 @@ A music player built on the LAMP stack which can play local MP3 files and stream
 
 # Requirements
 
-- PHP 7
+- PHP 8
 - SQLite 3
 - Apache
 
