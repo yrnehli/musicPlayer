@@ -18,7 +18,7 @@ foreach ($directories as $directory) {
 	}
 }
 
-spl_autoload_register(function($className) {
+spl_autoload_register(function ($className) {
 	$filepath = realpath('.') . "/" . str_replace("\\", "/", lcfirst($className)) . ".php";
 
 	if (file_exists($filepath)) {
@@ -42,4 +42,5 @@ foreach ($files as $file) {
 include_once "global.php";
 include_once "routes.php";
 
+Flight::set('flight.v2.output_buffering', true);
 Flight::start();
