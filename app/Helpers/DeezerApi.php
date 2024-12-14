@@ -173,7 +173,11 @@ class DeezerApi {
 		);
 
 		usort($res->data, function($a, $b) {
-			return strtotime($a->release_date) < strtotime($b->release_date);
+			if (strtotime($a->release_date) < strtotime($b->release_date)) {
+				return 1;
+			} else {
+				return -1;
+			}
 		});
 
 		$albums = [];

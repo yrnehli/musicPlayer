@@ -1,0 +1,9 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.sortMembers": "never",
+    "source.organizeImports": "never"
+  },
+  "editor.formatOnSave": false,
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false
+}
