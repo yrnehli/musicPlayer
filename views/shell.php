@@ -21,6 +21,7 @@
 		<script src="/public/js/app.js"></script>
 		<link rel="stylesheet" href="/public/css/jquery-ui-git.css">
 		<link rel="stylesheet" href="/public/css/global.css">
+		<link rel="stylesheet" href="/public/css/fa.css">
 		<link rel="stylesheet" href="/public/css/simplebar.css">
 		<link rel="manifest" href="/manifest.webmanifest">
 		<link rel="icon" href="data:,">
