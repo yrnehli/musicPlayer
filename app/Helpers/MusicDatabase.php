@@ -11,6 +11,7 @@ class MusicDatabase {
 		$this->conn = new PDO("sqlite:db.sqlite3");
 		$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+		$this->conn->exec('PRAGMA foreign_keys = ON');
 		$this->conn->sqliteCreateFunction('REGEXP_REPLACE', function ($string, $pattern, $replacement) {
             return preg_replace($pattern, $replacement, $string);
         }, 3);

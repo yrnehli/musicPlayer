@@ -1,4 +1,4 @@
-PRAGMA foreign_keys=OFF;
+PRAGMA foreign_keys=ON;
 BEGIN TRANSACTION;
 CREATE TABLE `albums` (
   `id` integer NOT NULL PRIMARY KEY AUTOINCREMENT
